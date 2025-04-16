@@ -39,7 +39,8 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        AutoEqualizer.requestNotificationAccess(this) //per richiedere i permessi
+        if(!AutoEqualizer.isNotificationServiceEnabled(this)) // richiede i permessi se non ci sono
+            AutoEqualizer.requestNotificationAccess(this)
         setContent {
             ClairaudTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
