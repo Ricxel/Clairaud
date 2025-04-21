@@ -1,51 +1,26 @@
-import android.media.audiofx.Equalizer
+package com.omasba.clairaud
 
-class Eq(private val sessionId: Int) {
-    private var equalizer: Equalizer? = null
+import android.util.Log
+import com.omasba.clairaud.ui.components.Eq
+import org.junit.Assert.assertTrue
+import org.junit.Rule
+import org.junit.Test
 
-    init {
-        equalizer = Equalizer(0, sessionId).apply {
-            enabled = true
-        }
-    }
+class EqTest{
 
-    fun setBandLevel(band: Int, level: Short) {
-        equalizer?.setBandLevel(band.toShort(), level)
-    }
+    @Test
+    fun setAllBands(){
+        val equalizer = Eq(0) // session id = 0 per tutto l'audio in uscita
 
-    fun getBandLevel(band: Int): Short {
-        return equalizer?.getBandLevel(band.toShort()) ?: 0
-    }
+        val range = equalizer.getBandRange()
+        Log.i("range: ", range.toString())
 
-    fun getNumberOfBands(): Int {
-        return equalizer?.numberOfBands?.toInt() ?: 0
-    }
+        val bands = equalizer.getNumberOfBands()
+        Log.i("bands: ", bands.toString())
 
-    fun getBandRange(): Pair<Short, Short> {
-        val range = equalizer?.bandLevelRange
-        return Pair(range?.get(0) ?: 0, range?.get(1) ?: 0)
-    }
-
-    fun setAllBands(levels: ShortArray) {
-        val bands = getNumberOfBands()
-        if (levels.size != bands) {
-            throw IllegalArgumentException(".")
-        }
-
-        for (i in levels.indices) {
-            setBandLevel(i, levels[i])
-        }
-    }
-
-    fun disable() {
-        equalizer?.enabled = false
-    }
-
-    fun enable() {
-        equalizer?.enabled = true
-    }
-
-    fun release() {
-        equalizer?.release()
+        // Non ancora testato
+        // val midLevel = ((range.first + range.second) / 2).toShort()
+        // val levels = ShortArray(bands) { midLevel }
+        // equalizer.setAllBands(levels)
     }
 }
