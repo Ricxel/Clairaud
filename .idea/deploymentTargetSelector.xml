@@ -2,10 +2,17 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
+<<<<<<< HEAD
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="setAllBands()">
+=======
+      <SelectionState runConfigName="AutoEqualizerTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="MainActivity">
+>>>>>>> 70d0fbd21e57dea9c2a81dc4560acfe7a3f15aaa
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

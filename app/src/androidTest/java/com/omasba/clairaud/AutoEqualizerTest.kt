@@ -1,9 +1,8 @@
 package com.omasba.clairaud
 
 import android.util.Log
-import com.omasba.clairaud.ui.components.AutoEqualizer
+import com.omasba.clairaud.components.AutoEqualizer
 import org.junit.Assert.assertTrue
-import org.junit.Rule
 import org.junit.Test
 
 class AutoEqualizerTest {

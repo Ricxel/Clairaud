@@ -1,52 +1,71 @@
 package com.omasba.clairaud
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
-import android.media.audiofx.Visualizer
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.unit.sp
 import com.omasba.clairaud.ui.theme.ClairaudTheme
-import com.omasba.clairaud.ui.components.AutoEqualizer
+import com.omasba.clairaud.components.AutoEqualizer
+import com.omasba.clairaud.ui.AutoEq
+import com.omasba.clairaud.ui.models.AutoEqViewModel
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if(!AutoEqualizer.isNotificationServiceEnabled(this)) // richiede i permessi se non ci sono
             AutoEqualizer.requestNotificationAccess(this)
+        val autoEqView = AutoEqViewModel()
         setContent {
             ClairaudTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AutoEqualizer.MusicNowPlayingUI(context = this)
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Clairaud/AutoEQ", fontSize = 40.sp)
+                        AutoEq(autoEqView)
+                    }
                 }
             }
         }
+    }
+    private fun isNotificationListenerEnabled(): Boolean {
+        val packageName = packageName
+        val listeners = Settings.Secure.getString(
+            contentResolver,
+            "enabled_notification_listeners"
+        )
+        return listeners?.contains(packageName) == true
+    }
+
+    private fun showEnableNotificationListenerDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Attiva il rilevamento musica")
+            .setMessage("Per rilevare la musica in riproduzione, devi abilitare l'accesso alle notifiche. Premi OK per andare alle impostazioni.")
+            .setPositiveButton("OK") { _, _ -> openNotificationListenerSettings() }
+            .setNegativeButton("Più tardi", null)
+            .show()
+    }
+
+    private fun openNotificationListenerSettings() {
+        startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
     }
 }
