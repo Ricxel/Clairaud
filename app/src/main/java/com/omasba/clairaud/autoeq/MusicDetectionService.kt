@@ -1,4 +1,4 @@
-package com.omasba.clairaud.components
+package com.omasba.clairaud.autoeq
 
 import android.content.ComponentName
 import android.content.Intent
@@ -12,20 +12,33 @@ import androidx.core.app.NotificationCompat
 import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.os.Build
-import androidx.compose.runtime.saveable.autoSaver
-import com.omasba.clairaud.ui.components.AutoEqRepo
+import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
+import com.omasba.clairaud.autoeq.utils.AutoEqualizerUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MusicDetectionService : NotificationListenerService() {
+    companion object {
+        private var pollingThread: Thread? = null
+
+        fun stopPolling() {
+            pollingThread?.interrupt()
+            pollingThread = null
+        }
+        fun isPollingActive() = pollingThread != null
+
+    }
 
     private lateinit var sessionManager: MediaSessionManager
     private var lastTitle: String = ""
     private var lastArtist: String = ""
     private val NOTIFICATION_ID = 1001
     private val CHANNEL_ID = "music_detection_channel"
+    private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
 
     override fun onCreate() {
         super.onCreate()
@@ -35,13 +48,31 @@ class MusicDetectionService : NotificationListenerService() {
 
         // Avvia il servizio come foreground per mantenerlo attivo in background
 //        startForeground(NOTIFICATION_ID, createForegroundNotification())
+        observeAutoEqState()
+
     }
 
     override fun onListenerConnected() {
         super.onListenerConnected()
         Log.d("MusicDetection", "Listener connected")
         // Avvia il polling delle sessioni media
-        checkForActiveSessions()
+//        if(AutoEqStateHolder.uiState.value.isOn){
+//            checkForActiveSessions()
+//        }
+
+    }
+    private fun observeAutoEqState() {
+        serviceScope.launch {
+            AutoEqStateHolder.uiState.collectLatest { state ->
+                if (state.isOn && !isPollingActive()) {
+                    Log.d("MusicDetection", "Starting polling...")
+                    checkForActiveSessions()
+                } else if (!state.isOn && isPollingActive()) {
+                    Log.d("MusicDetection", "Stopping polling...")
+                    stopPolling()
+                }
+            }
+        }
     }
 
     private fun createNotificationChannel() {
@@ -58,7 +89,7 @@ class MusicDetectionService : NotificationListenerService() {
     }
 
     private fun checkForActiveSessions() {
-        Thread {
+        pollingThread = Thread {
             try {
                 while (true) {
                     try {
@@ -76,16 +107,16 @@ class MusicDetectionService : NotificationListenerService() {
                                 if (title.isNotEmpty() && (title != lastTitle || artist != lastArtist)) {
                                     //se è diversa dalla traccia precedente, posso procedere con il call dell'api per capire il genere
                                     Log.d("MusicDetection", "Detected: $title by $artist")
-
-                                    val response = AutoEqRepo.updateGenre(artist = artist, title = title)
-                                    Log.d("MusicDetection", "Response: $response")
+                                    val tags = AutoEqualizerUtils.getTrackTags(artist = artist, track = title, AutoEqualizerUtils.API_KEY)
+                                    val genre = tags.firstOrNull() ?: "Not detected"
+                                    Log.d("MusicDetection", "Response: $tags")
 
                                     lastTitle = title
                                     lastArtist = artist
-                                    AutoEqRepo.title = title
-                                    AutoEqRepo.artist = artist
 
-                                    showMusicNotification(title, artist, response)
+                                    AutoEqStateHolder.changeGenre(genre)
+
+                                    showMusicNotification(title, artist, tags.firstOrNull() ?: "Not detected")
                                 }
 
                                 foundMusic = true
@@ -103,13 +134,13 @@ class MusicDetectionService : NotificationListenerService() {
                     }
 
                     // Aspetta 5 secondi prima del prossimo controllo
-//                    Log.d("MusicDetection", "Waiting...")
+                    Log.d("MusicDetection", "Waiting...")
                     Thread.sleep(5000)
                 }
             } catch (e: InterruptedException) {
                 Log.d("MusicDetection", "Music detection thread interrupted")
             }
-        }.start()
+        }.apply { start() }
     }
 
     private fun showMusicNotification(title: String, artist: String, genre: String) {
@@ -126,6 +157,7 @@ class MusicDetectionService : NotificationListenerService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        stopPolling()
         Log.d("MusicDetection", "Service destroyed")
     }
 

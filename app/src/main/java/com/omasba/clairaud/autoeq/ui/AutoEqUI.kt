@@ -1,6 +1,5 @@
-package com.omasba.clairaud.ui
+package com.omasba.clairaud.autoeq.ui
 
-import android.graphics.Paint.Align
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -13,22 +12,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.omasba.clairaud.ui.models.AutoEqViewModel
 
 @Composable
 fun AutoEq(viewModel: AutoEqViewModel) {
-    val genre by viewModel.detectedGenre.collectAsState()
-    val isOn by viewModel.isOn.collectAsState()
+    val state by viewModel.uiState.collectAsState()
     Row (
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(16.dp)
     ){
-        Text(text = "AutoEq - $genre")
+        Text(text = "AutoEq - ${state.genre}")
         Spacer(modifier = Modifier.width(8.dp))
         Switch(
-            checked = isOn,
+            checked = state.isOn,
             onCheckedChange = {checked ->
-                viewModel.toggleIsOn(checked)
+                viewModel.changeIsOn(checked)
             }
         )
     }

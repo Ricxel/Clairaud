@@ -54,6 +54,10 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.androidx.appcompat)
 
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1") // Per lifecycleScope
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

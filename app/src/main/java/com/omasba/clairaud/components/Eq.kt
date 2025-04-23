@@ -1,4 +1,4 @@
-package com.omasba.clairaud.ui.components
+package com.omasba.clairaud.components
 
 import android.media.audiofx.Equalizer
 

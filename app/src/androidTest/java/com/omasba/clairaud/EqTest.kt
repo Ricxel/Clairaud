@@ -1,9 +1,7 @@
 package com.omasba.clairaud
 
 import android.util.Log
-import com.omasba.clairaud.ui.components.Eq
-import org.junit.Assert.assertTrue
-import org.junit.Rule
+import com.omasba.clairaud.components.Eq
 import org.junit.Test
 
 class EqTest{
