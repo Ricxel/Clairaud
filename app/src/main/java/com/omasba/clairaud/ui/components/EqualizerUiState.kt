@@ -1,4 +1,6 @@
 package com.omasba.clairaud.ui.components
 
-class EqualizerState {
-}
+data class EqualizerUiState (
+    val isOn: Boolean = false,
+    val bands: ArrayList<Pair<Int, Short>> = ArrayList<Pair<Int, Short>>()
+)
