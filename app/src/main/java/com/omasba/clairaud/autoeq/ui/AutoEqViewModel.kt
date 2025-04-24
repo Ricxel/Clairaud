@@ -12,15 +12,11 @@ class AutoEqViewModel : ViewModel() {
 
     fun changeIsOn(value: Boolean) {
         AutoEqStateHolder.setIsOn(value)
-        if(!value)
-            MusicDetectionService.stopPolling()
         Log.d("autoeq", "isOn: ${uiState.value.isOn}")
     }
 
     fun toggleIsOn(){
         AutoEqStateHolder.setIsOn(!uiState.value.isOn)
-        if(!uiState.value.isOn)
-            MusicDetectionService.stopPolling()
     }
     fun changeGenre(newGenre: String) {
         AutoEqStateHolder.changeGenre(newGenre)
