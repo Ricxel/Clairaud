@@ -14,6 +14,7 @@ import android.app.NotificationChannel
 import android.os.Build
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
 import com.omasba.clairaud.autoeq.utils.AutoEqualizerUtils
+import com.omasba.clairaud.user.UserRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -105,15 +106,15 @@ class MusicDetectionService : NotificationListenerService() {
                                     //se è diversa dalla traccia precedente, posso procedere con il call dell'api per capire il genere
                                     Log.d("MusicDetection", "Detected: $title by $artist")
                                     val tags = AutoEqualizerUtils.getTrackTags(artist = artist, track = title, AutoEqualizerUtils.API_KEY)
-                                    val genre = tags.firstOrNull() ?: "Not detected"
                                     Log.d("MusicDetection", "Response: $tags")
 
                                     lastTitle = title
                                     lastArtist = artist
 
-                                    AutoEqStateHolder.changeGenre(genre)
+                                    val preset = UserRepo.getPresetToApply(tags)
+                                    AutoEqStateHolder.changePreset(preset)
 
-                                    showMusicNotification(title, artist, tags.firstOrNull() ?: "Not detected")
+                                    showMusicNotification(title, artist, preset.name)
                                 }
 
                                 foundMusic = true

@@ -23,7 +23,7 @@ fun AutoEq(viewModel: AutoEqViewModel) {
         modifier = Modifier.fillMaxWidth()
     ){
         Text(
-            text = "AutoEq - ${state.genre}",
+            text = "AutoEq - ${state.currentPreset.name}",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.weight(1f)
         )

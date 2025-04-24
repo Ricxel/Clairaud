@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.omasba.clairaud.autoeq.MusicDetectionService
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
 import com.omasba.clairaud.autoeq.state.AutoEqUiState
+import com.omasba.clairaud.model.EqPresetModel
 import kotlinx.coroutines.flow.StateFlow
 
 class AutoEqViewModel : ViewModel() {
@@ -18,7 +19,7 @@ class AutoEqViewModel : ViewModel() {
     fun toggleIsOn(){
         AutoEqStateHolder.setIsOn(!uiState.value.isOn)
     }
-    fun changeGenre(newGenre: String) {
-        AutoEqStateHolder.changeGenre(newGenre)
+    fun changePreset(preset: EqPresetModel) {
+        AutoEqStateHolder.changePreset(preset)
     }
 }

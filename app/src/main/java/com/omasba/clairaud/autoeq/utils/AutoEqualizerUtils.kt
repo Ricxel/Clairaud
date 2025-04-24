@@ -5,6 +5,7 @@ import android.content.Intent
 import android.provider.Settings
 import android.util.Log
 import com.google.gson.GsonBuilder
+import com.omasba.clairaud.model.TagModel
 import com.omasba.clairaud.ui.components.TrackTagsResponse
 import com.omasba.clairaud.ui.components.TrackTagsResponseDeserializer
 import okhttp3.OkHttpClient
@@ -28,7 +29,7 @@ class AutoEqualizerUtils {
             context.startActivity(intent)
         }
 
-        fun getTrackTags(artist: String, track: String, apiKey: String): Set<String> {
+        fun getTrackTags(artist: String, track: String, apiKey: String): Set<TagModel> {
             val client = OkHttpClient()
             //metto il mio deserializzatore personalizzato per avere subito i tag
             val gson = GsonBuilder()
@@ -61,18 +62,12 @@ class AutoEqualizerUtils {
                     json.tags //ottengo i tag direttamente in un set<String> perchè sto usando il sezializzatore custom
                 Log.d("TrackTags", "$tagSet")
 
-                return tagSet
+                var tagSetRet = mutableSetOf<TagModel>()
+                tagSet.forEach{
+                    tagSetRet.add(TagModel(name = it))
+                }
+                return tagSetRet
             }
-        }
-
-        fun getPresetToApply(
-            artist: String,
-            track: String,
-            apiKey: String,
-            availableTags: Set<String>
-        ): Set<String> {
-            val songTags = getTrackTags(artist, track, apiKey)
-            return songTags intersect availableTags
         }
     }
 
