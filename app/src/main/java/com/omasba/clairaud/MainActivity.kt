@@ -21,6 +21,8 @@ import com.omasba.clairaud.ui.theme.ClairaudTheme
 import com.omasba.clairaud.autoeq.utils.AutoEqualizerUtils
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
+import com.omasba.clairaud.ui.models.EqualizerViewModel
+import com.omasba.clairaud.ui.EqCard
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -29,6 +31,8 @@ class MainActivity : ComponentActivity() {
         if(!AutoEqualizerUtils.isNotificationServiceEnabled(this)) // richiede i permessi se non ci sono
             AutoEqualizerUtils.requestNotificationAccess(this)
         val autoEqView = AutoEqViewModel()
+        val eqView = EqualizerViewModel()
+
         setContent {
             ClairaudTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -38,7 +42,8 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(text = "Clairaud/AutoEQ", fontSize = 40.sp)
-                        AutoEq(autoEqView)
+//                        AutoEq(autoEqView)
+                        EqCard(eqView)
                     }
                 }
             }
