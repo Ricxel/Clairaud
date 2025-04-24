@@ -21,15 +21,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MusicDetectionService : NotificationListenerService() {
-    companion object {
-        private var pollingThread: Thread? = null
+    private var pollingThread: Thread? = null
 
-        fun stopPolling() {
-            pollingThread?.interrupt()
-            pollingThread = null
-        }
-        fun isPollingActive() = pollingThread != null
-
+    private fun isPollingActive() = pollingThread != null
+    private fun stopPolling() {
+        pollingThread?.interrupt()
+        pollingThread = null
     }
 
     private lateinit var sessionManager: MediaSessionManager
