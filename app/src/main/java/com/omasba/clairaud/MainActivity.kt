@@ -12,25 +12,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.omasba.clairaud.ui.theme.ClairaudTheme
-import com.omasba.clairaud.components.AutoEqualizer
-import com.omasba.clairaud.ui.AutoEq
-import com.omasba.clairaud.ui.models.AutoEqViewModel
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import com.omasba.clairaud.autoeq.utils.AutoEqualizerUtils
+import com.omasba.clairaud.autoeq.ui.AutoEq
+import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(!AutoEqualizer.isNotificationServiceEnabled(this)) // richiede i permessi se non ci sono
-            AutoEqualizer.requestNotificationAccess(this)
+        if(!AutoEqualizerUtils.isNotificationServiceEnabled(this)) // richiede i permessi se non ci sono
+            AutoEqualizerUtils.requestNotificationAccess(this)
         val autoEqView = AutoEqViewModel()
         setContent {
             ClairaudTheme {
