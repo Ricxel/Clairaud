@@ -1,5 +1,6 @@
 package com.omasba.clairaud.model
 
+import androidx.compose.ui.text.toLowerCase
 import kotlinx.serialization.Serializable
 
 
@@ -12,7 +13,7 @@ data class Tag(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Tag) return false
-        return name == other.name
+        return name.equals(other.name, ignoreCase = true)
     }
 
     override fun hashCode(): Int {
