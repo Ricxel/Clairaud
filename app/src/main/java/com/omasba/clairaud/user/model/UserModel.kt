@@ -1,9 +1,7 @@
 package com.omasba.clairaud.user.model
 
-import androidx.compose.runtime.mutableStateListOf
 import com.omasba.clairaud.model.EqPresetModel
-import com.omasba.clairaud.model.TagModel
-import com.omasba.clairaud.user.UserRepo.currentUser
+import com.omasba.clairaud.model.Tag
 
 class UserModel (
     var presets: ArrayList<EqPresetModel> = arrayListOf(),
@@ -13,7 +11,7 @@ class UserModel (
     var username: String,
     var mail: String
 ){
-    fun getPresetToApply(tags: Set<TagModel>): EqPresetModel{
+    fun getPresetToApply(tags: Set<Tag>): EqPresetModel{
         var maxCount = 0
         var correctPreset = EqPresetModel()
         favPresets.forEach{ id ->

@@ -14,20 +14,27 @@ import android.app.NotificationChannel
 import android.os.Build
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
 import com.omasba.clairaud.autoeq.utils.AutoEqualizerUtils
+import com.omasba.clairaud.model.Tag
+import com.omasba.clairaud.network.API_KEY
+import com.omasba.clairaud.network.LastFmApi
 import com.omasba.clairaud.user.UserRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 class MusicDetectionService : NotificationListenerService() {
-    private var pollingThread: Thread? = null
+    private var pollingJob: Job? = null
 
-    private fun isPollingActive() = pollingThread != null
+    private fun isPollingActive() = pollingJob != null
     private fun stopPolling() {
-        pollingThread?.interrupt()
-        pollingThread = null
+        pollingJob?.cancel()
+        pollingJob = null
     }
 
     private lateinit var sessionManager: MediaSessionManager
@@ -66,8 +73,8 @@ class MusicDetectionService : NotificationListenerService() {
                     Log.d("MusicDetection", "Starting polling...")
                     checkForActiveSessions()
                 } else if (!state.isOn && isPollingActive()) {
-                    Log.d("MusicDetection", "Stopping polling...")
                     stopPolling()
+                    Log.d("MusicDetection", "Stopping polling...")
                 }
             }
         }
@@ -87,11 +94,11 @@ class MusicDetectionService : NotificationListenerService() {
     }
 
     private fun checkForActiveSessions() {
-        pollingThread = Thread {
+        pollingJob = serviceScope.launch {
             try {
-                while (true) {
+                while (isActive) {
                     try {
-                        val component = ComponentName(this, javaClass)
+                        val component = ComponentName(this@MusicDetectionService, javaClass)
                         val controllers = sessionManager.getActiveSessions(component)
 
                         var foundMusic = false
@@ -102,16 +109,36 @@ class MusicDetectionService : NotificationListenerService() {
                                 val artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST) ?:
                                 metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST) ?: ""
 
+                                val artists = artist.split(",") //trovo tutti gli artisti coinvolti
+
                                 if (title.isNotEmpty() && (title != lastTitle || artist != lastArtist)) {
                                     //se è diversa dalla traccia precedente, posso procedere con il call dell'api per capire il genere
                                     Log.d("MusicDetection", "Detected: $title by $artist")
-                                    val tags = AutoEqualizerUtils.getTrackTags(artist = artist, track = title, AutoEqualizerUtils.API_KEY)
+                                    //chiamo la api
+                                    var tags: List<Tag> = listOf()
+                                    for(item in artists){ //visto che non posso sapere quale sia l'artista principale, provo con tutti finche' non trovo dei tag, oppure finisco gli artisti
+                                        val artistName = item.trim()
+                                        val response = LastFmApi.retrofitService.getTopTags(
+                                            artist = artistName,
+                                            track = title,
+                                            apiKey = API_KEY
+                                        )
+                                        tags = response.toptags.tag
+                                            .distinctBy { it.name.lowercase() }
+                                        if(tags.isNotEmpty())
+                                            break
+                                    }
+
+
+                                    tags.forEach {
+                                        Log.d("LastFm", "Tag: ${it.name}")
+                                    }
                                     Log.d("MusicDetection", "Response: $tags")
 
                                     lastTitle = title
                                     lastArtist = artist
 
-                                    val preset = UserRepo.getPresetToApply(tags)
+                                    val preset = UserRepo.getPresetToApply(tags.toSet())
                                     AutoEqStateHolder.changePreset(preset)
 
                                     showMusicNotification(title, artist, preset.name)
@@ -135,10 +162,13 @@ class MusicDetectionService : NotificationListenerService() {
                     Log.d("MusicDetection", "Waiting...")
                     Thread.sleep(5000)
                 }
-            } catch (e: InterruptedException) {
-                Log.d("MusicDetection", "Music detection thread interrupted")
+            }catch (e: CancellationException) { //serve altrimenti blocca l'eccezione e il job non termina
+                Log.d("Polling", "Job cancellato")
+                throw e
+            }catch (e: Exception) {
+                Log.e("Polling", "Errore: ${e.message}")
             }
-        }.apply { start() }
+        }
     }
 
     private fun showMusicNotification(title: String, artist: String, genre: String) {
@@ -156,6 +186,7 @@ class MusicDetectionService : NotificationListenerService() {
     override fun onDestroy() {
         super.onDestroy()
         stopPolling()
+        serviceScope.cancel()
         Log.d("MusicDetection", "Service destroyed")
     }
 

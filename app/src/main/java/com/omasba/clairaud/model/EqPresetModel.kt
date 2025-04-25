@@ -1,7 +1,7 @@
 package com.omasba.clairaud.model
 
 class EqPresetModel(
-    var tags: MutableSet<TagModel> = mutableSetOf(),
+    var tags: MutableSet<Tag> = mutableSetOf(),
     var name: String = "DefaultPreset",
     var setting: ArrayList<Pair<Int,Short>> = arrayListOf( //default preset
         Pair(60, 0),
@@ -15,6 +15,6 @@ class EqPresetModel(
     val id: Int = -1
 ) {
     fun addTag(tag: String){
-        tags.add(TagModel(name = tag))
+        tags.add(Tag(name = tag))
     }
 }

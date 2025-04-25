@@ -5,7 +5,7 @@ import android.content.Intent
 import android.provider.Settings
 import android.util.Log
 import com.google.gson.GsonBuilder
-import com.omasba.clairaud.model.TagModel
+import com.omasba.clairaud.model.Tag
 import com.omasba.clairaud.ui.components.TrackTagsResponse
 import com.omasba.clairaud.ui.components.TrackTagsResponseDeserializer
 import okhttp3.OkHttpClient
@@ -14,7 +14,6 @@ import java.net.URLEncoder
 
 class AutoEqualizerUtils {
     companion object {
-        val API_KEY: String = "51b710eed01b56a851a342cca1bead2a"
         fun isNotificationServiceEnabled(context: Context): Boolean {
             val pkgName = context.packageName
             val enabledListeners = Settings.Secure.getString(
@@ -29,7 +28,7 @@ class AutoEqualizerUtils {
             context.startActivity(intent)
         }
 
-        fun getTrackTags(artist: String, track: String, apiKey: String): Set<TagModel> {
+        fun getTrackTags(artist: String, track: String, apiKey: String): Set<Tag> {
             val client = OkHttpClient()
             //metto il mio deserializzatore personalizzato per avere subito i tag
             val gson = GsonBuilder()
@@ -62,9 +61,9 @@ class AutoEqualizerUtils {
                     json.tags //ottengo i tag direttamente in un set<String> perchè sto usando il sezializzatore custom
                 Log.d("TrackTags", "$tagSet")
 
-                var tagSetRet = mutableSetOf<TagModel>()
+                var tagSetRet = mutableSetOf<Tag>()
                 tagSet.forEach{
-                    tagSetRet.add(TagModel(name = it))
+                    tagSetRet.add(Tag(name = it))
                 }
                 return tagSetRet
             }
