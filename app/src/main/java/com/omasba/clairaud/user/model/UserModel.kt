@@ -7,7 +7,7 @@ import com.omasba.clairaud.user.UserRepo.currentUser
 
 class UserModel (
     var presets: ArrayList<EqPresetModel> = arrayListOf(),
-    var favPresets: ArrayList<Int> = arrayListOf(), // lista degli id dei preset preferiti
+    var favPresets: ArrayList<Int> = arrayListOf(), // lista degli id dei preset preferitit
     var uid: String,
     var token: String,
     var username: String,

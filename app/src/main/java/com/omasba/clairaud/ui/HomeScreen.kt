@@ -95,7 +95,7 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                     bands.take(6).forEachIndexed { index, band ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.width((cardWidth/6)).background(Color.Black) // spazio per testo sopra e sotto
+                            modifier = Modifier.width((cardWidth/6)) // spazio per testo sopra e sotto
                         ) {
                             // Testo dB
                             Text(
@@ -124,13 +124,14 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                                                     maxHeight = constraints.maxWidth
                                                 )
                                             )
+
                                             layout(placeable.height, placeable.width) {
-                                                placeable.place(-135, 135)
+                                                placeable.place(-135, 140)
                                             }
                                         }
-                                        .width(200.dp)
-                                        .height(60.dp)
-//                                    .background(Color.Red)
+                                        .fillMaxWidth()
+                                        .fillMaxHeight()
+                                        .align(Alignment.Center),
                                 ) {
                                     Slider(
                                         modifier = Modifier
