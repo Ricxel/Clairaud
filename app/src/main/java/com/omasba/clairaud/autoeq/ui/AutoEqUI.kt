@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -20,12 +21,18 @@ fun AutoEq(viewModel: AutoEqViewModel) {
     val state by viewModel.uiState.collectAsState()
     Row (
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
     ){
         Text(
-            text = "AutoEq - ${state.currentPreset.name}",
+            text = "AutoEqualizer",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = state.currentPreset.name,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier
+                .padding(18.dp,5.dp),
+            color = MaterialTheme.colorScheme.secondary
         )
         Switch(
             checked = state.isOn,
