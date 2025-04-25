@@ -37,6 +37,7 @@ class EqualizerViewModel : ViewModel() {
     fun ToggleEq(){
         isOn = !isOn
 
+
         _eqState.update{ currentState ->
             currentState.copy(isOn = this.isOn)
         }
