@@ -1,15 +1,18 @@
 package com.omasba.clairaud.components
 
+import android.content.Context
+import android.media.audiofx.AudioEffect
 import android.media.audiofx.Equalizer
 
 class Eq(private val sessionId: Int) {
     private var equalizer: Equalizer? = null
 
     init {
-        equalizer = Equalizer(0, sessionId).apply {
+        equalizer = Equalizer(0, AudioEffect.SESS).apply {
             enabled = true
         }
     }
+
 
     fun setBandLevel(band: Int, level: Short) {
         equalizer?.setBandLevel(band.toShort(), level)
@@ -28,23 +31,15 @@ class Eq(private val sessionId: Int) {
         return Pair(range?.get(0) ?: 0, range?.get(1) ?: 0)
     }
 
-    fun setAllBands(levels: ShortArray) {
-        val bands = getNumberOfBands()
-        if (levels.size != bands) {
-            throw IllegalArgumentException(".")
+    fun setAllBands(bands: ArrayList<Pair<Int, Short>>) {
+        bands.forEach {
+            this.setBandLevel(it.first, it.second)
         }
 
-        for (i in levels.indices) {
-            setBandLevel(i, levels[i])
-        }
     }
 
-    fun disable() {
-        equalizer?.enabled = false
-    }
-
-    fun enable() {
-        equalizer?.enabled = true
+    fun isOn(isOn:Boolean){
+        equalizer?.enabled = isOn
     }
 
     fun release() { // IMPORTANTE

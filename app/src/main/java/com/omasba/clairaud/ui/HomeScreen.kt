@@ -1,9 +1,6 @@
 package com.omasba.clairaud.ui
 
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -13,11 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -32,11 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
@@ -80,7 +70,7 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                     )
                     Switch(
                         checked = isOn,
-                        onCheckedChange = { viewModel.ToggleEq() }
+                        onCheckedChange = { viewModel.toggleEq() }
                     )
                 }
 
@@ -92,7 +82,7 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    bands.take(6).forEachIndexed { index, band ->
+                    bands.take(7).forEachIndexed { index, band ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.width((cardWidth/6)) // spazio per testo sopra e sotto
@@ -141,7 +131,7 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                                             val updatedBands = ArrayList(bands)
                                             updatedBands[index] =
                                                 band.first to (newValue).toInt().toShort()
-                                            viewModel.NewBands(updatedBands)
+                                            viewModel.newBands(updatedBands)
                                         },
                                         valueRange = -15f..15f,
                                         enabled = isOn,

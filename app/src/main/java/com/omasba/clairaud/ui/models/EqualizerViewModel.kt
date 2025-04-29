@@ -1,32 +1,23 @@
 package com.omasba.clairaud.ui.models
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Paint
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import com.omasba.clairaud.ui.components.EqualizerUiState
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import com.omasba.clairaud.components.EqRepo
 
 class EqualizerViewModel : ViewModel() {
-    private val _eqState = MutableStateFlow(EqualizerUiState())
-    val eqState = _eqState.asStateFlow()
+    val eqState = EqRepo.eqState
 
     var isOn by mutableStateOf(false)
         private set
 
-    var bands by mutableStateOf(ArrayList<Pair<Int, Short>>())
-        private set
-
     init {
-        this.NewBands(arrayListOf(
+        this.newBands(arrayListOf(
             Pair(60, 0),
             Pair(250, 0),
             Pair(500, 0),
-            Pair(2000, 0),
+            Pair(2000, 10),
             Pair(6000, 0),
             Pair(8000, 0),
             Pair(16000, 0)
@@ -34,21 +25,14 @@ class EqualizerViewModel : ViewModel() {
         )
     }
 
-    fun ToggleEq(){
-        isOn = !isOn
-
-
-        _eqState.update{ currentState ->
-            currentState.copy(isOn = this.isOn)
-        }
+    fun newBands(newBands: ArrayList<Pair<Int, Short>>){
+        EqRepo.newBands(newBands)
     }
 
-    fun NewBands(newBands: ArrayList<Pair<Int, Short>>) {
-        bands = newBands
-
-        _eqState.update { currentState ->
-            currentState.copy(bands = newBands)
-        }
+    fun toggleEq(){
+        EqRepo.setIsOn(!eqState.value.isOn)
     }
+
+
 
 }
