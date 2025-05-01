@@ -1,4 +1,4 @@
-package com.omasba.clairaud.components
+package com.omasba.clairaud.ui.components
 
 data class EqualizerUiState (
     val isOn: Boolean = false,

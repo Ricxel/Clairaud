@@ -1,12 +1,12 @@
 package com.omasba.clairaud.components
 
-import android.content.Context
 import android.media.MediaPlayer
+import com.omasba.clairaud.ui.components.EqualizerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-object EqRepo 11{
+object EqRepo{
     val media = MediaPlayer()
 
     private val eq = Eq(0)

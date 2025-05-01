@@ -1,6 +1,6 @@
 package com.omasba.clairaud.model
 
-class EqPresetModel(
+class EqPreset(
     var tags: MutableSet<Tag> = mutableSetOf(),
     var name: String = "DefaultPreset",
     var setting: ArrayList<Pair<Int,Short>> = arrayListOf( //default preset
