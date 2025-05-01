@@ -3,14 +3,6 @@ package com.omasba.clairaud.autoeq.utils
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
-import android.util.Log
-import com.google.gson.GsonBuilder
-import com.omasba.clairaud.model.Tag
-import com.omasba.clairaud.ui.components.TrackTagsResponse
-import com.omasba.clairaud.ui.components.TrackTagsResponseDeserializer
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.net.URLEncoder
 
 class AutoEqualizerUtils {
     companion object {

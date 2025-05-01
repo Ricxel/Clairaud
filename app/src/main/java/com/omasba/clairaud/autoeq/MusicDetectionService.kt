@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import android.app.NotificationManager
 import android.app.NotificationChannel
+import android.media.audiofx.Visualizer
 import android.os.Build
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
 import com.omasba.clairaud.model.Tag
@@ -46,6 +47,7 @@ class MusicDetectionService : NotificationListenerService() {
 
     override fun onCreate() {
         super.onCreate()
+
         Log.d("MusicDetection", "Service created")
         sessionManager = getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
         createNotificationChannel()

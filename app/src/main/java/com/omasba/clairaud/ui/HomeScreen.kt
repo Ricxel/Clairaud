@@ -1,6 +1,11 @@
 package com.omasba.clairaud.ui
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.media.audiofx.AudioEffect
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -12,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +26,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import com.omasba.clairaud.ui.models.EqualizerViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,10 +34,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
-
+import com.omasba.clairaud.components.EqService
+import kotlin.math.log
 
 
 @Composable
@@ -41,6 +51,17 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
     val bands = eqState.bands
     Log.d("before", bands.toString())
     val autoEqModel = AutoEqViewModel()
+
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        val serviceIntent = Intent(context, EqService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(serviceIntent)
+        } else {
+            context.startService(serviceIntent)
+        }
+        Log.d("test","Lanciato!")
+    }
 
     BoxWithConstraints( // <--- Questo è il segreto
         modifier = Modifier.fillMaxWidth().padding(16.dp)
@@ -161,6 +182,27 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                 Spacer(modifier = Modifier.height(24.dp))
                 // Terza riga: AutoEQ
                 AutoEq(autoEqModel)
+                // Tasto per aprire l'audio effect control panel
+                Button(
+                    onClick = {
+                        val TAG = "EqService"
+                        val sessionId = AudioEffect.EXTRA_AUDIO_SESSION // o usa AudioEffect.EXTRA_AUDIO_SESSION
+                        val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+                            putExtra(AudioEffect.EXTRA_AUDIO_SESSION, sessionId)
+                            putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                            putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+                        }
+                        try {
+                            context.startActivity(intent)
+                            Log.d(TAG, "DIOPORCO")
+                        } catch (e: Exception) {
+                            Log.d(TAG, "Errore: ${e.message}")
+                            Toast.makeText(context, "Nessun pannello effetti disponibile", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                ) {
+                    Text("Pannello")
+                }
             }
         }
     }
