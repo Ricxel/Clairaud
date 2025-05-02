@@ -6,15 +6,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-object EqRepo 11{
+object EqRepo{
     val media = MediaPlayer()
+    private val eq = Eq(media.audioSessionId)
 
-    private val eq = Eq(0)
     private val _eqState = MutableStateFlow(EqualizerUiState())
     val eqState = _eqState.asStateFlow()
 
     fun setIsOn(isOn:Boolean){
-        //eq.isOn(isOn)
+        eq.isOn(isOn)
 
         _eqState.update{ currentState ->
             currentState.copy(isOn = isOn)
@@ -22,7 +22,7 @@ object EqRepo 11{
     }
 
     fun newBands(newBands: ArrayList<Pair<Int, Short>>) {
-        //eq.setAllBands(newBands)
+        eq.setAllBands(newBands)
 
         _eqState.update { currentState ->
             currentState.copy(bands = newBands)

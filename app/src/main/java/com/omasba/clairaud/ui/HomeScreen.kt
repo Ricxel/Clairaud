@@ -82,7 +82,7 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    bands.take(7).forEachIndexed { index, band ->
+                    bands.take(5).forEachIndexed { index, band ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.width((cardWidth/6)) // spazio per testo sopra e sotto

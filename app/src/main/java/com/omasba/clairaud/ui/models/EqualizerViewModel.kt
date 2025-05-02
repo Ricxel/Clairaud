@@ -14,13 +14,13 @@ class EqualizerViewModel : ViewModel() {
 
     init {
         this.newBands(arrayListOf(
-            Pair(60, 0),
-            Pair(250, 0),
-            Pair(500, 0),
-            Pair(2000, 10),
-            Pair(6000, 0),
-            Pair(8000, 0),
-            Pair(16000, 0)
+            Pair(0, 0),
+            Pair(1, 3),
+            Pair(2, 0),
+            Pair(3, 0),
+            Pair(4, 10),
+            Pair(5, 0),
+            Pair(6, 0)
         )
         )
     }
