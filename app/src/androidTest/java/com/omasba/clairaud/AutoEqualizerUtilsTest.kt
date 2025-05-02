@@ -1,28 +1,27 @@
 package com.omasba.clairaud
 
 import android.util.Log
-import com.omasba.clairaud.autoeq.utils.AutoEqualizerUtils
-import com.omasba.clairaud.model.EqPresetModel
+import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.model.Tag
-import com.omasba.clairaud.user.model.UserModel
+import com.omasba.clairaud.model.User
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AutoEqualizerUtilsTest {
     @Test
     fun getIntersectionWithUserPresets(){
-        val currentUser = UserModel(
+        val currentUser = User(
             uid = "12",
             token = "alsdaksd",
             username = "Ziopedro",
             mail = "skibidi123@gmail.com"
         )
-        currentUser.presets.add(EqPresetModel(
+        currentUser.presets.add(EqPreset(
             tags = mutableSetOf(Tag("rap"), Tag("hip hop"), Tag("hip-hop")),
             id = 1
         ))
         currentUser.presets.add(
-            EqPresetModel(
+            EqPreset(
                 tags = mutableSetOf(Tag("hip-hop")),
                 id = 2
         ))

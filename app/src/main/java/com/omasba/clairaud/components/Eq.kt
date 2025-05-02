@@ -8,9 +8,9 @@ class Eq(private val sessionId: Int) {
     private var equalizer: Equalizer? = null
 
     init {
-        equalizer = Equalizer(0, AudioEffect.SESS).apply {
-            enabled = true
-        }
+//        equalizer = Equalizer(0, 0).apply {
+//            enabled = true
+//        }
     }
 
 

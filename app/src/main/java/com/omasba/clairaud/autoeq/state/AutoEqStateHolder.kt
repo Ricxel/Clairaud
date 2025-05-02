@@ -1,8 +1,6 @@
 package com.omasba.clairaud.autoeq.state
 
-import android.util.Log
-import com.omasba.clairaud.autoeq.utils.AutoEqualizerUtils
-import com.omasba.clairaud.model.EqPresetModel
+import com.omasba.clairaud.model.EqPreset
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,7 +12,7 @@ object AutoEqStateHolder {
     fun setIsOn(value: Boolean){
         _uiState.update { it.copy(isOn = value) }
     }
-    fun changePreset(preset: EqPresetModel) {
+    fun changePreset(preset: EqPreset) {
         _uiState.update { it.copy(currentPreset = preset) }
     }
 //    fun updateGenre(artist: String, title: String): String{

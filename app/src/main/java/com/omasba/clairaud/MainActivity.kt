@@ -33,6 +33,8 @@ class MainActivity : ComponentActivity() {
         val autoEqView = AutoEqViewModel()
         val eqView = EqualizerViewModel()
 
+
+
         setContent {
             ClairaudTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -70,4 +72,5 @@ class MainActivity : ComponentActivity() {
     private fun openNotificationListenerSettings() {
         startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
     }
+
 }

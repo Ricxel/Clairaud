@@ -1,8 +1,8 @@
 package com.omasba.clairaud.autoeq.state
 
-import com.omasba.clairaud.model.EqPresetModel
+import com.omasba.clairaud.model.EqPreset
 
 data class AutoEqUiState (
     val isOn: Boolean = false,
-    val currentPreset: EqPresetModel = EqPresetModel(),
+    val currentPreset: EqPreset = EqPreset(),
 )
