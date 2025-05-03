@@ -31,7 +31,7 @@ class Eq(private val sessionId: Int) {
         return Pair(range?.get(0) ?: 0, range?.get(1) ?: 0)
     }
 
-    fun setAllBands(bands: ArrayList<Pair<Int, Short>>) {
+    public fun setAllBands(bands: ArrayList<Pair<Int, Short>>) {
         bands.forEach {
             this.setBandLevel(it.first, it.second)
         }

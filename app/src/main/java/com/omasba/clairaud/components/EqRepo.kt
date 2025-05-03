@@ -1,20 +1,23 @@
 package com.omasba.clairaud.components
 
-import android.media.MediaPlayer
+import android.app.Application
+import android.content.Intent
+import android.util.Log
 import com.omasba.clairaud.ui.components.EqualizerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object EqRepo{
-    val media = MediaPlayer()
-    private val eq = Eq(media.audioSessionId)
-
+    val TAG = "EqService"
     private val _eqState = MutableStateFlow(EqualizerUiState())
     val eqState = _eqState.asStateFlow()
+    var eqService = EqService().equalizer
 
     fun setIsOn(isOn:Boolean){
-        eq.isOn(isOn)
+        eqService?.setEnabled(isOn)
+        Log.d(TAG, "isOn: " + isOn.toString())
+
 
         _eqState.update{ currentState ->
             currentState.copy(isOn = isOn)
@@ -22,10 +25,18 @@ object EqRepo{
     }
 
     fun newBands(newBands: ArrayList<Pair<Int, Short>>) {
-        eq.setAllBands(newBands)
+        try{
+            Log.d(TAG, "bande: " + newBands.toList().toString())
 
-        _eqState.update { currentState ->
-            currentState.copy(bands = newBands)
+            for (band in newBands)
+                eqService?.setBandLevel(band.first.toShort(), (band.second * 100).toShort())
+
+            _eqState.update { currentState ->
+                currentState.copy(bands = newBands)
+            }
+        }catch (e:Exception){
+            Log.d(TAG, e.message.toString())
         }
+
     }
 }

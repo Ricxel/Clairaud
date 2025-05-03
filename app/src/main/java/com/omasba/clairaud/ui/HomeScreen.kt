@@ -103,7 +103,7 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    bands.take(5).forEachIndexed { index, band ->
+                    bands.take(6).forEachIndexed { index, band ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.width((cardWidth/6)) // spazio per testo sopra e sotto
@@ -183,26 +183,26 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                 // Terza riga: AutoEQ
                 AutoEq(autoEqModel)
                 // Tasto per aprire l'audio effect control panel
-                Button(
-                    onClick = {
-                        val TAG = "EqService"
-                        val sessionId = AudioEffect.EXTRA_AUDIO_SESSION // o usa AudioEffect.EXTRA_AUDIO_SESSION
-                        val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-                            putExtra(AudioEffect.EXTRA_AUDIO_SESSION, sessionId)
-                            putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
-                            putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                        }
-                        try {
-                            context.startActivity(intent)
-                            Log.d(TAG, "DIOPORCO")
-                        } catch (e: Exception) {
-                            Log.d(TAG, "Errore: ${e.message}")
-                            Toast.makeText(context, "Nessun pannello effetti disponibile", Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                ) {
-                    Text("Pannello")
-                }
+//                Button(
+//                    onClick = {
+//                        val TAG = "EqService"
+//                        val sessionId = AudioEffect.EXTRA_AUDIO_SESSION // o usa AudioEffect.EXTRA_AUDIO_SESSION
+//                        val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+//                            putExtra(AudioEffect.EXTRA_AUDIO_SESSION, sessionId)
+//                            putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+//                            putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+//                        }
+//                        try {
+//                            context.startActivity(intent)
+//                            Log.d(TAG, "DIOPORCO")
+//                        } catch (e: Exception) {
+//                            Log.d(TAG, "Errore: ${e.message}")
+//                            Toast.makeText(context, "Nessun pannello effetti disponibile", Toast.LENGTH_SHORT).show()
+//                        }
+//                    },
+//                ) {
+//                    Text("Pannello")
+//                }
             }
         }
     }

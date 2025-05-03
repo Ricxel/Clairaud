@@ -16,26 +16,31 @@ import androidx.annotation.RequiresApi
 class EqService : Service() {
 
     private val TAG = "EqService"
+    var equalizer:Equalizer? = null
+
     private val audioSessionReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d(TAG, "Receive")
             if (intent == null) return
             val sessionId = intent.getIntExtra(AudioEffect.EXTRA_AUDIO_SESSION, AudioEffect.ERROR)
+
             if (sessionId == AudioEffect.ERROR) return
-            var equalizer: Equalizer? = null
+
+
             when (intent.action) {
                 AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION -> {
                     Log.d(TAG, "Audio session opened: $sessionId")
                     try {
                         equalizer = Equalizer(0, sessionId)
-                        equalizer.enabled = true
+                        EqRepo.eqService = equalizer
 
-//                        val bands = equalizer.numberOfBands
-//                        val range = equalizer.bandLevelRange
-//                        val midLevel = ((range[0] + range[1]) / 2).toShort()
-//                        for (i in 0 until bands) {
-//                            equalizer.setBandLevel(i.toShort(), midLevel)
+                        val b = equalizer?.numberOfBands
+//                        for(i in 0..b-1){
+//                            Log.d(TAG, equalizer?.getBandFreqRange(i.toShort())?.toList().toString())
 //                        }
+
+                        Log.d(TAG, equalizer?.properties.toString())
+
                     } catch (e: Exception) {
                         Log.e(TAG, "Equalizer error: ${e.message}")
                     }
@@ -49,6 +54,25 @@ class EqService : Service() {
             }
         }
     }
+
+    fun setIsOn(isOn:Boolean){
+        equalizer?.enabled = (isOn)
+        Log.d(TAG, "isOn: " + isOn.toString())
+
+        if(isOn){
+            for (band in 1..5){
+                equalizer?.setBandLevel(band.toShort(), -1500)
+            }
+        }else{
+            for (band in 1..5){
+                equalizer?.setBandLevel(band.toShort(), 0)
+            }
+        }
+
+        Log.d(TAG, equalizer?.properties.toString())
+    }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
