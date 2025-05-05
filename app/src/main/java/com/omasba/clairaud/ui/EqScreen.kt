@@ -1,11 +1,8 @@
 package com.omasba.clairaud.ui
 
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.media.audiofx.AudioEffect
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -36,12 +32,20 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
 import com.omasba.clairaud.components.EqService
-import kotlin.math.log
 
+
+@Composable
+fun EqScreen(){
+    Text(
+        text = "Clairaud Equalizer",
+        modifier = Modifier
+            .padding(16.dp)
+    )
+    EqCard()
+}
 
 @Composable
 fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
