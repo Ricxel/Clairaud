@@ -1,7 +1,5 @@
 package com.omasba.clairaud.components
 
-import android.app.Application
-import android.content.Intent
 import android.util.Log
 import com.omasba.clairaud.ui.components.EqualizerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,10 +10,14 @@ object EqRepo{
     val TAG = "EqService"
     private val _eqState = MutableStateFlow(EqualizerUiState())
     val eqState = _eqState.asStateFlow()
-    var eqService = EqService().equalizer
+    var eqService: Eq? = null
+
+    fun setBand(index:Int, level:Short){
+        eqService?.setBandLevel(index, level)
+    }
 
     fun setIsOn(isOn:Boolean){
-        eqService?.setEnabled(isOn)
+        eqService?.setIsOn(isOn)
         Log.d(TAG, "isOn: " + isOn.toString())
 
 
@@ -28,8 +30,10 @@ object EqRepo{
         try{
             Log.d(TAG, "bande: " + newBands.toList().toString())
 
-            for (band in newBands)
-                eqService?.setBandLevel(band.first.toShort(), (band.second * 100).toShort())
+            eqService?.setAllBands(newBands)
+
+//            for (band in newBands)
+//                eqService?.setBandLevel(band.first.toShort(), (band.second * 100).toShort())
 
             _eqState.update { currentState ->
                 currentState.copy(bands = newBands)

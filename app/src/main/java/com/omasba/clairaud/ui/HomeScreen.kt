@@ -152,7 +152,8 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                                             val updatedBands = ArrayList(bands)
                                             updatedBands[index] =
                                                 band.first to (newValue).toInt().toShort()
-                                            viewModel.newBands(updatedBands)
+                                            viewModel.setBand(band.first, band.second)
+//                                            viewModel.newBands(updatedBands)
                                         },
                                         valueRange = -15f..15f,
                                         enabled = isOn,

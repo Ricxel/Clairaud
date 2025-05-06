@@ -16,7 +16,7 @@ import androidx.annotation.RequiresApi
 class EqService : Service() {
 
     private val TAG = "EqService"
-    var equalizer:Equalizer? = null
+    var equalizer:Eq? = null
 
     private val audioSessionReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -31,16 +31,10 @@ class EqService : Service() {
                 AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION -> {
                     Log.d(TAG, "Audio session opened: $sessionId")
                     try {
-                        equalizer = Equalizer(0, sessionId)
+                        equalizer = Eq(sessionId)
                         EqRepo.eqService = equalizer
 
-                        val b = equalizer?.numberOfBands
-//                        for(i in 0..b-1){
-//                            Log.d(TAG, equalizer?.getBandFreqRange(i.toShort())?.toList().toString())
-//                        }
-
-                        Log.d(TAG, equalizer?.properties.toString())
-
+//                        Log.d(TAG, equalizer?.properties.toString())
                     } catch (e: Exception) {
                         Log.e(TAG, "Equalizer error: ${e.message}")
                     }
@@ -54,24 +48,6 @@ class EqService : Service() {
             }
         }
     }
-
-    fun setIsOn(isOn:Boolean){
-        equalizer?.enabled = (isOn)
-        Log.d(TAG, "isOn: " + isOn.toString())
-
-        if(isOn){
-            for (band in 1..5){
-                equalizer?.setBandLevel(band.toShort(), -1500)
-            }
-        }else{
-            for (band in 1..5){
-                equalizer?.setBandLevel(band.toShort(), 0)
-            }
-        }
-
-        Log.d(TAG, equalizer?.properties.toString())
-    }
-
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -96,6 +72,7 @@ class EqService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        equalizer?.release()
         unregisterReceiver(audioSessionReceiver)
     }
 
