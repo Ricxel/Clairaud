@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    // API
     implementation(libs.okhttp)
     implementation(libs.gson)
     implementation(libs.androidx.appcompat)
@@ -67,6 +68,12 @@ dependencies {
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.okhttp.v4110)
     implementation(libs.kotlinx.serialization.json)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material)
+
+
 
 
     testImplementation(libs.junit)
