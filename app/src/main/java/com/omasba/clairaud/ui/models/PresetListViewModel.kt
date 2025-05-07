@@ -36,7 +36,7 @@ class PresetListViewModel:ViewModel() {
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val filteredItemsByTags = combine(presets, selectedTags) { items, tags ->
+    val filteredItemsByTags = combine(filteredPresets, selectedTags) { items, tags ->
         if (tags.isEmpty()) items
         else items.filter { it.tags.any { tag -> tag in tags } }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
