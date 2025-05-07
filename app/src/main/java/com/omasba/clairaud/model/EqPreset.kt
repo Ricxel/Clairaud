@@ -12,6 +12,7 @@ class EqPreset(
         Pair(8000, 0),
         Pair(16000, 0)
     ),
+    var author: String = "",
     val id: Int = -1
 ) {
     fun addTag(tag: String){

@@ -34,7 +34,13 @@ import com.omasba.clairaud.ui.models.PresetListViewModel
 @Composable
 fun SearchablePresetList(viewModel: PresetListViewModel = viewModel()) {
     val presets by viewModel.presets.collectAsState()
-    val filteredPresets by viewModel.filteredPresets.collectAsState()
+//    val filteredPresets by viewModel.filteredPresets.collectAsState() //per barra di ricerca
+    val filteredPresets by viewModel.filteredItemsByTags.collectAsState() // per tags
+
+    val selectedTags by viewModel.selectedTags.collectAsState()
+    val allTags = remember { //estrae i tag dispinibili dai preset
+        viewModel.presets.value.flatMap { it.tags }.toSet()
+    }
     var active by remember { mutableStateOf(false)}
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -58,7 +64,19 @@ fun SearchablePresetList(viewModel: PresetListViewModel = viewModel()) {
         ) {
             // mostrato solo quando attiva
         }
-
+        //filtro per i tag
+        TagFilterSection(
+            availableTags = allTags,
+            selectedTags = selectedTags,
+            onTagToggle = {tag ->
+                if(selectedTags.contains(tag)){
+                    viewModel.onTagRemoved(tag)
+                }
+                else{
+                    viewModel.onTagSelected(tag)
+                }
+            }
+        )
         if(filteredPresets.isEmpty()){
             Text(
                 text = "No presets found",
