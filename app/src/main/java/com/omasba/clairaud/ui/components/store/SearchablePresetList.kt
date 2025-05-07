@@ -39,7 +39,7 @@ fun SearchablePresetList(viewModel: PresetListViewModel = viewModel()) {
 
     val selectedTags by viewModel.selectedTags.collectAsState()
     val allTags = remember { //estrae i tag dispinibili dai preset
-        viewModel.presets.value.flatMap { it.tags }.toSet()
+        viewModel.presets.value.flatMap { it.tags }.toSet().sortedBy { it.name }.toSet()
     }
     var active by remember { mutableStateOf(false)}
 
