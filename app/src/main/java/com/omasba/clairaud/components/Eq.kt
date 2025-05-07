@@ -3,19 +3,23 @@ package com.omasba.clairaud.components
 import android.content.Context
 import android.media.audiofx.AudioEffect
 import android.media.audiofx.Equalizer
+import android.util.Log
 
 class Eq(private val sessionId: Int) {
     private var equalizer: Equalizer? = null
+    val TAG = "Eq"
 
-    init {
-//        equalizer = Equalizer(0, 0).apply {
-//            enabled = true
-//        }
+    init{
+        equalizer = Equalizer(0, sessionId)
     }
 
+    fun properties(): Equalizer.Settings? {
+        return equalizer?.properties
+    }
 
     fun setBandLevel(band: Int, level: Short) {
         equalizer?.setBandLevel(band.toShort(), level)
+
     }
 
     fun getBandLevel(band: Int): Short {
@@ -31,18 +35,29 @@ class Eq(private val sessionId: Int) {
         return Pair(range?.get(0) ?: 0, range?.get(1) ?: 0)
     }
 
-    public fun setAllBands(bands: ArrayList<Pair<Int, Short>>) {
-        bands.forEach {
-            this.setBandLevel(it.first, it.second)
+    fun setAllBands(bands: ArrayList<Pair<Int, Short>>) {
+
+        try {
+            bands.forEach {
+                this.setBandLevel(it.first, it.second)
+            }
+        }catch (e:Exception){
+            Log.d(TAG, e.message.toString())
         }
 
+
+        Log.d(TAG, "set bands for ${bands.toList().toString()}")
+        Log.d(TAG, equalizer?.properties.toString())
     }
 
-    fun isOn(isOn:Boolean){
+    fun setIsOn(isOn:Boolean){
+        Log.d(TAG, "isOn: $isOn")
         equalizer?.enabled = isOn
     }
 
+
     fun release() { // IMPORTANTE
+        Log.d(TAG, "releasing")
         equalizer?.release()
     }
 }

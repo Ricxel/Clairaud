@@ -17,7 +17,7 @@ class EqualizerViewModel : ViewModel() {
     init {
         this.newBands(arrayListOf(
             Pair(0, 0),
-            Pair(1, 3),
+            Pair(1, 0),
             Pair(2, 0),
             Pair(3, 0),
             Pair(4, 0),
@@ -25,6 +25,10 @@ class EqualizerViewModel : ViewModel() {
             Pair(6, 0)
         )
         )
+    }
+
+    fun setBand(index:Int, level:Short){
+        EqRepo.setBand(index, level)
     }
 
     fun newBands(newBands: ArrayList<Pair<Int, Short>>){
