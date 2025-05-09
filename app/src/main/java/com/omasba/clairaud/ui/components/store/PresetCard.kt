@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.omasba.clairaud.components.UserRepo
 import com.omasba.clairaud.model.EqPreset
+import com.omasba.clairaud.ui.components.PresetGraph
 
 @Composable
 fun PresetCard(preset: EqPreset) {
@@ -68,6 +69,7 @@ fun PresetCard(preset: EqPreset) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(text = "Author: ${preset.author}", style = MaterialTheme.typography.bodyMedium)
                     TagList(preset.tags)
+                    PresetGraph(presetName = preset.name, bands = preset.bands)
                 }
             }
         }

@@ -1,9 +1,11 @@
 package com.omasba.clairaud.model
 
+import java.lang.reflect.Constructor
+
 class EqPreset(
     var tags: MutableSet<Tag> = mutableSetOf(),
     var name: String = "DefaultPreset",
-    var setting: ArrayList<Pair<Int,Short>> = arrayListOf( //default preset
+    var bands: ArrayList<Pair<Int,Short>> = arrayListOf( //default preset
         Pair(60, 0),
         Pair(250, 0),
         Pair(500, 0),
