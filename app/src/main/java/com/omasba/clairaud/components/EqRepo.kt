@@ -7,22 +7,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object EqRepo{
-    val TAG = "EqService"
+    val TAG = "EqRepo"
     private val _eqState = MutableStateFlow(EqualizerUiState())
     val eqState = _eqState.asStateFlow()
     var eqService: Eq? = null
 
-    fun setBand(index:Int, level:Short){
-        eqService?.setBandLevel(index, level)
-    }
+    fun setBand(index:Int, level:Short, newBands: ArrayList<Pair<Int, Short>>){
+        Log.d(TAG, "repoBands: ${newBands.toList()}")
+        eqService?.setBandLevel(index, (level).toShort())
 
-    fun setIsOn(isOn:Boolean){
-        eqService?.setIsOn(isOn)
-        Log.d(TAG, "isOn: " + isOn.toString())
-
-
-        _eqState.update{ currentState ->
-            currentState.copy(isOn = isOn)
+        _eqState.update { currentState ->
+            currentState.copy(bands = newBands)
         }
     }
 
@@ -32,9 +27,6 @@ object EqRepo{
 
             eqService?.setAllBands(newBands)
 
-//            for (band in newBands)
-//                eqService?.setBandLevel(band.first.toShort(), (band.second * 100).toShort())
-
             _eqState.update { currentState ->
                 currentState.copy(bands = newBands)
             }
@@ -42,5 +34,15 @@ object EqRepo{
             Log.d(TAG, e.message.toString())
         }
 
+    }
+
+    fun setIsOn(isOn:Boolean){
+        eqService?.setIsOn(isOn)
+        Log.d(TAG, "enabled: " + isOn.toString())
+
+
+        _eqState.update{ currentState ->
+            currentState.copy(isOn = isOn)
+        }
     }
 }

@@ -21,6 +21,7 @@ class EqService : Service() {
     private val audioSessionReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d(TAG, "Receive")
+
             if (intent == null) return
             val sessionId = intent.getIntExtra(AudioEffect.EXTRA_AUDIO_SESSION, AudioEffect.ERROR)
 

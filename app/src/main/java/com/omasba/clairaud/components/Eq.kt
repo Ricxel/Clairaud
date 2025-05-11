@@ -18,7 +18,9 @@ class Eq(private val sessionId: Int) {
     }
 
     fun setBandLevel(band: Int, level: Short) {
+        //Log.d(TAG, "1: " + equalizer?.properties.toString())
         equalizer?.setBandLevel(band.toShort(), level)
+        //Log.d(TAG, "2: " + equalizer?.properties.toString())
 
     }
 
@@ -42,7 +44,7 @@ class Eq(private val sessionId: Int) {
                 this.setBandLevel(it.first, it.second)
             }
         }catch (e:Exception){
-            Log.d(TAG, e.message.toString())
+            Log.d(TAG, e.message.toString() + bands.toList())
         }
 
 

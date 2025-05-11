@@ -3,6 +3,8 @@ package com.omasba.clairaud.ui
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -13,9 +15,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -26,12 +32,20 @@ import androidx.compose.runtime.LaunchedEffect
 import com.omasba.clairaud.ui.models.EqualizerViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.internal.composableLambda
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
 import com.omasba.clairaud.components.EqService
@@ -48,12 +62,13 @@ fun EqScreen(){
 }
 
 @Composable
-fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
+fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
+    val TAG = "EqScreen"
 
     val eqState by viewModel.eqState.collectAsState()
     val isOn = eqState.isOn
     val bands = eqState.bands
-    Log.d("before", bands.toString())
+    Log.d(TAG, "bands: $bands.toString()")
     val autoEqModel = AutoEqViewModel()
 
     val context = LocalContext.current
@@ -64,13 +79,13 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
         } else {
             context.startService(serviceIntent)
         }
-        Log.d("test","Lanciato!")
+        Log.d(TAG,"Lanciato!")
     }
 
-    BoxWithConstraints( // <--- Questo è il segreto
+    BoxWithConstraints(
         modifier = Modifier.fillMaxWidth().padding(16.dp)
     ) {
-        val cardWidth = this.maxWidth - 32.dp // <--- Ecco la larghezza disponibile per la Card
+        val cardWidth = this.maxWidth - 32.dp
 
         Card(
             modifier = Modifier
@@ -107,10 +122,13 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    bands.take(6).forEachIndexed { index, band ->
+
+                    val bandsNum = 5
+                    var hz = 250
+                    bands.take(bandsNum).forEachIndexed { index, band ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.width((cardWidth/6)) // spazio per testo sopra e sotto
+                            modifier = Modifier.width((cardWidth/bandsNum)) // spazio per testo sopra e sotto
                         ) {
                             // Testo dB
                             Text(
@@ -124,8 +142,8 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                             //Slider verticale libero dai vincoli della colonna
                             Box(
                                 modifier = Modifier
-                                    .height(150.dp) // Altezza totale della zona slider
-                                    .width(200.dp),  // Larghezza effettiva dello slider verticale
+                                    .height(250.dp) // Altezza totale della zona slider
+                                    .width(250.dp),  // Larghezza effettiva dello slider verticale
 //                                .background(Color.Blue)
                                 contentAlignment = Alignment.Center
                             ) {
@@ -141,26 +159,34 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                                             )
 
                                             layout(placeable.height, placeable.width) {
-                                                placeable.place(-135, 140)
+                                                placeable.place(-325, 320)
                                             }
                                         }
                                         .fillMaxWidth()
                                         .fillMaxHeight()
                                         .align(Alignment.Center),
                                 ) {
+                                    var sliderValue by remember { mutableStateOf(band.first) }
+
                                     Slider(
                                         modifier = Modifier
                                             .fillMaxWidth(),
-                                        value = band.second.toFloat(),
+                                        value = sliderValue.toFloat(),
                                         onValueChange = { newValue ->
                                             val updatedBands = ArrayList(bands)
                                             updatedBands[index] =
                                                 band.first to (newValue).toInt().toShort()
-                                            viewModel.setBand(band.first, band.second)
+
+                                            sliderValue = newValue.toInt()
+                                            Log.d(TAG, "on change: $newValue")
+                                            viewModel.setBand(band.first, (sliderValue * 100).toShort(), updatedBands)
 //                                            viewModel.newBands(updatedBands)
+
                                         },
                                         valueRange = -15f..15f,
                                         enabled = isOn,
+                                        steps = 15,
+
                                         colors = SliderDefaults.colors(
                                             thumbColor = MaterialTheme.colorScheme.primary,
                                             activeTrackColor = MaterialTheme.colorScheme.primaryContainer,
@@ -172,12 +198,13 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
 
                             // Frequenza
                             Text(
-                                text = formatFrequency(band.first),
+                                text = formatFrequency(hz),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = if (isOn) MaterialTheme.colorScheme.onSurface
                                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                                 modifier = Modifier.padding(top = 4.dp)
                             )
+                            hz *= 2
                         }
 
                     }
@@ -187,27 +214,7 @@ fun EqCard(viewModel: EqualizerViewModel = EqualizerViewModel()) {
                 Spacer(modifier = Modifier.height(24.dp))
                 // Terza riga: AutoEQ
                 AutoEq(autoEqModel)
-                // Tasto per aprire l'audio effect control panel
-//                Button(
-//                    onClick = {
-//                        val TAG = "EqService"
-//                        val sessionId = AudioEffect.EXTRA_AUDIO_SESSION // o usa AudioEffect.EXTRA_AUDIO_SESSION
-//                        val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-//                            putExtra(AudioEffect.EXTRA_AUDIO_SESSION, sessionId)
-//                            putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
-//                            putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-//                        }
-//                        try {
-//                            context.startActivity(intent)
-//                            Log.d(TAG, "DIOPORCO")
-//                        } catch (e: Exception) {
-//                            Log.d(TAG, "Errore: ${e.message}")
-//                            Toast.makeText(context, "Nessun pannello effetti disponibile", Toast.LENGTH_SHORT).show()
-//                        }
-//                    },
-//                ) {
-//                    Text("Pannello")
-//                }
+
             }
         }
     }

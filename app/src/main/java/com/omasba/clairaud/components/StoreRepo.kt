@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 object StoreRepo {
-    //funzione per fare la query che ritorla il flow di preset
+    //funzione per fare la query che ritorna il flow di preset
     fun getPresets(): Flow<List<EqPreset>> = flow{
         val samplePresets = listOf(
             EqPreset(

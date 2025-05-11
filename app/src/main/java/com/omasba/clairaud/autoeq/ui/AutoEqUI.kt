@@ -23,7 +23,7 @@ fun AutoEq(viewModel: AutoEqViewModel) {
         verticalAlignment = Alignment.CenterVertically,
     ){
         Text(
-            text = "AutoEqualizer",
+            text = "AutoEq",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.weight(1f)
         )
