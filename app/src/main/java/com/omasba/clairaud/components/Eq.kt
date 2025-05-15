@@ -1,16 +1,19 @@
 package com.omasba.clairaud.components
 
-import android.content.Context
-import android.media.audiofx.AudioEffect
 import android.media.audiofx.Equalizer
 import android.util.Log
 
-class Eq(private val sessionId: Int) {
+class Eq(private val sessionId: Int, private val eq:Eq? = null) {
     private var equalizer: Equalizer? = null
     val TAG = "Eq"
 
     init{
-        equalizer = Equalizer(0, sessionId)
+        if(eq == null){
+            equalizer = Equalizer(0, sessionId)
+        }else{
+            equalizer = Equalizer(0, sessionId)
+            this.setAllBands(eq.getAllBands())
+        }
     }
 
     fun properties(): Equalizer.Settings? {
@@ -18,9 +21,7 @@ class Eq(private val sessionId: Int) {
     }
 
     fun setBandLevel(band: Int, level: Short) {
-        //Log.d(TAG, "1: " + equalizer?.properties.toString())
         equalizer?.setBandLevel(band.toShort(), level)
-        //Log.d(TAG, "2: " + equalizer?.properties.toString())
 
     }
 
@@ -35,6 +36,17 @@ class Eq(private val sessionId: Int) {
     fun getBandRange(): Pair<Short, Short> {
         val range = equalizer?.bandLevelRange
         return Pair(range?.get(0) ?: 0, range?.get(1) ?: 0)
+    }
+
+    fun getAllBands():ArrayList<Pair<Int, Short>>{
+        val nBands = this.getNumberOfBands()
+        val result:ArrayList<Pair<Int, Short>> = ArrayList<Pair<Int, Short>>()
+
+        for(band in 0..nBands){
+            result.add(Pair(band, this.getBandLevel(band)))
+        }
+
+        return result
     }
 
     fun setAllBands(bands: ArrayList<Pair<Int, Short>>) {

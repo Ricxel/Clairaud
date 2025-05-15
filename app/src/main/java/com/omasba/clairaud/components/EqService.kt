@@ -35,8 +35,10 @@ class EqService : Service() {
                         if(EqRepo.eqService == null){
                             equalizer = Eq(sessionId)
                             EqRepo.eqService = equalizer
+                        }else{
+                            equalizer = Eq(sessionId, EqRepo.eqService)
+                            EqRepo.eqService = equalizer
                         }
-//                        Log.d(TAG, equalizer?.properties.toString())
                     } catch (e: Exception) {
                         Log.e(TAG, "Equalizer error: ${e.message}")
                     }
