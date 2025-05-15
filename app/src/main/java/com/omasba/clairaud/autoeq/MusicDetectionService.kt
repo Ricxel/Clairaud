@@ -14,6 +14,7 @@ import android.app.NotificationChannel
 import android.media.audiofx.Visualizer
 import android.os.Build
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
+import com.omasba.clairaud.components.EqRepo
 import com.omasba.clairaud.model.Tag
 import com.omasba.clairaud.network.API_KEY
 import com.omasba.clairaud.network.LastFmApi
@@ -35,6 +36,8 @@ class MusicDetectionService : NotificationListenerService() {
     private fun stopPolling() {
         pollingJob?.cancel()
         pollingJob = null
+        lastTitle = ""
+        lastArtist = ""
     }
 
     private lateinit var sessionManager: MediaSessionManager
@@ -141,7 +144,8 @@ class MusicDetectionService : NotificationListenerService() {
 
                                     val preset = UserRepo.getPresetToApply(tags.toSet())
                                     AutoEqStateHolder.changePreset(preset)
-
+                                    EqRepo.newBands(preset.bands)
+                                    Log.d("MusicDetection","Bande cambiate")
                                     showMusicNotification(title, artist, preset.name)
                                 }
 

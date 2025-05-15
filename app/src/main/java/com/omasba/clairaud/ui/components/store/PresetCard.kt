@@ -1,11 +1,13 @@
 package com.omasba.clairaud.ui.components.store
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
@@ -22,6 +26,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.omasba.clairaud.components.StoreRepo
 import com.omasba.clairaud.components.UserRepo
 import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.ui.components.PresetGraph
@@ -36,6 +42,7 @@ import com.omasba.clairaud.ui.components.PresetGraph
 @Composable
 fun PresetCard(preset: EqPreset) {
     var expanded by remember { mutableStateOf(false) }
+    var favPresets = UserRepo.favPreset.collectAsState()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,6 +60,21 @@ fun PresetCard(preset: EqPreset) {
             Row{
                 Text(text = preset.name, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    imageVector = if (favPresets.value.contains(preset.id)) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = "favorite icon",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .clickable {
+                            Log.d("store", "Click")
+                            if(favPresets.value.contains(preset.id))
+                                UserRepo.removeFavorite(preset.id)
+                            else UserRepo.addFavorite(preset.id)
+                            Log.d("store","Fav: ${favPresets.value}")
+                        }
+
+                )
+
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = "expand icon",
@@ -81,8 +103,6 @@ fun PresetCard(preset: EqPreset) {
 )
 @Composable
 fun PresetCardPreview(){
-    val eqPreset = UserRepo.currentUser?.presets?.first()
-    if (eqPreset != null) {
-        PresetCard(eqPreset)
-    }
+    val eqPreset = StoreRepo.collectPresets().first()
+    PresetCard(eqPreset)
 }
