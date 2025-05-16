@@ -83,7 +83,9 @@ fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
     }
 
     BoxWithConstraints(
-        modifier = Modifier.fillMaxWidth().padding(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         val cardWidth = this.maxWidth - 32.dp
 
@@ -95,7 +97,8 @@ fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
 
 
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Prima riga: Titolo e switch
@@ -106,7 +109,8 @@ fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
                     Text(
                         text = "Equalizer",
                         style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.primary
                     )
                     Switch(
                         checked = isOn,

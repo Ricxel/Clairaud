@@ -70,6 +70,10 @@ fun PresetGraph(presetName:String, bands: ArrayList<Pair<Int, Short>>){
                 axisLeft.axisMaximum = 15f
                 axisLeft.textColor = labelColor
                 invalidate()
+
+                legend.apply {
+                    textColor = labelColor
+                }
             }
         }
     )

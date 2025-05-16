@@ -19,7 +19,7 @@ fun TagFilterSection(
     onTagToggle: (Tag) -> Unit
 ) {
     FlowRow(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(20.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {

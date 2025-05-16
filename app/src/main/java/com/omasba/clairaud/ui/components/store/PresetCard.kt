@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -47,10 +48,10 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(MaterialTheme.colorScheme.surface)
+//            .background(MaterialTheme.colorScheme.surface)
             .animateContentSize(animationSpec = tween(0)), // fluidità altezza
         shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
+//        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         onClick = {expanded = !expanded}
     ) {
         Column(
@@ -95,6 +96,8 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
                 }
             }
         }
+
+
     }
 }
 
@@ -104,5 +107,6 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
 @Composable
 fun PresetCardPreview(){
     val eqPreset = StoreRepo.collectPresets().first()
-//    PresetCard(eqPreset)
+    val favPreset = UserRepo.favPresets
+    PresetCard(eqPreset, favPreset.collectAsState())
 }

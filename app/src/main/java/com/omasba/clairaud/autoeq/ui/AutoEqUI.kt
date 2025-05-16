@@ -25,7 +25,8 @@ fun AutoEq(viewModel: AutoEqViewModel) {
         Text(
             text = "AutoEq",
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            color = MaterialTheme.colorScheme.primary
         )
         Text(
             text = state.currentPreset.name,

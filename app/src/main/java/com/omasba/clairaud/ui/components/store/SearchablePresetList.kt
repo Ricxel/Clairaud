@@ -59,7 +59,7 @@ fun SearchablePresetList(viewModel: PresetListViewModel = viewModel()) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
+                .padding(start = 8.dp, end = 8.dp)
 
         ) {
             // mostrato solo quando attiva
