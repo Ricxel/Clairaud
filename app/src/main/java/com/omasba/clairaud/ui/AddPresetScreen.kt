@@ -35,8 +35,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.components.StoreRepo
+import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.model.Tag
 import com.omasba.clairaud.ui.components.BottomNavItem
+import com.omasba.clairaud.ui.components.PresetGraph
 import com.omasba.clairaud.ui.components.store.FloatingButton
 import com.omasba.clairaud.ui.components.store.TagList
 import com.omasba.clairaud.ui.models.AddPresetViewModel
@@ -61,6 +63,7 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
             )
             //area dell'eq
             //TODO
+            PresetGraph(presetName = eqPreset.name, bands = EqPreset().bands)
 
             //area per le altre info del preset
             TextField(
@@ -88,7 +91,7 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 singleLine = true,
                 textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
                 modifier = Modifier
-                    .width(150.dp)
+                    .width(100.dp)
             )
             Spacer(
                 modifier = Modifier.height(8.dp)
@@ -107,7 +110,7 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                     onClick = {
                     TODO()
                 }) {
-                    Text(text = "Aggiungi preset")
+                    Text(text = "Add")
                 }
             }
 
