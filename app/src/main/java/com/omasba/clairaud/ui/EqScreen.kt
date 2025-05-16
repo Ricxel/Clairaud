@@ -19,9 +19,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -46,23 +50,25 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
 import com.omasba.clairaud.components.EqService
 
 
 @Composable
-fun EqScreen(){
+fun EqScreen(navController: NavHostController){
     Text(
         text = "Clairaud Equalizer",
         modifier = Modifier
             .padding(16.dp)
     )
-    EqCard()
+    EqCard(navController = navController)
 }
 
 @Composable
-fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
+fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}, navController: NavHostController) {
     val TAG = "EqScreen"
 
     val eqState by viewModel.eqState.collectAsState()
@@ -112,6 +118,17 @@ fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
                         modifier = Modifier.weight(1f),
                         color = MaterialTheme.colorScheme.primary
                     )
+                    IconButton(
+                        onClick = {
+                            //navigazione all'aggiunta del preset
+                            navController.navigate("addPreset")
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Share"
+                        )
+                    }
                     Switch(
                         checked = isOn,
                         onCheckedChange = { viewModel.toggleEq() }

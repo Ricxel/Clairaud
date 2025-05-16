@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.omasba.clairaud.components.EqRepo
 import com.omasba.clairaud.components.StoreRepo
 import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.model.Tag
@@ -46,6 +47,7 @@ import com.omasba.clairaud.ui.models.AddPresetViewModel
 @Composable
 fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostController){
     val eqPreset by viewModel.eqPreset.collectAsState()
+    val eqState by EqRepo.eqState.collectAsState()
     var tagInput by remember { mutableStateOf("") }
     Box (
         modifier = Modifier
@@ -62,9 +64,8 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 color = MaterialTheme.colorScheme.primary
             )
             //area dell'eq
-            //TODO
-            PresetGraph(presetName = eqPreset.name, bands = EqPreset().bands)
-
+            PresetGraph(presetName = eqPreset.name, bands = eqState.bands)
+            Spacer(modifier = Modifier.height(8.dp))
             //area per le altre info del preset
             TextField(
                 value = eqPreset.name,
@@ -122,7 +123,7 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
             icon = Icons.Filled.Close
         )
         {
-            navController.navigate(BottomNavItem.Store.route)
+            navController.popBackStack()
         }
 
     }

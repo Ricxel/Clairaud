@@ -71,7 +71,7 @@ fun MainScreen() {
             startDestination = BottomNavItem.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(BottomNavItem.Home.route) { EqScreen() }
+            composable(BottomNavItem.Home.route) { EqScreen(navController = navController) }
             composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
             composable(BottomNavItem.Downloads.route) { Text("Downloads") }
             composable(BottomNavItem.Profile.route) { Text("Profilo") }
