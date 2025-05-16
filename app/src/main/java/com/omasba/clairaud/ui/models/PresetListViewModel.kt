@@ -3,6 +3,7 @@ package com.omasba.clairaud.ui.models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omasba.clairaud.components.StoreRepo
+import com.omasba.clairaud.components.UserRepo
 import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.model.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,8 +28,11 @@ class PresetListViewModel:ViewModel() {
     private val _query = MutableStateFlow("")
     val query = _query.asStateFlow()
 
-    //funzione per filtare i preset dalla seach bar
-    val filteredPresets: StateFlow<List<EqPreset>> = _query
+    //per gestire i preferiti
+    val favPresets = UserRepo.favPresets
+
+    //funzione per filtare i preset dalla search bar
+    private val filteredPresets: StateFlow<List<EqPreset>> = _query
         .map { query ->
             val items = _presets.value
             if(query.isBlank()) items

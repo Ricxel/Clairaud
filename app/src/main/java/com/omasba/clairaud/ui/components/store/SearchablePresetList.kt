@@ -94,7 +94,7 @@ fun SearchablePresetList(viewModel: PresetListViewModel = viewModel()) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(filteredPresets) { preset ->
-                    PresetCard(preset)
+                    PresetCard(preset, viewModel.favPresets.collectAsState())
                 }
             }
         }

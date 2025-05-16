@@ -14,7 +14,7 @@ object UserRepo {
         mail = "Luca.Bandolero@ziocan.com"
     )
     private val _favPresets = MutableStateFlow<Set<Int>>(currentUser.favPresets)
-    val favPreset = _favPresets.asStateFlow()
+    val favPresets = _favPresets.asStateFlow()
     fun getPresetToApply(tags: Set<Tag>): EqPreset{
         var maxCount = 0
         var correctPreset = EqPreset()

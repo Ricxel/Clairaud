@@ -26,6 +26,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,9 +41,8 @@ import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.ui.components.PresetGraph
 
 @Composable
-fun PresetCard(preset: EqPreset) {
+fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
     var expanded by remember { mutableStateOf(false) }
-    var favPresets = UserRepo.favPreset.collectAsState()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,5 +104,5 @@ fun PresetCard(preset: EqPreset) {
 @Composable
 fun PresetCardPreview(){
     val eqPreset = StoreRepo.collectPresets().first()
-    PresetCard(eqPreset)
+//    PresetCard(eqPreset)
 }
