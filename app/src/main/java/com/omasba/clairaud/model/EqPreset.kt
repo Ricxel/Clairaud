@@ -2,8 +2,8 @@ package com.omasba.clairaud.model
 
 import java.lang.reflect.Constructor
 
-class EqPreset(
-    var tags: MutableSet<Tag> = mutableSetOf(),
+data class EqPreset(
+    var tags: Set<Tag> = emptySet(),
     var name: String = "DefaultPreset",
     var bands: ArrayList<Pair<Int,Short>> = arrayListOf( //default preset
         Pair(60, 0),
@@ -16,8 +16,4 @@ class EqPreset(
     ),
     var author: String = "",
     val id: Int = -1
-) {
-    fun addTag(tag: String){
-        tags.add(Tag(name = tag))
-    }
-}
+)

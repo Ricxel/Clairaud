@@ -7,15 +7,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
-fun FloatingButton(modifier: Modifier,onClick: () -> Unit) {
+fun FloatingButton(modifier: Modifier = Modifier, icon: ImageVector = Icons.Filled.Add, onClick: () -> Unit) {
     FloatingActionButton(
         modifier = modifier,
         onClick = { onClick() },
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         contentColor = MaterialTheme.colorScheme.secondary
     ) {
-        Icon(Icons.Filled.Add, "Small floating action button.")
+        Icon(icon, "Small floating action button.")
     }
 }

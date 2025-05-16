@@ -9,13 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.omasba.clairaud.model.Tag
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.forEach
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TagList(tags: MutableSet<Tag>){
+fun TagList(tags: Set<Tag>){
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
-
     )
     {
         tags.forEach{ tag ->

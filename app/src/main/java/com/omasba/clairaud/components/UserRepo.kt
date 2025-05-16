@@ -5,6 +5,7 @@ import com.omasba.clairaud.model.Tag
 import com.omasba.clairaud.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 object UserRepo {
     var currentUser: User = User(
@@ -34,16 +35,18 @@ object UserRepo {
         return _favPresets.value.contains(id);
     }
     fun addFavorite(id: Int){
-        val tmp = mutableSetOf<Int>()
-        tmp.addAll(_favPresets.value)
-        tmp.add(id)
-        _favPresets.value = tmp
+//        val tmp = mutableSetOf<Int>()
+//        tmp.addAll(_favPresets.value)
+//        tmp.add(id)
+//        _favPresets.value = tmp
+        _favPresets.update { it + id }
     }
     fun removeFavorite(id: Int){
-        val tmp = mutableSetOf<Int>()
-        tmp.addAll(_favPresets.value)
-        tmp.remove(id)
-        _favPresets.value = tmp
+//        val tmp = mutableSetOf<Int>()
+//        tmp.addAll(_favPresets.value)
+//        tmp.remove(id)
+//        _favPresets.value = tmp
+        _favPresets.update { it - id }
     }
     init {
     }

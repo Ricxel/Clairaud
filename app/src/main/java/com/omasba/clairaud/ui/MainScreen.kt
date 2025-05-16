@@ -9,7 +9,6 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,12 +17,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.ui.components.BottomNavItem
-import com.omasba.clairaud.ui.models.PresetListViewModel
+import com.omasba.clairaud.ui.models.AddPresetViewModel
+import com.omasba.clairaud.ui.models.StoreViewModel
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val presetListViewModel = PresetListViewModel()
+    val storeViewModel = StoreViewModel()
+    val addPresetViewModel = AddPresetViewModel()
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Store,
@@ -71,11 +72,11 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(BottomNavItem.Home.route) { EqScreen() }
-            composable(BottomNavItem.Store.route) { StoreScreen(viewModel = presetListViewModel, navController = navController) }
+            composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
             composable(BottomNavItem.Downloads.route) { Text("Downloads") }
             composable(BottomNavItem.Profile.route) { Text("Profilo") }
             //add preset
-            composable("addPreset"){ AddPresetScreen() }
+            composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
         }
     }
 }

@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PresetListViewModel:ViewModel() {
+class StoreViewModel:ViewModel() {
     private val _presets = MutableStateFlow<List<EqPreset>>(emptyList()) // andra popolata con la query a firebase
     val presets = _presets.asStateFlow()
 
