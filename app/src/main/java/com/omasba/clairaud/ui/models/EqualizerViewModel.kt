@@ -14,11 +14,7 @@ class EqualizerViewModel : ViewModel() {
 
     var isOn by mutableStateOf(false)
         private set
-
-
-    fun getCurrentBands():ArrayList<Pair<Int, Short>>?{
-        return EqRepo.eqService?.getAllBands()
-    }
+    
 
     fun setBand(index:Int, level:Short, newBands: ArrayList<Pair<Int, Short>>){
         Log.d(TAG, "modelBands: ${newBands.toList()}" )

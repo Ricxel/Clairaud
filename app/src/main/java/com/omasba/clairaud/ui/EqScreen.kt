@@ -81,16 +81,15 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.omasba.clairaud.ui.components.PresetGraph
 
 @Composable
-fun EqScreen(navController: NavHostController){
+fun EqScreen(viewModel:EqualizerViewModel,navController: NavHostController){
     Column(modifier = Modifier
         .verticalScroll(rememberScrollState())
         .padding(16.dp)
     ) {
-        var eqViewModel = remember { EqualizerViewModel() }
-        EqCard(eqViewModel, navController = navController)
+        EqCard(viewModel = viewModel, navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
 
-        PresetComparisonCard(eqViewModel)
+        PresetComparisonCard(viewModel)
     }
 
 }
