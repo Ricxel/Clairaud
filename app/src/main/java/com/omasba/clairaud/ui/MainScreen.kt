@@ -29,7 +29,6 @@ fun MainScreen() {
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Store,
-        BottomNavItem.Downloads,
         BottomNavItem.Profile
     )
 
@@ -74,8 +73,12 @@ fun MainScreen() {
         ) {
             composable(BottomNavItem.Home.route) { EqScreen(navController = navController) }
             composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
+<<<<<<< HEAD
             composable(BottomNavItem.Downloads.route) { Text("Downloads") }
             composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
+=======
+            composable(BottomNavItem.Profile.route) { Text("Profilo") }
+>>>>>>> 6dba659801de2bf02aaa794f01d8d4bd39781e11
             //add preset
             composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
         }

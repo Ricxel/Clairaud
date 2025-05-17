@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,31 +52,35 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
             .padding(8.dp)
 //            .background(MaterialTheme.colorScheme.surface)
             .animateContentSize(animationSpec = tween(0)), // fluidità altezza
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(50.dp),
 //        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         onClick = {expanded = !expanded}
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp),
+                .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp)
         ) {
-            Row{
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
                 Text(text = preset.name, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    imageVector = if (favPresets.value.contains(preset.id)) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "favorite icon",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .clickable {
-                            Log.d("store", "Click")
-                            if(favPresets.value.contains(preset.id))
-                                UserRepo.removeFavorite(preset.id)
-                            else UserRepo.addFavorite(preset.id)
-                            Log.d("store","Fav: ${favPresets.value}")
-                        }
+                IconButton(
+                    onClick = {
+                        Log.d("store", "Click")
+                        if(favPresets.value.contains(preset.id))
+                            UserRepo.removeFavorite(preset.id)
+                        else UserRepo.addFavorite(preset.id)
+                        Log.d("store","Fav: ${favPresets.value}")
+                    }
+                ) {
+                    Icon(
+                        imageVector = if (favPresets.value.contains(preset.id)) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "favorite icon",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
 
-                )
 
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
@@ -106,7 +112,7 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
 )
 @Composable
 fun PresetCardPreview(){
-    val eqPreset = StoreRepo.collectPresets().first()
+    val presets by StoreRepo.presets.collectAsState()
     val favPreset = UserRepo.favPresets
-    PresetCard(eqPreset, favPreset.collectAsState())
+    PresetCard(presets.first(), favPreset.collectAsState())
 }
