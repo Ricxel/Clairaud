@@ -1,5 +1,7 @@
 package com.omasba.clairaud.components
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.model.Tag
 import com.omasba.clairaud.model.User
@@ -17,11 +19,12 @@ object UserRepo {
     private val _favPresets = MutableStateFlow<Set<Int>>(currentUser.favPresets)
     val favPresets = _favPresets.asStateFlow()
     fun getPresetToApply(tags: Set<Tag>): EqPreset{
+        //prendo i preset dallo store
         var maxCount = 0
         var correctPreset = EqPreset()
         _favPresets.value.forEach{ id ->
             run {
-                val preset = StoreRepo.collectPresets().find { it.id == id } ?: EqPreset()
+                val preset = StoreRepo.presets.value.find { it.id == id } ?: EqPreset()
                 val tagsIntersection = preset.tags intersect tags
                 if (tagsIntersection.count() > maxCount){
                     maxCount = tagsIntersection.count()

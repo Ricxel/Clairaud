@@ -1,5 +1,8 @@
 package com.omasba.clairaud.ui.models
 
+import android.util.Log
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omasba.clairaud.components.StoreRepo
@@ -17,8 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class StoreViewModel:ViewModel() {
-    private val _presets = MutableStateFlow<List<EqPreset>>(emptyList()) // andra popolata con la query a firebase
-    val presets = _presets.asStateFlow()
+    val presets = StoreRepo.presets
 
     //per filtare con i tag
     private val _selectedTags = MutableStateFlow<Set<Tag>>(emptySet())
@@ -31,16 +33,28 @@ class StoreViewModel:ViewModel() {
     //per gestire i preferiti
     val favPresets = UserRepo.favPresets
 
-    //funzione per filtare i preset dalla search bar
-    private val filteredPresets: StateFlow<List<EqPreset>> = _query
-        .map { query ->
-            val items = _presets.value
-            if(query.isBlank()) items
-            else items.filter { it.name.contains(query, ignoreCase = true) }
+    //flag per filtro sui preferiti
+    private val _filterByFavorites = MutableStateFlow(false)
+    val filterByFavorites = _filterByFavorites.asStateFlow()
+
+    //filtra per preferiti
+    private val filteredPresetsByFav: StateFlow<List<EqPreset>> = _filterByFavorites
+        .map { filter ->
+            val items = presets.value
+            if(!filter) {
+                items
+            }
+            else items.filter { favPresets.value.contains(it.id) }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    val filteredItemsByTags = combine(filteredPresets, selectedTags) { items, tags ->
+    //funzione per filtare i preset dalla search bar
+    private val filteredPresetsByQuery: StateFlow<List<EqPreset>> =
+        combine(_query, filteredPresetsByFav) { query, items ->
+            if (query.isBlank()) items
+            else items.filter { it.name.contains(query, ignoreCase = true) }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    //filtra per i tag
+    val filteredItemsByTags = combine(filteredPresetsByQuery, selectedTags) { items, tags ->
         if (tags.isEmpty()) items
         else items.filter { it.tags.any { tag -> tag in tags } }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
@@ -48,19 +62,15 @@ class StoreViewModel:ViewModel() {
     fun onQueryChanged(newQuery: String){
         _query.value = newQuery
     }
+    fun toggleFavoriteFilter(){
+        _filterByFavorites.value = !_filterByFavorites.value
+    }
     fun onTagSelected(tag: Tag) {
         _selectedTags.update { it + tag }
     }
 
     fun onTagRemoved(tag: Tag) {
         _selectedTags.update { it - tag }
-    }
-    init {
-        viewModelScope.launch {
-            StoreRepo.getPresets().collect{ presetList ->
-                _presets.value = presetList
-            }
-        }
     }
 
 }
