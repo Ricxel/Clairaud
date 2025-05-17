@@ -21,13 +21,6 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
         Column(modifier = Modifier.fillMaxSize()) {
             SearchablePresetList(viewModel = viewModel)
         }
-        FloatingButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        ) {
-            navController.navigate("addPreset")
-        }
     }
 
 }

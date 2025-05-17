@@ -16,6 +16,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -107,23 +110,28 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ){
+
+                Button(
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                    )
+                ) {
+                    Text(text = "Cancel")
+                }
+                Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
                     TODO()
-                }) {
+                },
+                ) {
                     Text(text = "Add")
                 }
             }
 
-        }
-        FloatingButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            icon = Icons.Filled.Close
-        )
-        {
-            navController.popBackStack()
         }
 
     }
