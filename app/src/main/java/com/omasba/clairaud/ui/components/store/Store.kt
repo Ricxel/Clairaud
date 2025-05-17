@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -24,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -56,52 +59,26 @@ fun Store(viewModel: StoreViewModel) {
             .fillMaxSize()
             .padding(WindowInsets.statusBars.asPaddingValues())
     ) {
-        Row(
+        SearchBar(
+            query = viewModel.query.collectAsState().value,
+            onQueryChange = { viewModel.onQueryChanged(it) },
+            onSearch = {active = false},
+            active = false,
+            onActiveChange = {},
+            placeholder = { Text("Search") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Icon"
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            SearchBar(
-                query = viewModel.query.collectAsState().value,
-                onQueryChange = { viewModel.onQueryChanged(it) },
-                onSearch = {active = false},
-                active = false,
-                onActiveChange = {},
-                placeholder = { Text("Search") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search Icon"
-                    )
-                },
-                modifier = Modifier
-//                    .fillMaxWidth()
-                    .weight(10f)
-                    .padding(start = 8.dp, end = 8.dp)
+                .padding(start = 8.dp, end = 8.dp)
 
-            ) {
-                // mostrato solo quando attiva
-            }
-            //filtro per far vedere i preferiti
-            IconButton(
-                onClick = {
-                    viewModel.toggleFavoriteFilter()
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .height(70.dp)
-            ) {
-                Icon(
-                    imageVector = if(filterByFavorites) Icons.Filled.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "Favorite filter",
-                    modifier = Modifier.size(30.dp)
-                )
-            }
+        ) {
+            // mostrato solo quando attiva
         }
-
-
-
 
         //filtro per i tag
         TagFilterSection(
@@ -116,6 +93,24 @@ fun Store(viewModel: StoreViewModel) {
                 }
             }
         )
+        //filtro preferiti
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            ){
+            Text(
+                text = "Show only favourites",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Spacer(Modifier.width(8.dp))
+            Switch(
+                checked = filterByFavorites,
+                onCheckedChange = {viewModel.toggleFavoriteFilter()}
+            )
+        }
         if(filteredPresets.isEmpty()){
             Text(
                 text = "No presets found",
