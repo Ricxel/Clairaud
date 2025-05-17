@@ -278,7 +278,7 @@ fun formatFrequency(hz: Int): String {
 
 @Composable
 fun PresetComparisonCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
-    val presets = remember { StoreRepo.collectPresets() }
+    val presets by StoreRepo.presets.collectAsState()
     var leftExpanded by remember { mutableStateOf(false) }
     var rightExpanded by remember { mutableStateOf(false) }
     var selectedLeft by remember { mutableStateOf<EqPreset?>(null) }
