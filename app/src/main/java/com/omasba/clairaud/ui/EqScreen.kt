@@ -77,7 +77,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
     val eqState by viewModel.eqState.collectAsState()
     val isOn = eqState.isOn
     val eq by EqRepo.eq.collectAsState()
-    val bands = eq?.getAllBands() ?: EqPreset().bands
+    val bands = eqState.bands
     Log.d(TAG, "bands: $bands.toString()")
     val autoEqModel = AutoEqViewModel()
 
@@ -196,20 +196,14 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                                         modifier = Modifier
                                             .fillMaxWidth(),
                                         value = sliderValue.toFloat(),
-//                                        onValueChange = { newValue ->
-//                                            val updatedBands = ArrayList(bands)
-//                                            updatedBands[index] =
-//                                                band.second to (newValue).toInt().toShort()
-//
-//                                            sliderValue = newValue
-//                                            Log.d(TAG, "on change: $newValue")
-//                                            viewModel.setBand(band.first, (sliderValue * 100).toShort(), updatedBands)
-////                                            viewModel.newBands(updatedBands)
-//
-//                                        },
                                         onValueChange = { newValue ->
-//                                            viewModel.setBand(index, level = band.second, )
-                                            viewModel.updateBandLevel(band.first,newValue.toInt().toShort())
+                                            val updatedBands = bands
+                                            updatedBands[index] =
+                                                band.first to (newValue).toInt().toShort()
+
+                                            sliderValue = newValue.toInt().toShort()
+                                            Log.d(TAG, "on change: $newValue")
+                                            viewModel.setBand(band.first, (sliderValue * 100).toShort(), updatedBands)
                                         },
                                         valueRange = -15f..15f,
                                         enabled = isOn,

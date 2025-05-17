@@ -38,7 +38,10 @@ object EqRepo{
         try{
             Log.d(TAG, "bande: " + newBands.toList().toString())
 
-            _eq.value?.setAllBands(newBands)
+            _eq.update {
+                it?.setAllBands(newBands)
+                it
+            }
 
             _eqState.update { currentState ->
                 currentState.copy(bands = newBands)
