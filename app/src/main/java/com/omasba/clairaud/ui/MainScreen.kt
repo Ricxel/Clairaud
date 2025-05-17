@@ -1,5 +1,6 @@
 package com.omasba.clairaud.ui
 
+import UserViewModel
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -74,7 +75,7 @@ fun MainScreen() {
             composable(BottomNavItem.Home.route) { EqScreen(navController = navController) }
             composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
             composable(BottomNavItem.Downloads.route) { Text("Downloads") }
-            composable(BottomNavItem.Profile.route) { Text("Profilo") }
+            composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
             //add preset
             composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
         }

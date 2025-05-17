@@ -17,14 +17,18 @@ class EqualizerViewModel : ViewModel() {
     init {
         this.newBands(arrayListOf(
             Pair(0, 0),
-            Pair(1, 5),
+            Pair(1, 0),
             Pair(2, 0),
             Pair(3, 0),
-            Pair(4, 0)
-//            Pair(5, 0),
+            Pair(4, 0),
+            Pair(5, 0)
 //            Pair(6, 0)
         )
         )
+    }
+
+    fun getCurrentBands():ArrayList<Pair<Int, Short>>?{
+        return EqRepo.eqService?.getAllBands()
     }
 
     fun setBand(index:Int, level:Short, newBands: ArrayList<Pair<Int, Short>>){
@@ -40,7 +44,4 @@ class EqualizerViewModel : ViewModel() {
     fun toggleEq(){
         EqRepo.setIsOn(!eqState.value.isOn)
     }
-
-
-
 }

@@ -11,7 +11,9 @@ class Eq(private val sessionId: Int, private val eq:Eq? = null) {
         if(eq == null){
             equalizer = Equalizer(0, sessionId)
         }else{
+            Log.d(TAG, "1: " + eq.properties().toString())
             equalizer = Equalizer(0, sessionId)
+            Log.d(TAG, "2: " + eq.properties().toString())
             this.setAllBands(eq.getAllBands())
         }
     }
@@ -41,10 +43,13 @@ class Eq(private val sessionId: Int, private val eq:Eq? = null) {
     fun getAllBands():ArrayList<Pair<Int, Short>>{
         val nBands = this.getNumberOfBands()
         val result:ArrayList<Pair<Int, Short>> = ArrayList<Pair<Int, Short>>()
+        Log.d(TAG, "nBands: " + nBands)
 
-        for(band in 0..nBands){
+        for(band in 0..nBands-1){
             result.add(Pair(band, this.getBandLevel(band)))
         }
+
+        Log.d(TAG, "result: " + result.toString())
 
         return result
     }

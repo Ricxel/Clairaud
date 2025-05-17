@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -17,16 +18,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
@@ -48,6 +61,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
@@ -55,16 +70,28 @@ import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
 import com.omasba.clairaud.components.EqService
+import com.omasba.clairaud.components.StoreRepo
+import com.omasba.clairaud.model.EqPreset
 
+import androidx.compose.material3.DropdownMenuItem
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineDataSet
+import com.omasba.clairaud.ui.components.PresetGraph
 
 @Composable
 fun EqScreen(navController: NavHostController){
-    Text(
-        text = "Clairaud Equalizer",
-        modifier = Modifier
-            .padding(16.dp)
-    )
-    EqCard(navController = navController)
+    Column(modifier = Modifier
+        .verticalScroll(rememberScrollState())
+        .padding(16.dp)
+    ) {
+        var eqViewModel = remember { EqualizerViewModel() }
+        EqCard(eqViewModel, navController = navController)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PresetComparisonCard(eqViewModel)
+    }
+
 }
 
 @Composable
@@ -206,7 +233,7 @@ fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}, navC
                                         },
                                         valueRange = -15f..15f,
                                         enabled = isOn,
-                                        steps = 15,
+                                        steps = 30,
 
                                         colors = SliderDefaults.colors(
                                             thumbColor = MaterialTheme.colorScheme.primary,
@@ -247,4 +274,115 @@ fun formatFrequency(hz: Int): String {
         else -> "$hz"
     } + "Hz"
 
+}
+
+@Composable
+fun PresetComparisonCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
+    val presets = remember { StoreRepo.collectPresets() }
+    var leftExpanded by remember { mutableStateOf(false) }
+    var rightExpanded by remember { mutableStateOf(false) }
+    var selectedLeft by remember { mutableStateOf<EqPreset?>(null) }
+    var selectedRight by remember { mutableStateOf<EqPreset?>(null) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Compare Presets",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            // Comparison Row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                var showGraph by remember { mutableStateOf(false) }
+                // Right Dropdown
+                Box(modifier = Modifier.weight(1f)) {
+                    val rightText = selectedRight?.name ?: "Preset"
+                    PresetDropdown(
+                        text = rightText,
+                        expanded = rightExpanded,
+                        onExpandChange = { rightExpanded = it },
+                        presets = presets,
+                        onPresetSelected = {
+                            selectedRight = it
+                            rightExpanded = false
+                            showGraph = true
+                        }
+                    )
+                }
+
+                if (showGraph && selectedRight != null) {
+                    PresetGraph(selectedRight!!.name, selectedRight!!.bands)
+                }
+
+            }
+
+        }
+    }
+}
+
+@Composable
+fun PresetDropdown(
+    text: String,
+    expanded: Boolean,
+    onExpandChange: (Boolean) -> Unit,
+    presets: List<EqPreset>,
+    onPresetSelected: (EqPreset) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .clickable { onExpandChange(!expanded) }
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = text,
+                modifier = Modifier.weight(1f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) "Collapse" else "Expand"
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { onExpandChange(false) },
+            modifier = Modifier.fillMaxWidth(0.95f)
+        ) {
+            presets.forEach { preset ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = preset.name,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
+                    onClick = { onPresetSelected(preset) }
+                )
+            }
+        }
+    }
 }

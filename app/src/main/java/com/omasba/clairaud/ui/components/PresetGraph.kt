@@ -20,7 +20,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 
 @Composable
-fun PresetGraph(presetName:String, bands: ArrayList<Pair<Int, Short>>){
+fun PresetGraph(presetName:String, bands: ArrayList<Pair<Int, Short>>?){
     val labelColor = MaterialTheme.colorScheme.primary.toArgb()
     AndroidView(
         modifier = Modifier
@@ -33,7 +33,7 @@ fun PresetGraph(presetName:String, bands: ArrayList<Pair<Int, Short>>){
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
 
-                val entries = bands.map { Entry(it.first.toFloat(), it.second.toFloat()) }
+                val entries = bands?.map { Entry(it.first.toFloat(), it.second.toFloat()) }
 
                 val dataSet = LineDataSet(entries, presetName).apply {
                     color = ColorTemplate.getHoloBlue()
