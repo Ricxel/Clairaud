@@ -125,8 +125,8 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
-                    TODO()
-                },
+                        viewModel.addPreset()
+                    },
                 ) {
                     Text(text = "Add")
                 }

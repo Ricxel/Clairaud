@@ -1,6 +1,7 @@
 package com.omasba.clairaud.ui
 
 import UserViewModel
+import android.media.audiofx.Equalizer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,12 +20,20 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.ui.components.BottomNavItem
 import com.omasba.clairaud.ui.models.AddPresetViewModel
+import com.omasba.clairaud.ui.models.EqualizerViewModel
 import com.omasba.clairaud.ui.models.StoreViewModel
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     val storeViewModel = StoreViewModel()
+    val equalizerViewModel = EqualizerViewModel()
+    val bands = arrayListOf(Pair<Int,Short>(60,4),
+        Pair<Int,Short>(250,-2),
+        Pair<Int,Short>(1000,1),
+        Pair<Int,Short>(4000,3),
+        Pair<Int,Short>(14000,4))
+    equalizerViewModel.newBands(bands)
     val addPresetViewModel = AddPresetViewModel()
     val items = listOf(
         BottomNavItem.Home,
@@ -71,7 +80,7 @@ fun MainScreen() {
             startDestination = BottomNavItem.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(BottomNavItem.Home.route) { EqScreen(navController = navController) }
+            composable(BottomNavItem.Home.route) { EqScreen(viewModel = equalizerViewModel,navController = navController) }
             composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
             composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
             composable(BottomNavItem.Profile.route) { Text("Profilo") }

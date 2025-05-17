@@ -32,12 +32,12 @@ class EqService : Service() {
                 AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION -> {
                     Log.d(TAG, "Audio session opened: $sessionId")
                     try {
-                        if(EqRepo.eqService == null){
+                        if(EqRepo.eq.value == null){
                             equalizer = Eq(sessionId)
-                            EqRepo.eqService = equalizer
+                            EqRepo.setEq(equalizer)
                         }else{
-                            equalizer = Eq(sessionId, EqRepo.eqService)
-                            EqRepo.eqService = equalizer
+                            equalizer = Eq(sessionId, EqRepo.eq.value)
+                            EqRepo.setEq(equalizer)
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "Equalizer error: ${e.message}")

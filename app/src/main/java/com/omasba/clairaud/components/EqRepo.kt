@@ -1,5 +1,6 @@
 package com.omasba.clairaud.components
 
+import android.media.audiofx.Equalizer
 import android.util.Log
 import com.omasba.clairaud.ui.components.EqualizerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,14 +11,26 @@ object EqRepo{
     val TAG = "EqRepo"
     private val _eqState = MutableStateFlow(EqualizerUiState())
     val eqState = _eqState.asStateFlow()
-    var eqService: Eq? = null
+    private val _eq = MutableStateFlow<Eq?>(null)
+    val eq = _eq.asStateFlow()
+
+    fun setEq(equalizer:Eq?){
+        _eq.update { equalizer }
+    }
 
     fun setBand(index:Int, level:Short, newBands: ArrayList<Pair<Int, Short>>){
         Log.d(TAG, "repoBands: ${newBands.toList()}")
-        eqService?.setBandLevel(index, (level).toShort())
+        _eq.value?.setBandLevel(index, (level).toShort())
 
         _eqState.update { currentState ->
             currentState.copy(bands = newBands)
+        }
+    }
+    fun changeBandLevel(freq: Int, newValue: Short){
+        _eq.update { currentEq ->
+            val newEq = currentEq?.copy()
+            newEq?.setBandLevel(band = freq, level = newValue)
+            newEq
         }
     }
 
@@ -25,7 +38,10 @@ object EqRepo{
         try{
             Log.d(TAG, "bande: " + newBands.toList().toString())
 
-            eqService?.setAllBands(newBands)
+            _eq.update {
+                it?.setAllBands(newBands)
+                it
+            }
 
             _eqState.update { currentState ->
                 currentState.copy(bands = newBands)
@@ -37,7 +53,7 @@ object EqRepo{
     }
 
     fun setIsOn(isOn:Boolean){
-        eqService?.setIsOn(isOn)
+        _eq.value?.setIsOn(isOn)
         Log.d(TAG, "enabled: " + isOn.toString())
 
 
