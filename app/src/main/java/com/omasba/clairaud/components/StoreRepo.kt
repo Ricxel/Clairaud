@@ -52,4 +52,9 @@ object StoreRepo {
             samplePresets
         }
     }
+    fun addPreset(preset:EqPreset){
+        _presets.update {
+            it + preset
+        }
+    }
 }

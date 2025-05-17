@@ -54,26 +54,30 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
+import com.omasba.clairaud.components.EqRepo
 import com.omasba.clairaud.components.EqService
+import com.omasba.clairaud.components.StoreRepo
+import com.omasba.clairaud.model.EqPreset
 
 
 @Composable
-fun EqScreen(navController: NavHostController){
+fun EqScreen(viewModel: EqualizerViewModel, navController: NavHostController){
     Text(
         text = "Clairaud Equalizer",
         modifier = Modifier
             .padding(16.dp)
     )
-    EqCard(navController = navController)
+    EqCard(viewModel = viewModel, navController = navController)
 }
 
 @Composable
-fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}, navController: NavHostController) {
+fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
     val TAG = "EqScreen"
 
     val eqState by viewModel.eqState.collectAsState()
     val isOn = eqState.isOn
-    val bands = eqState.bands
+    val eq by EqRepo.eq.collectAsState()
+    val bands = eq?.getAllBands() ?: EqPreset().bands
     Log.d(TAG, "bands: $bands.toString()")
     val autoEqModel = AutoEqViewModel()
 
@@ -144,8 +148,7 @@ fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}, navC
                     modifier = Modifier.fillMaxWidth()
                 ) {
 
-                    val bandsNum = 5
-                    var hz = 250
+                    val bandsNum = eqState.bands.size
                     bands.take(bandsNum).forEachIndexed { index, band ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -187,22 +190,26 @@ fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}, navC
                                         .fillMaxHeight()
                                         .align(Alignment.Center),
                                 ) {
-                                    var sliderValue by remember { mutableStateOf(band.first) }
+                                    var sliderValue by remember { mutableStateOf(band.second) }
 
                                     Slider(
                                         modifier = Modifier
                                             .fillMaxWidth(),
                                         value = sliderValue.toFloat(),
+//                                        onValueChange = { newValue ->
+//                                            val updatedBands = ArrayList(bands)
+//                                            updatedBands[index] =
+//                                                band.second to (newValue).toInt().toShort()
+//
+//                                            sliderValue = newValue
+//                                            Log.d(TAG, "on change: $newValue")
+//                                            viewModel.setBand(band.first, (sliderValue * 100).toShort(), updatedBands)
+////                                            viewModel.newBands(updatedBands)
+//
+//                                        },
                                         onValueChange = { newValue ->
-                                            val updatedBands = ArrayList(bands)
-                                            updatedBands[index] =
-                                                band.first to (newValue).toInt().toShort()
-
-                                            sliderValue = newValue.toInt()
-                                            Log.d(TAG, "on change: $newValue")
-                                            viewModel.setBand(band.first, (sliderValue * 100).toShort(), updatedBands)
-//                                            viewModel.newBands(updatedBands)
-
+//                                            viewModel.setBand(index, level = band.second, )
+                                            viewModel.updateBandLevel(band.first,newValue.toInt().toShort())
                                         },
                                         valueRange = -15f..15f,
                                         enabled = isOn,
@@ -219,13 +226,12 @@ fun EqCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}, navC
 
                             // Frequenza
                             Text(
-                                text = formatFrequency(hz),
+                                text = formatFrequency(band.first),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = if (isOn) MaterialTheme.colorScheme.onSurface
                                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                                 modifier = Modifier.padding(top = 4.dp)
                             )
-                            hz *= 2
                         }
 
                     }

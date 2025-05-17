@@ -3,7 +3,7 @@ package com.omasba.clairaud.components
 import android.media.audiofx.Equalizer
 import android.util.Log
 
-class Eq(private val sessionId: Int, private val eq:Eq? = null) {
+data class Eq(private val sessionId: Int, private val eq:Eq? = null) {
     private var equalizer: Equalizer? = null
     val TAG = "Eq"
 

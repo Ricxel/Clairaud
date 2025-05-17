@@ -1,6 +1,7 @@
 package com.omasba.clairaud.ui.models
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,22 +15,14 @@ class EqualizerViewModel : ViewModel() {
     var isOn by mutableStateOf(false)
         private set
 
-    init {
-        this.newBands(arrayListOf(
-            Pair(0, 0),
-            Pair(1, 5),
-            Pair(2, 0),
-            Pair(3, 0),
-            Pair(4, 0)
-//            Pair(5, 0),
-//            Pair(6, 0)
-        )
-        )
-    }
+
 
     fun setBand(index:Int, level:Short, newBands: ArrayList<Pair<Int, Short>>){
         Log.d(TAG, "modelBands: ${newBands.toList()}" )
         EqRepo.setBand(index, level, newBands)
+    }
+    fun updateBandLevel(freq: Int, newValue: Short){
+        EqRepo.changeBandLevel(freq, newValue)
     }
 
     fun newBands(newBands: ArrayList<Pair<Int, Short>>){
