@@ -31,11 +31,11 @@ fun MainScreen() {
     val equalizerViewModel = EqualizerViewModel()
     val pcViewModel = PresetComparisonViewModel()
     val bands = arrayListOf(
-        Pair<Int,Short>(60,0),
-        Pair<Int,Short>(250,0),
-        Pair<Int,Short>(1000,0),
-        Pair<Int,Short>(4000,0),
-        Pair<Int,Short>(14000,0))
+        Pair<Int,Short>(0,0),
+        Pair<Int,Short>(1,0),
+        Pair<Int,Short>(2,0),
+        Pair<Int,Short>(3,0),
+        Pair<Int,Short>(4,0))
     equalizerViewModel.newBands(bands)
     val addPresetViewModel = AddPresetViewModel()
     val items = listOf(

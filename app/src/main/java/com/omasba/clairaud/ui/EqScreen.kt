@@ -225,7 +225,9 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                                             sliderValue = newValue.toInt()
                                             Log.d(TAG, "on change: $newValue")
                                             viewModel.setBand(index, (sliderValue * 100).toShort())
+//                                            viewModel.setBandByHz(band.first, (sliderValue*100).toShort())
                                         },
+
                                         valueRange = -15f..15f,
                                         enabled = isOn,
                                         steps = 30,
@@ -241,7 +243,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
 
                             // Frequenza
                             Text(
-                                text = formatFrequency(band.first),
+                                text = formatFrequency(EqRepo.getFreq(index.toShort())),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = if (isOn) MaterialTheme.colorScheme.onSurface
                                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),

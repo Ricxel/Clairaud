@@ -16,7 +16,10 @@ class EqualizerViewModel : ViewModel() {
         private set
 
     fun setBandByHz(hz:Int, level:Short){
-        EqRepo.setBand(EqRepo.getBand(hz), level)
+        EqRepo.setBand(EqRepo.getBand(hz*1000), level)
+    }
+    fun getFreqByIndex(index: Short):Int{
+        return EqRepo.getFreq(index)
     }
     fun setBand(index:Int, level:Short){
         EqRepo.setBand(index, level)

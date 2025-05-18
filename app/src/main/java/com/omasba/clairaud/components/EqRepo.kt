@@ -21,7 +21,14 @@ object EqRepo{
     fun getBand(hz:Int):Int{
         return _eq.value?.getBand(hz) ?: -1
     }
+    fun getBandsFormatted(bands:ArrayList<Pair<Int,Short>>):ArrayList<Pair<Int,Short>>{
+        val newBands = _eq.value?.getBandsFormatted(bands) ?: ArrayList<Pair<Int,Short>>()
+        return newBands
+    }
 
+        fun getFreq(index:Short):Int{
+        return _eq.value?.getFreq(index) ?: -1
+    }
     fun setBand(index:Int, level:Short){
         _eq.value?.setBandLevel(index, (level))
 

@@ -32,7 +32,7 @@ object StoreRepo {
         return myPresets
     }
     suspend fun fetchPresets() {
-        delay(1000)
+        delay(200)
         val samplePresets = listOf(
             EqPreset(
                 name = "Rock",
@@ -49,11 +49,11 @@ object StoreRepo {
                     Tag(name = "rap"),
                     Tag(name = "hip-hop")),
                 bands = arrayListOf(
-                    Pair<Int,Short>(60,4),
-                    Pair<Int,Short>(250,-2),
-                    Pair<Int,Short>(1000,1),
-                    Pair<Int,Short>(4000,3),
-                    Pair<Int,Short>(14000,4)),
+                    Pair<Int,Short>(1,400),
+                    Pair<Int,Short>(1,-200),
+                    Pair<Int,Short>(1,100),
+                    Pair<Int,Short>(1,300),
+                    Pair<Int,Short>(1,400)),
                 id = 2,
                 author = "Francesco Rigatone",
                 authorUid = 2

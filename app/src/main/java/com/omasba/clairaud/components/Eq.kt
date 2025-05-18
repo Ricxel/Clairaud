@@ -2,6 +2,8 @@ package com.omasba.clairaud.components
 
 import android.media.audiofx.Equalizer
 import android.util.Log
+import androidx.versionedparcelable.ParcelImpl
+import kotlinx.coroutines.delay
 
 data class Eq(private val sessionId: Int, private val eq:Eq? = null) {
     private var equalizer: Equalizer? = null
@@ -10,16 +12,31 @@ data class Eq(private val sessionId: Int, private val eq:Eq? = null) {
     init{
         if(eq == null){
             equalizer = Equalizer(0, sessionId)
+            Log.d("Skibidi", "${equalizer!!.getCenterFreq(1)}")
+            Log.d("Skibidi", "Livello banda: ${equalizer!!.getBandLevel(1)}")
         }else{
             equalizer = Equalizer(0, sessionId)
             this.setAllBands(eq.getAllBands())
         }
+        EqRepo.newBands(this.getAllBands())
+//        EqRepo.newBands(StoreRepo.presets.value[1].bands)
 
         Log.d(TAG, "Equalizer init: ${this.properties().toString()}")
     }
 
     fun properties(): Equalizer.Settings? {
         return equalizer?.properties
+    }
+
+    //restitusce l'array di coppie (Hz,dB)
+    fun getBandsFormatted(bands:ArrayList<Pair<Int,Short>>):ArrayList<Pair<Int,Short>>{
+        val newBands = ArrayList<Pair<Int,Short>>()
+        bands.forEach{band ->
+            val freq = equalizer?.getCenterFreq(band.first.toShort()) ?: 0 //mi trovo la frequenza della banda
+            newBands.add(Pair<Int,Short>(freq/1000,(band.second/100).toShort()))
+        }
+        return newBands
+
     }
 
     fun setBandLevel(band: Int, level: Short) {
@@ -29,6 +46,10 @@ data class Eq(private val sessionId: Int, private val eq:Eq? = null) {
 
     fun getBandLevel(band: Int): Short {
         return equalizer?.getBandLevel(band.toShort()) ?: 0
+    }
+    fun getFreq(index: Short):Int{
+        val freq = equalizer!!.getCenterFreq(index) /1000
+        return freq
     }
 
     fun getBand(hz:Int):Int?{
