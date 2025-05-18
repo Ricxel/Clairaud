@@ -11,11 +11,11 @@ data class Eq(private val sessionId: Int, private val eq:Eq? = null) {
         if(eq == null){
             equalizer = Equalizer(0, sessionId)
         }else{
-            Log.d(TAG, "1: " + eq.properties().toString())
             equalizer = Equalizer(0, sessionId)
-            Log.d(TAG, "2: " + eq.properties().toString())
             this.setAllBands(eq.getAllBands())
         }
+
+        Log.d(TAG, "Equalizer init: ${this.properties().toString()}")
     }
 
     fun properties(): Equalizer.Settings? {
@@ -29,6 +29,10 @@ data class Eq(private val sessionId: Int, private val eq:Eq? = null) {
 
     fun getBandLevel(band: Int): Short {
         return equalizer?.getBandLevel(band.toShort()) ?: 0
+    }
+
+    fun getBand(hz:Int):Int?{
+        return equalizer?.getBand(hz * 1000)?.toInt()
     }
 
     fun getNumberOfBands(): Int {
