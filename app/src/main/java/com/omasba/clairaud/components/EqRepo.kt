@@ -18,14 +18,18 @@ object EqRepo{
         _eq.update { equalizer }
     }
 
-    fun setBand(index:Int, level:Short, newBands: ArrayList<Pair<Int, Short>>){
-        Log.d(TAG, "repoBands: ${newBands.toList()}")
-        _eq.value?.setBandLevel(index, (level).toShort())
+    fun getBand(hz:Int):Int{
+        return _eq.value?.getBand(hz) ?: -1
+    }
+
+    fun setBand(index:Int, level:Short){
+        _eq.value?.setBandLevel(index, (level))
 
         _eqState.update { currentState ->
-            currentState.copy(bands = newBands)
+            currentState.copy(bands = _eq.value?.getAllBands()!!)
         }
     }
+
     fun changeBandLevel(freq: Int, newValue: Short){
         _eq.update { currentEq ->
             val newEq = currentEq?.copy()

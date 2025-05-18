@@ -14,11 +14,12 @@ class EqualizerViewModel : ViewModel() {
 
     var isOn by mutableStateOf(false)
         private set
-    
 
-    fun setBand(index:Int, level:Short, newBands: ArrayList<Pair<Int, Short>>){
-        Log.d(TAG, "modelBands: ${newBands.toList()}" )
-        EqRepo.setBand(index, level, newBands)
+    fun setBandByHz(hz:Int, level:Short){
+        EqRepo.setBand(EqRepo.getBand(hz), level)
+    }
+    fun setBand(index:Int, level:Short){
+        EqRepo.setBand(index, level)
     }
     fun updateBandLevel(freq: Int, newValue: Short){
         EqRepo.changeBandLevel(freq, newValue)

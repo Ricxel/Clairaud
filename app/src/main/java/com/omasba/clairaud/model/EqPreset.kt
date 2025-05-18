@@ -1,7 +1,5 @@
 package com.omasba.clairaud.model
 
-import java.lang.reflect.Constructor
-
 data class EqPreset(
     var tags: Set<Tag> = emptySet(),
     var name: String = "DefaultPreset",

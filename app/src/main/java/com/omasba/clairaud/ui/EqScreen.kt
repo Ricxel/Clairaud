@@ -3,7 +3,6 @@ package com.omasba.clairaud.ui
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,30 +15,20 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
@@ -49,24 +38,17 @@ import androidx.compose.runtime.LaunchedEffect
 import com.omasba.clairaud.ui.models.EqualizerViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
 import com.omasba.clairaud.components.EqRepo
@@ -75,21 +57,20 @@ import com.omasba.clairaud.components.StoreRepo
 import com.omasba.clairaud.model.EqPreset
 
 import androidx.compose.material3.DropdownMenuItem
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineDataSet
 import com.omasba.clairaud.ui.components.PresetGraph
+import com.omasba.clairaud.ui.models.PresetComparisonViewModel
 
 @Composable
-fun EqScreen(viewModel:EqualizerViewModel,navController: NavHostController){
+fun EqScreen(eqViewModel:EqualizerViewModel,pcViewModel: PresetComparisonViewModel, navController: NavHostController){
     Column(modifier = Modifier
         .verticalScroll(rememberScrollState())
         .padding(16.dp)
+        .fillMaxWidth()
     ) {
-        EqCard(viewModel = viewModel, navController = navController)
+        EqCard(viewModel = eqViewModel, navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
 
-        PresetComparisonCard(viewModel)
+        PresetComparisonCard(eqViewModel, pcViewModel)
     }
 
 }
@@ -221,13 +202,13 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                                             .fillMaxWidth(),
                                         value = sliderValue.toFloat(),
                                         onValueChange = { newValue ->
-                                            val updatedBands = bands
-                                            updatedBands[index] =
-                                                band.first to (newValue).toInt().toShort()
+//                                            val updatedBands = bands
+//                                            updatedBands[index] =
+//                                                band.first to (newValue).toInt().toShort()
 
                                             sliderValue = newValue.toInt().toShort()
                                             Log.d(TAG, "on change: $newValue")
-                                            viewModel.setBand(band.first, (sliderValue * 100).toShort(), updatedBands)
+                                            viewModel.setBand(index, (sliderValue * 100).toShort())
                                         },
                                         valueRange = -15f..15f,
                                         enabled = isOn,
@@ -274,12 +255,10 @@ fun formatFrequency(hz: Int): String {
 }
 
 @Composable
-fun PresetComparisonCard(viewModel: EqualizerViewModel = remember {EqualizerViewModel()}) {
+fun PresetComparisonCard(eqViewModel: EqualizerViewModel, pcViewModel: PresetComparisonViewModel) {
     val presets by StoreRepo.presets.collectAsState()
-    var leftExpanded by remember { mutableStateOf(false) }
     var rightExpanded by remember { mutableStateOf(false) }
-    var selectedLeft by remember { mutableStateOf<EqPreset?>(null) }
-    var selectedRight by remember { mutableStateOf<EqPreset?>(null) }
+    var selected by remember { mutableStateOf<EqPreset?>(null) }
 
     Card(
         modifier = Modifier
@@ -302,26 +281,32 @@ fun PresetComparisonCard(viewModel: EqualizerViewModel = remember {EqualizerView
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                var showGraph by remember { mutableStateOf(false) }
-                // Right Dropdown
-                Box(modifier = Modifier.weight(1f)) {
-                    val rightText = selectedRight?.name ?: "Preset"
-                    PresetDropdown(
-                        text = rightText,
-                        expanded = rightExpanded,
-                        onExpandChange = { rightExpanded = it },
-                        presets = presets,
-                        onPresetSelected = {
-                            selectedRight = it
-                            rightExpanded = false
-                            showGraph = true
-                        }
-                    )
-                }
+                // Dropdown
+                    Box(modifier = Modifier.weight(1f)) {
+                        val rightText = selected?.name ?: "Preset"
 
-                if (showGraph && selectedRight != null) {
-                    PresetGraph(selectedRight!!.name, selectedRight!!.bands)
-                }
+                        Column {
+                            PresetDropdown(
+                                text = rightText,
+                                expanded = rightExpanded,
+                                onExpandChange = { rightExpanded = it },
+                                presets = presets,
+                                onPresetSelected = {
+                                    selected = it
+                                    rightExpanded = false
+
+                                    eqViewModel.newBands(it.bands)
+                                }
+                            )
+
+                            selected?.let { preset ->
+                                PresetGraph(preset.name, preset.bands)
+                                Log.d("EqScreen", "graph changed")
+                            }
+
+                        }
+
+                    }
 
             }
 
