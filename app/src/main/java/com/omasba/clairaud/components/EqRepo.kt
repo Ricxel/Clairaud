@@ -26,7 +26,15 @@ object EqRepo{
         _eq.value?.setBandLevel(index, (level))
 
         _eqState.update { currentState ->
-            currentState.copy(bands = _eq.value?.getAllBands()!!)
+            currentState.copy(
+                bands = _eq.value?.getAllBands() ?: arrayListOf( // se l'eq e' null, gli slider non si muovono
+                        Pair<Int,Short>(1,0),
+                        Pair<Int,Short>(2,0),
+                        Pair<Int,Short>(3,0),
+                        Pair<Int,Short>(4,0),
+                        Pair<Int,Short>(5,0)
+                    )
+                )
         }
     }
 

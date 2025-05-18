@@ -57,6 +57,8 @@ import com.omasba.clairaud.components.StoreRepo
 import com.omasba.clairaud.model.EqPreset
 
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import com.omasba.clairaud.ui.components.PresetGraph
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel
 
@@ -159,13 +161,22 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.width((cardWidth/bandsNum)) // spazio per testo sopra e sotto
                         ) {
+                            var dBx = 0
+
+
                             // Testo dB
                             Text(
-                                text = "${band.second}dB",
+                                text = "${band.second/100}dB",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = if (isOn) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                modifier = Modifier.padding(bottom = 4.dp)
+                                modifier = Modifier
+                                    .padding(bottom = 4.dp)
+                                    .onGloballyPositioned { coordinates ->
+                                        val position = coordinates.positionInParent()
+                                        val size = coordinates.size
+                                        dBx = (position.x + size.width / 2).toInt()
+                                    }
                             )
 
                             //Slider verticale libero dai vincoli della colonna
@@ -188,14 +199,19 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                                             )
 
                                             layout(placeable.height, placeable.width) {
-                                                placeable.place(-325, 320)
+                                                val layoutHeight = placeable.width
+                                                val x = dBx - placeable.width / 2.5f
+                                                val y = (layoutHeight - placeable.height) / 2
+
+                                                placeable.placeRelative(x.toInt(), y)
+
                                             }
                                         }
                                         .fillMaxWidth()
                                         .fillMaxHeight()
                                         .align(Alignment.Center),
                                 ) {
-                                    var sliderValue by remember { mutableStateOf(band.second) }
+                                    var sliderValue = band.second/100 // perche nello state e nell'eq vengono impostati come mB
 
                                     Slider(
                                         modifier = Modifier
@@ -206,7 +222,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
 //                                            updatedBands[index] =
 //                                                band.first to (newValue).toInt().toShort()
 
-                                            sliderValue = newValue.toInt().toShort()
+                                            sliderValue = newValue.toInt()
                                             Log.d(TAG, "on change: $newValue")
                                             viewModel.setBand(index, (sliderValue * 100).toShort())
                                         },
@@ -244,7 +260,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
             }
         }
     }
-    }
+}
 @Composable
 fun formatFrequency(hz: Int): String {
     return when {
