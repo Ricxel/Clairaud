@@ -83,7 +83,6 @@ fun MainScreen() {
             composable(BottomNavItem.Home.route) { EqScreen(viewModel = equalizerViewModel,navController = navController) }
             composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
             composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
-            composable(BottomNavItem.Profile.route) { Text("Profilo") }
             //add preset
             composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
         }

@@ -1,14 +1,18 @@
 package com.omasba.clairaud.ui.models
 
 import android.util.Log
+import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.compose.composable
 import com.omasba.clairaud.components.StoreRepo
 import com.omasba.clairaud.components.UserRepo
 import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.model.Tag
+import com.omasba.clairaud.ui.components.BottomNavItem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
