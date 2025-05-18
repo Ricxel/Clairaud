@@ -39,11 +39,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.ui.models.StoreViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Store(viewModel: StoreViewModel) {
+fun Store(viewModel: StoreViewModel, navController: NavHostController) {
     val presets by viewModel.presets.collectAsState()
 //    val filteredPresets by viewModel.filteredPresets.collectAsState() //per barra di ricerca
     val filteredPresets by viewModel.filteredItemsByTags.collectAsState() // per tags
@@ -128,7 +130,7 @@ fun Store(viewModel: StoreViewModel) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(filteredPresets) { preset ->
-                    PresetCard(preset, viewModel.favPresets.collectAsState())
+                    PresetCard(preset, viewModel.favPresets.collectAsState(), navController = navController)
                 }
             }
         }
@@ -140,5 +142,5 @@ fun Store(viewModel: StoreViewModel) {
 )
 @Composable
 fun SearchablePresetListPreview() {
-    Store(StoreViewModel())
+    Store(StoreViewModel(), rememberNavController())
 }

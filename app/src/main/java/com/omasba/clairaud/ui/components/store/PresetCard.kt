@@ -47,7 +47,7 @@ import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.ui.components.PresetGraph
 
 @Composable
-fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: NavHostController {
+fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: NavHostController) {
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -68,17 +68,21 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
             ){
                 Text(text = preset.name, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = {
-                        navController.navigate("addPreset")
+
+                if(preset.authorUid == UserRepo.currentUser.uid){
+                    IconButton(
+                        onClick = {
+                            navController.navigate("addPreset")
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit preset",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit preset",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
                 }
+
                 IconButton(
                     onClick = {
                         Log.d("store", "Click")

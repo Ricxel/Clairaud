@@ -36,7 +36,7 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
     else {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Store(viewModel = viewModel)
+                Store(viewModel = viewModel, navController)
             }
         }
     }
