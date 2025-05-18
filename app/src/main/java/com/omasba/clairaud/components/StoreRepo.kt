@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -25,6 +26,11 @@ object StoreRepo {
             it + preset
         }
     }
+    //restituisce i preset creati dall'utente
+    fun getMyPresets(uid: Int):List<EqPreset>{
+        val myPresets = _presets.value.filter { it.authorUid == uid }
+        return myPresets
+    }
     suspend fun fetchPresets() {
         delay(1000)
         val samplePresets = listOf(
@@ -34,7 +40,8 @@ object StoreRepo {
                     Tag(name = "rock"),
                     Tag(name = "alternative-rock")),
                 id = 1,
-                author = "Mario Bava"
+                author = "Mario Bava",
+                authorUid = 0
             ),
             EqPreset(
                 name = "Rap",
@@ -47,7 +54,9 @@ object StoreRepo {
                     Pair<Int,Short>(4000,3),
                     Pair<Int,Short>(14000,4)),
                 id = 2,
-                author = "Francesco Rigatone"
+                author = "Francesco Rigatone",
+                authorUid = 2
+
 
             ),
             EqPreset(
@@ -56,8 +65,8 @@ object StoreRepo {
                     Tag(name = "metal"),
                     Tag(name = "nu metal")),
                 id = 3,
-                author = "Geremia"
-
+                author = "Geremia",
+                authorUid = 56
             ),
         )
         _presets.update {

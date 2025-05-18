@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.omasba.clairaud.model.User
+import com.omasba.clairaud.ui.models.AddPresetViewModel
 
 @Composable
 fun ProfileScreen(navController: NavHostController, viewModel: UserViewModel = remember { UserViewModel() }) {

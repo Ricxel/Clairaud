@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 
 object UserRepo {
     var currentUser: User = User(
-        uid = "101",
+        uid = 101,
         token = "skibidi",
         username = "LucaBandolero",
         mail = "Luca.Bandolero@ziocan.com"

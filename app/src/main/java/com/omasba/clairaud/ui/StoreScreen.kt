@@ -21,7 +21,8 @@ import com.omasba.clairaud.ui.models.StoreViewModel
 fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
     val presets by viewModel.presets.collectAsState()
     LaunchedEffect(Unit) {
-        StoreRepo.fetchPresets()
+        if(presets.isEmpty())
+            StoreRepo.fetchPresets()
     }
     if(presets.isEmpty()){
         Box(

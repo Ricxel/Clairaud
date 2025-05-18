@@ -25,7 +25,7 @@ class UserViewModel : ViewModel() {
             delay(500)
             _userData.value = User(
                 favPresets = emptySet(),
-                uid = "user123",
+                uid = 123,
                 token = "authToken123",
                 username = "ClairaudUser",
                 mail = "user@clairaud.com"

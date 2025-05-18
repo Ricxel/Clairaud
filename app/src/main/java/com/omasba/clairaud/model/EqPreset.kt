@@ -15,5 +15,6 @@ data class EqPreset(
         Pair(16000, 0)
     ),
     var author: String = "",
+    var authorUid: Int = -1,
     val id: Int = -1
 )

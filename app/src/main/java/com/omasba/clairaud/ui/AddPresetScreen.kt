@@ -67,7 +67,8 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 color = MaterialTheme.colorScheme.primary
             )
             //area dell'eq
-            PresetGraph(presetName = eqPreset.name, bands = eqState.bands)
+            val bands = if(eqPreset.authorUid > 0) eqPreset.bands else eqState.bands
+            PresetGraph(presetName = eqPreset.name, bands = bands)
             Spacer(modifier = Modifier.height(8.dp))
             //area per le altre info del preset
             TextField(

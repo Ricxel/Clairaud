@@ -3,6 +3,7 @@ package com.omasba.clairaud.ui.models
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.omasba.clairaud.components.StoreRepo
+import com.omasba.clairaud.components.UserRepo
 import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.model.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class AddPresetViewModel:ViewModel(){
-    private val _eqPreset = MutableStateFlow(EqPreset().apply { name = "" })
+    private val _eqPreset = MutableStateFlow(EqPreset(authorUid = -1).apply { name = "" })
     val eqPreset = _eqPreset.asStateFlow()
 
     fun changePreset(preset: EqPreset){
@@ -33,6 +34,10 @@ class AddPresetViewModel:ViewModel(){
         }
     }
     fun addPreset(){
+        _eqPreset.update {
+            val uid = UserRepo.currentUser.uid
+            it.copy(authorUid = UserRepo.currentUser.uid)
+        }
         StoreRepo.addPreset(_eqPreset.value)
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -38,13 +39,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.components.StoreRepo
 import com.omasba.clairaud.components.UserRepo
 import com.omasba.clairaud.model.EqPreset
 import com.omasba.clairaud.ui.components.PresetGraph
 
 @Composable
-fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
+fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: NavHostController {
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -65,6 +68,17 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
             ){
                 Text(text = preset.name, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = {
+                        navController.navigate("addPreset")
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit preset",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
                 IconButton(
                     onClick = {
                         Log.d("store", "Click")
@@ -114,5 +128,5 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>) {
 fun PresetCardPreview(){
     val presets by StoreRepo.presets.collectAsState()
     val favPreset = UserRepo.favPresets
-    PresetCard(presets.first(), favPreset.collectAsState())
+    PresetCard(presets.first(), favPreset.collectAsState(), rememberNavController())
 }
