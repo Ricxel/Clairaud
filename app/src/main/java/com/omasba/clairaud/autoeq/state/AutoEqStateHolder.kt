@@ -15,15 +15,8 @@ object AutoEqStateHolder {
     fun changePreset(preset: EqPreset) {
         _uiState.update { it.copy(currentPreset = preset) }
     }
-//    fun updateGenre(artist: String, title: String): String{
-//        val tags = AutoEqualizerUtils.getTrackTags(artist = artist, track = title, AutoEqualizerUtils.API_KEY)
-//        val genre = tags.firstOrNull() ?: "Not detected"
-//        changeGenre(genre)
-//
-//        //ora che so i tag, bisogna intersecare quelli dei preset scaricati dall'utente con quelli trovati nella traccia
-//        //TODO
-//        Log.d("MusicDetection", "" + tags)
-//
-//        return genre
-//    }
+    fun reload(){
+        _uiState.update { it.copy(isOn = false) }
+        _uiState.update { it.copy(isOn = true) }
+    }
 }
