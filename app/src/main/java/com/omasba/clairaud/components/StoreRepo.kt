@@ -39,6 +39,12 @@ object StoreRepo {
                 tags = mutableSetOf(
                     Tag(name = "rock"),
                     Tag(name = "alternative-rock")),
+                bands = arrayListOf(
+                    Pair<Int,Short>(1, 400),
+                    Pair<Int,Short>(2, 200),
+                    Pair<Int,Short>(3, 0),
+                    Pair<Int,Short>(4, 300),
+                    Pair<Int,Short>(5, 200)),
                 id = 1,
                 author = "Mario Bava",
                 authorUid = 0
@@ -65,6 +71,12 @@ object StoreRepo {
                 tags = mutableSetOf(
                     Tag(name = "metal"),
                     Tag(name = "nu metal")),
+                bands = arrayListOf(
+                    Pair<Int,Short>(1, 500),
+                    Pair<Int,Short>(2, 100),
+                    Pair<Int,Short>(3, -100),
+                    Pair<Int,Short>(4, 400),
+                    Pair<Int,Short>(5, 300)),
                 id = 3,
                 author = "Geremia",
                 authorUid = 56
@@ -75,11 +87,11 @@ object StoreRepo {
                     Tag(name = "pop"),
                     Tag(name = "mainstream")),
                 bands = arrayListOf(
-                    Pair<Int,Short>(1,2),
-                    Pair<Int,Short>(2,3),
-                    Pair<Int,Short>(3,4),
-                    Pair<Int,Short>(4,2),
-                    Pair<Int,Short>(5,1)),
+                    Pair<Int,Short>(1,200),
+                    Pair<Int,Short>(2,300),
+                    Pair<Int,Short>(3,400),
+                    Pair<Int,Short>(4,200),
+                    Pair<Int,Short>(5,100)),
                 id = 4,
                 author = "Francesco Rigatone"
             ),
@@ -90,11 +102,11 @@ object StoreRepo {
                     Tag(name = "classical"),
                     Tag(name = "orchestral")),
                 bands = arrayListOf(
-                    Pair<Int,Short>(1,-1),
+                    Pair<Int,Short>(1,-100),
                     Pair<Int,Short>(2,0),
                     Pair<Int,Short>(3,0),
-                    Pair<Int,Short>(4,1),
-                    Pair<Int,Short>(5,2)),
+                    Pair<Int,Short>(4,100),
+                    Pair<Int,Short>(5,200)),
                 id = 5,
                 author = "Francesco Rigatone"
             ),
@@ -106,11 +118,11 @@ object StoreRepo {
                     Tag(name = "edm"),
                     Tag(name = "dance")),
                 bands = arrayListOf(
-                    Pair<Int,Short>(1,5),
-                    Pair<Int,Short>(2,3),
-                    Pair<Int,Short>(3,1),
-                    Pair<Int,Short>(4,4),
-                    Pair<Int,Short>(5,5)),
+                    Pair<Int,Short>(1,500),
+                    Pair<Int,Short>(2,300),
+                    Pair<Int,Short>(3,100),
+                    Pair<Int,Short>(4,400),
+                    Pair<Int,Short>(5,500)),
                 id = 6,
                 author = "Francesco Rigatone"
             ),
@@ -121,11 +133,11 @@ object StoreRepo {
                     Tag(name = "jazz"),
                     Tag(name = "blues")),
                 bands = arrayListOf(
-                    Pair<Int,Short>(1,-2),
+                    Pair<Int,Short>(1,-200),
                     Pair<Int,Short>(2,0),
-                    Pair<Int,Short>(3,2),
-                    Pair<Int,Short>(4,3),
-                    Pair<Int,Short>(5,1)),
+                    Pair<Int,Short>(3,200),
+                    Pair<Int,Short>(4,300),
+                    Pair<Int,Short>(5,100)),
                 id = 7,
                 author = "Francesco Rigatone"
             ),
@@ -136,11 +148,11 @@ object StoreRepo {
                     Tag(name = "metal"),
                     Tag(name = "heavy")),
                 bands = arrayListOf(
-                    Pair<Int,Short>(1,4),
-                    Pair<Int,Short>(2,2),
-                    Pair<Int,Short>(3,-1),
-                    Pair<Int,Short>(4,3),
-                    Pair<Int,Short>(5,4)),
+                    Pair<Int,Short>(1,400),
+                    Pair<Int,Short>(2,200),
+                    Pair<Int,Short>(3,-100),
+                    Pair<Int,Short>(4,300),
+                    Pair<Int,Short>(5,400)),
                 id = 8,
                 author = "Francesco Rigatone"
             ),
@@ -152,9 +164,9 @@ object StoreRepo {
                     Tag(name = "dub")),
                 bands = arrayListOf(
                     Pair<Int,Short>(1,0),
-                    Pair<Int,Short>(2,4),
-                    Pair<Int,Short>(3,3),
-                    Pair<Int,Short>(4,1),
+                    Pair<Int,Short>(2,400),
+                    Pair<Int,Short>(3,300),
+                    Pair<Int,Short>(4,100),
                     Pair<Int,Short>(5,0)),
                 id = 9,
                 author = "Francesco Rigatone"
@@ -166,11 +178,11 @@ object StoreRepo {
                     Tag(name = "country"),
                     Tag(name = "folk")),
                 bands = arrayListOf(
-                    Pair<Int,Short>(1,2),
-                    Pair<Int,Short>(2,3),
-                    Pair<Int,Short>(3,1),
+                    Pair<Int,Short>(1,200),
+                    Pair<Int,Short>(2,300),
+                    Pair<Int,Short>(3,100),
                     Pair<Int,Short>(4,0),
-                    Pair<Int,Short>(5,1)),
+                    Pair<Int,Short>(5,100)),
                 id = 10,
                 author = "Francesco Rigatone"
             )
