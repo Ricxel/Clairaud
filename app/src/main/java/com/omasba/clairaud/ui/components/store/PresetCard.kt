@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.omasba.clairaud.components.EqRepo
 import com.omasba.clairaud.components.StoreRepo
 import com.omasba.clairaud.components.UserRepo
 import com.omasba.clairaud.model.EqPreset
@@ -116,7 +117,7 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(text = "Author: ${preset.author}", style = MaterialTheme.typography.bodyMedium)
                     TagList(preset.tags)
-                    PresetGraph(presetName = preset.name, bands = preset.bands)
+                    PresetGraph(presetName = preset.name, bands = EqRepo.getBandsFormatted(preset.bands))
                 }
             }
         }

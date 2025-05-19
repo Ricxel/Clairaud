@@ -57,6 +57,7 @@ import com.omasba.clairaud.components.StoreRepo
 import com.omasba.clairaud.model.EqPreset
 
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.runtime.key
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import com.omasba.clairaud.ui.components.PresetGraph
@@ -102,7 +103,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(bottom = 8.dp)
     ) {
         val cardWidth = this.maxWidth - 32.dp
 
@@ -318,10 +319,11 @@ fun PresetComparisonCard(eqViewModel: EqualizerViewModel, pcViewModel: PresetCom
                             )
 
                             selected?.let { preset ->
-                                PresetGraph(preset.name, preset.bands)
-                                Log.d("EqScreen", "graph changed")
+                                key (preset.name){
+                                    PresetGraph(preset.name, EqRepo.getBandsFormatted(preset.bands))
+                                    Log.d("EqScreen", "graph changed")
+                                }
                             }
-
                         }
 
                     }

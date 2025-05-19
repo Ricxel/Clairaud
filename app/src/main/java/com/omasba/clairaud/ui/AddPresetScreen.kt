@@ -1,5 +1,6 @@
 package com.omasba.clairaud.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -127,7 +128,11 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
+                        eqPreset.bands = rawBands
+                        Log.d("add", "${eqPreset.bands}")
+
                         viewModel.addPreset()
+                        navController.popBackStack()
                     },
                 ) {
                     Text(text = "Add")

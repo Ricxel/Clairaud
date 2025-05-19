@@ -32,7 +32,7 @@ object StoreRepo {
         return myPresets
     }
     suspend fun fetchPresets() {
-        delay(200)
+        delay(1000)
         val samplePresets = listOf(
             EqPreset(
                 name = "Rock",
