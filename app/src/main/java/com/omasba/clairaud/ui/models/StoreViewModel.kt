@@ -41,6 +41,10 @@ class StoreViewModel:ViewModel() {
     private val _filterByFavorites = MutableStateFlow(false)
     val filterByFavorites = _filterByFavorites.asStateFlow()
 
+    //flag per filtro sui preset dell'utente
+    private val _showUserPresets = MutableStateFlow(false)
+    val showUserPresets = _showUserPresets.asStateFlow()
+
     //filtra per preferiti
     private val filteredPresetsByFav: StateFlow<List<EqPreset>> = _filterByFavorites
         .map { filter ->
@@ -57,17 +61,27 @@ class StoreViewModel:ViewModel() {
             if (query.isBlank()) items
             else items.filter { it.name.contains(query, ignoreCase = true) }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    //per mostrare solo quelli dell'utente
+    private val userPresets: StateFlow<List<EqPreset>> =
+        combine(filteredPresetsByQuery, _showUserPresets) { items, filter ->
+            if (!filter) items
+            else items.filter { it.authorUid == UserRepo.currentUser.uid }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
     //filtra per i tag
-    val filteredItemsByTags = combine(filteredPresetsByQuery, selectedTags) { items, tags ->
+    val filteredItemsByTags = combine(userPresets, selectedTags) { items, tags ->
         if (tags.isEmpty()) items
         else items.filter { it.tags.any { tag -> tag in tags } }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
 
     fun onQueryChanged(newQuery: String){
         _query.value = newQuery
     }
     fun toggleFavoriteFilter(){
-        _filterByFavorites.value = !_filterByFavorites.value
+        _filterByFavorites.update { !it }
+    }
+    fun toggleShowUserPresets(){
+        _showUserPresets.update { !it }
     }
     fun onTagSelected(tag: Tag) {
         _selectedTags.update { it + tag }

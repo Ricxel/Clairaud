@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.omasba.clairaud.components.UserRepo
 import com.omasba.clairaud.ui.models.StoreViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +50,7 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
     val presets by viewModel.presets.collectAsState()
 //    val filteredPresets by viewModel.filteredPresets.collectAsState() //per barra di ricerca
     val filteredPresets by viewModel.filteredItemsByTags.collectAsState() // per tags
+    val showUserPresets by viewModel.showUserPresets.collectAsState()
     val filterByFavorites by viewModel.filterByFavorites.collectAsState()
     val selectedTags by viewModel.selectedTags.collectAsState()
     val allTags = remember { //estrae i tag dispinibili dai preset
@@ -99,7 +101,7 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(start = 16.dp, top = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             ){
             Text(
@@ -111,6 +113,24 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
             Switch(
                 checked = filterByFavorites,
                 onCheckedChange = {viewModel.toggleFavoriteFilter()}
+            )
+        }
+        // filtro sui preset fatti dall'utente
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ){
+            Text(
+                text = "Show only my presets",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Spacer(Modifier.width(8.dp))
+            Switch(
+                checked = showUserPresets,
+                onCheckedChange = {viewModel.toggleShowUserPresets()}
             )
         }
         if(filteredPresets.isEmpty()){
