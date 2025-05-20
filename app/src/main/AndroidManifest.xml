@@ -30,6 +30,7 @@
             android:name=".autoeq.MusicDetectionService"
             android:label="Clairaud Music Detection"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:foregroundServiceType="mediaPlayback"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />

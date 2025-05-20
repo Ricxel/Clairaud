@@ -1,5 +1,6 @@
 package com.omasba.clairaud.autoeq
 
+import android.app.Notification
 import android.content.ComponentName
 import android.content.Intent
 import android.media.MediaMetadata
@@ -11,6 +12,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import android.app.NotificationManager
 import android.app.NotificationChannel
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.os.Build
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
 import com.omasba.clairaud.repos.EqRepo
@@ -49,15 +51,28 @@ class MusicDetectionService : NotificationListenerService() {
 
     override fun onCreate() {
         super.onCreate()
-
         Log.d("MusicDetection", "Service created")
         sessionManager = getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
         createNotificationChannel()
 
         // Avvia il servizio come foreground per mantenerlo attivo in background
-//        startForeground(NOTIFICATION_ID, createForegroundNotification())
+        startForeground(NOTIFICATION_ID, createForegroundNotification())
         observeAutoEqState()
 
+    }
+    private fun createForegroundNotification(): Notification {
+        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("Rilevamento Musica in corso")
+            .setContentText("Il servizio è attivo.")
+            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
+            .setTicker("Servizio in esecuzione")
+
+        // Assicurati che la notifica venga sempre creata correttamente
+        Log.d("MusicDetection", "Notifica creata")
+
+        return notificationBuilder.build()
     }
 
     override fun onListenerConnected() {
