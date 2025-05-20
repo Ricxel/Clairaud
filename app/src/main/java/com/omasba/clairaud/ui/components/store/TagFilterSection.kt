@@ -3,6 +3,7 @@ package com.omasba.clairaud.ui.components.store
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,18 +50,13 @@ fun TagFilterSection(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .clickable { expanded = !expanded }
             .heightIn(max = animatedHeight),
     ) {
         Box(
             modifier = Modifier
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
         ){
-            Row(
-                modifier = Modifier
-                    .heightIn(max = animatedHeight+20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ){
+            Row{
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -76,12 +73,19 @@ fun TagFilterSection(
                         )
                     }
                 }
-                Icon(
-                    modifier = Modifier.weight(1f),
-                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "expand icon",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                IconButton(
+                    onClick = {expanded = !expanded}
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .padding(top = 6.dp)
+                            .weight(1f),
+                        imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = "expand icon",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
             }
 
         }
