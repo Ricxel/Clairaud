@@ -1,4 +1,4 @@
-package com.omasba.clairaud.model
+package com.omasba.clairaud.state
 
 import kotlinx.serialization.Serializable
 

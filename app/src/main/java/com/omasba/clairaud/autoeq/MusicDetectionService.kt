@@ -11,14 +11,13 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import android.app.NotificationManager
 import android.app.NotificationChannel
-import android.media.audiofx.Visualizer
 import android.os.Build
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
-import com.omasba.clairaud.components.EqRepo
-import com.omasba.clairaud.model.Tag
+import com.omasba.clairaud.repos.EqRepo
+import com.omasba.clairaud.state.Tag
 import com.omasba.clairaud.network.API_KEY
 import com.omasba.clairaud.network.LastFmApi
-import com.omasba.clairaud.components.UserRepo
+import com.omasba.clairaud.repos.UserRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

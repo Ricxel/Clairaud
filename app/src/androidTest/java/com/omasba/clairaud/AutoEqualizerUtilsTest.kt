@@ -1,9 +1,9 @@
 package com.omasba.clairaud
 
 import android.util.Log
-import com.omasba.clairaud.model.EqPreset
-import com.omasba.clairaud.model.Tag
-import com.omasba.clairaud.model.User
+import com.omasba.clairaud.state.EqPreset
+import com.omasba.clairaud.state.Tag
+import com.omasba.clairaud.state.User
 import org.junit.Assert.assertTrue
 import org.junit.Test
 

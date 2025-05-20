@@ -1,8 +1,8 @@
-package com.omasba.clairaud.components
+package com.omasba.clairaud.repos
 
-import android.media.audiofx.Equalizer
 import android.util.Log
-import com.omasba.clairaud.ui.components.EqualizerUiState
+import com.omasba.clairaud.components.Eq
+import com.omasba.clairaud.state.EqualizerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,7 +14,7 @@ object EqRepo{
     private val _eq = MutableStateFlow<Eq?>(null)
     val eq = _eq.asStateFlow()
 
-    fun setEq(equalizer:Eq?){
+    fun setEq(equalizer: Eq?){
         _eq.update { equalizer }
     }
 

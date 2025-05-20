@@ -1,7 +1,7 @@
 package com.omasba.clairaud.ui.models
 
 import androidx.lifecycle.ViewModel
-import com.omasba.clairaud.model.EqPreset
+import com.omasba.clairaud.state.EqPreset
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

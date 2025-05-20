@@ -1,7 +1,7 @@
 package com.omasba.clairaud.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.omasba.clairaud.model.TopTagsResponse
+import com.omasba.clairaud.state.TopTagsResponse
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit

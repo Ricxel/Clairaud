@@ -1,7 +1,6 @@
 package com.omasba.clairaud.ui
 
 import UserViewModel
-import android.media.audiofx.Equalizer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.omasba.clairaud.ui.components.BottomNavItem
+import com.omasba.clairaud.state.BottomNavItem
 import com.omasba.clairaud.ui.models.AddPresetViewModel
 import com.omasba.clairaud.ui.models.EqualizerViewModel
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel

@@ -1,7 +1,6 @@
-package com.omasba.clairaud.ui.components
+package com.omasba.clairaud.state
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart

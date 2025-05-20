@@ -1,18 +1,11 @@
 package com.omasba.clairaud.ui.models
 
-import android.util.Log
-import androidx.compose.material3.Text
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.compose.composable
-import com.omasba.clairaud.components.StoreRepo
-import com.omasba.clairaud.components.UserRepo
-import com.omasba.clairaud.model.EqPreset
-import com.omasba.clairaud.model.Tag
-import com.omasba.clairaud.ui.components.BottomNavItem
-import kotlinx.coroutines.delay
+import com.omasba.clairaud.repos.StoreRepo
+import com.omasba.clairaud.repos.UserRepo
+import com.omasba.clairaud.state.EqPreset
+import com.omasba.clairaud.state.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +14,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class StoreViewModel:ViewModel() {
     val presets = StoreRepo.presets

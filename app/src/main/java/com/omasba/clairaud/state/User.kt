@@ -1,6 +1,4 @@
-package com.omasba.clairaud.model
-
-import com.omasba.clairaud.components.StoreRepo
+package com.omasba.clairaud.state
 
 data class User (
     var favPresets: Set<Int> = emptySet(), // lista degli id dei preset preferitit

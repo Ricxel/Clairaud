@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.omasba.clairaud.components.StoreRepo
+import com.omasba.clairaud.repos.StoreRepo
 import com.omasba.clairaud.ui.components.store.Store
 import com.omasba.clairaud.ui.models.StoreViewModel
 

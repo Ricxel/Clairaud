@@ -2,8 +2,7 @@ package com.omasba.clairaud.components
 
 import android.media.audiofx.Equalizer
 import android.util.Log
-import androidx.versionedparcelable.ParcelImpl
-import kotlinx.coroutines.delay
+import com.omasba.clairaud.repos.EqRepo
 
 data class Eq(private val sessionId: Int, private val eq:Eq? = null) {
     private var equalizer: Equalizer? = null

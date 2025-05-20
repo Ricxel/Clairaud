@@ -1,7 +1,5 @@
 package com.omasba.clairaud.ui
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -30,21 +23,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.omasba.clairaud.components.EqRepo
-import com.omasba.clairaud.components.StoreRepo
-import com.omasba.clairaud.model.EqPreset
-import com.omasba.clairaud.model.Tag
-import com.omasba.clairaud.ui.components.BottomNavItem
+import com.omasba.clairaud.repos.EqRepo
+import com.omasba.clairaud.state.Tag
 import com.omasba.clairaud.ui.components.PresetGraph
-import com.omasba.clairaud.ui.components.store.FloatingButton
 import com.omasba.clairaud.ui.components.store.TagList
 import com.omasba.clairaud.ui.models.AddPresetViewModel
 
@@ -52,6 +38,7 @@ import com.omasba.clairaud.ui.models.AddPresetViewModel
 fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostController){
     val eqPreset by viewModel.eqPreset.collectAsState()
     val eqState by EqRepo.eqState.collectAsState()
+    val errorState by viewModel.showError.collectAsState()
     var tagInput by remember { mutableStateOf("") }
     Box (
         modifier = Modifier
@@ -79,6 +66,13 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 label = {Text("Preset name")},
                 modifier = Modifier.fillMaxWidth()
             )
+            // per mostrare l'errore
+            if(errorState){
+                Text(
+                    text = "* Preset name is empty",
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             Spacer(
                 modifier = Modifier
                     .height(20.dp)
@@ -89,16 +83,18 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.secondary
                 )
-            TagList(eqPreset.tags)
+            TagList(eqPreset.tags){tag ->
+                //viene eseguita al click di un assist chip
+                viewModel.removeTag(tag)
+            }
             OutlinedTextField(
                 value = tagInput,
                 onValueChange = { tagInput = it },
                 label = { Text("Tag") },
                 shape = RoundedCornerShape(30.dp),
                 singleLine = true,
-                textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
                 modifier = Modifier
-                    .width(100.dp)
+                    .width(80.dp)
             )
             Spacer(
                 modifier = Modifier.height(8.dp)
@@ -128,11 +124,8 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
-                        eqPreset.bands = rawBands
-                        Log.d("add", "${eqPreset.bands}")
-
-                        viewModel.addPreset()
-                        navController.popBackStack()
+                        if(viewModel.addPreset(rawBands))
+                            navController.popBackStack()
                     },
                 ) {
                     Text(text = "Add")

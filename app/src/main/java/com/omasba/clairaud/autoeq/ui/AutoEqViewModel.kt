@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
 import com.omasba.clairaud.autoeq.state.AutoEqUiState
-import com.omasba.clairaud.model.EqPreset
+import com.omasba.clairaud.state.EqPreset
 import kotlinx.coroutines.flow.StateFlow
 
 class AutoEqViewModel : ViewModel() {

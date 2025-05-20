@@ -6,12 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.audiofx.AudioEffect
-import android.media.audiofx.Equalizer
 import android.os.Build
 import android.app.*
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.omasba.clairaud.repos.EqRepo
 
 class EqService : Service() {
 

@@ -51,29 +51,49 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.omasba.clairaud.autoeq.ui.AutoEq
 import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
-import com.omasba.clairaud.components.EqRepo
+import com.omasba.clairaud.repos.EqRepo
 import com.omasba.clairaud.components.EqService
-import com.omasba.clairaud.components.StoreRepo
-import com.omasba.clairaud.model.EqPreset
+import com.omasba.clairaud.repos.StoreRepo
+import com.omasba.clairaud.state.EqPreset
 
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.key
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
+import com.omasba.clairaud.ui.components.EqNotFound
 import com.omasba.clairaud.ui.components.PresetGraph
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel
 
 @Composable
 fun EqScreen(eqViewModel:EqualizerViewModel,pcViewModel: PresetComparisonViewModel, navController: NavHostController){
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .padding(16.dp)
-        .fillMaxWidth()
-    ) {
-        EqCard(viewModel = eqViewModel, navController = navController)
-        Spacer(modifier = Modifier.height(16.dp))
+    val eq by EqRepo.eq.collectAsState()
+    val context = LocalContext.current
+    //si fa partire il servizio
+    LaunchedEffect(Unit) {
+        val serviceIntent = Intent(context, EqService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(serviceIntent)
+        } else {
+            context.startService(serviceIntent)
+        }
+        Log.d("EqScreen","Lanciato!")
+    }
 
-        PresetComparisonCard(eqViewModel, pcViewModel)
+    if (eq != null) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            EqCard(viewModel = eqViewModel, navController = navController)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            PresetComparisonCard(eqViewModel, pcViewModel)
+        }
+    }
+    else{
+        EqNotFound()
     }
 
 }
@@ -89,16 +109,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
     Log.d(TAG, "bands: $bands.toString()")
     val autoEqModel = AutoEqViewModel()
 
-    val context = LocalContext.current
-    LaunchedEffect(Unit) {
-        val serviceIntent = Intent(context, EqService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(serviceIntent)
-        } else {
-            context.startService(serviceIntent)
-        }
-        Log.d(TAG,"Lanciato!")
-    }
+    Log.d("EqScreen", "eq card ${eq}")
 
     BoxWithConstraints(
         modifier = Modifier

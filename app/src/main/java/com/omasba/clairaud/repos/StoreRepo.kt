@@ -1,20 +1,11 @@
-package com.omasba.clairaud.components
+package com.omasba.clairaud.repos
 
-import androidx.lifecycle.viewModelScope
-import com.omasba.clairaud.model.EqPreset
-import com.omasba.clairaud.model.Tag
-import com.omasba.clairaud.model.User
-import kotlinx.coroutines.coroutineScope
+import com.omasba.clairaud.state.EqPreset
+import com.omasba.clairaud.state.Tag
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 object StoreRepo {
     //funzione per fare la query che ritorna il flow di preset

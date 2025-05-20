@@ -1,12 +1,11 @@
 package com.omasba.clairaud.ui.models
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.omasba.clairaud.components.EqRepo
+import com.omasba.clairaud.repos.EqRepo
 
 class EqualizerViewModel : ViewModel() {
     val TAG:String = "EqViewModel"

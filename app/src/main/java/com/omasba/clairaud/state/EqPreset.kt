@@ -1,4 +1,4 @@
-package com.omasba.clairaud.model
+package com.omasba.clairaud.state
 
 data class EqPreset(
     var tags: Set<Tag> = emptySet(),

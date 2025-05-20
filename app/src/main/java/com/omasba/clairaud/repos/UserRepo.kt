@@ -1,10 +1,8 @@
-package com.omasba.clairaud.components
+package com.omasba.clairaud.repos
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import com.omasba.clairaud.model.EqPreset
-import com.omasba.clairaud.model.Tag
-import com.omasba.clairaud.model.User
+import com.omasba.clairaud.state.EqPreset
+import com.omasba.clairaud.state.Tag
+import com.omasba.clairaud.state.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

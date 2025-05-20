@@ -1,6 +1,5 @@
-package com.omasba.clairaud.model
+package com.omasba.clairaud.state
 
-import androidx.compose.ui.text.toLowerCase
 import kotlinx.serialization.Serializable
 
 
