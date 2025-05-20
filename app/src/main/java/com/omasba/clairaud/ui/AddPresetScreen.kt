@@ -100,7 +100,10 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 modifier = Modifier.height(8.dp)
             )
             Button(
-                onClick = {viewModel.addTag(Tag(name = tagInput))},
+                onClick = {
+                    viewModel.addTag(Tag(name = tagInput))
+                    tagInput = ""
+                },
             ) {
                 Text("Add tag")
             }
@@ -124,11 +127,11 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
-                        if(viewModel.addPreset(rawBands))
+                        if(viewModel.confirmPreset(rawBands))
                             navController.popBackStack()
                     },
                 ) {
-                    Text(text = "Add")
+                    Text(text = "Confirm")
                 }
             }
 

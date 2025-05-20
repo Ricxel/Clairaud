@@ -2,6 +2,7 @@ package com.omasba.clairaud.repos
 
 import android.util.Log
 import com.omasba.clairaud.components.Eq
+import com.omasba.clairaud.state.EqPreset
 import com.omasba.clairaud.state.EqualizerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -80,4 +81,5 @@ object EqRepo{
             currentState.copy(isOn = isOn)
         }
     }
+
 }

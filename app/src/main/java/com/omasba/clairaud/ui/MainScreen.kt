@@ -1,6 +1,7 @@
 package com.omasba.clairaud.ui
 
 import UserViewModel
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +11,7 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,7 +19,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.omasba.clairaud.repos.StoreRepo
 import com.omasba.clairaud.state.BottomNavItem
+import com.omasba.clairaud.state.EqPreset
 import com.omasba.clairaud.ui.models.AddPresetViewModel
 import com.omasba.clairaud.ui.models.EqualizerViewModel
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel
@@ -42,7 +46,7 @@ fun MainScreen() {
         BottomNavItem.Store,
         BottomNavItem.Profile
     )
-
+    val presets by StoreRepo.presets.collectAsState()
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -82,12 +86,25 @@ fun MainScreen() {
             startDestination = BottomNavItem.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
+//            val presets by StoreRepo.presets.collectAsState()
             composable(BottomNavItem.Home.route) { EqScreen(eqViewModel = equalizerViewModel, pcViewModel, navController = navController) }
             composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
             composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
 //            composable(BottomNavItem.Profile.route) { Text("Profilo") }
             //add preset
             composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
+            composable("editPreset/{presetId}"){backStackEntry ->
+                //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare
+                //e aggiornare il viewModel di conseguenza
+                val presetId = backStackEntry.arguments?.getString("presetId")?.toInt()
+                Log.d("route", "id passato alla route: ${presetId}")
+                val preset = presets.find { it.id == presetId }
+
+                Log.d("route","Preset trovato: $preset")
+                val editPresetViewModel = AddPresetViewModel()
+                editPresetViewModel.changePreset(preset ?: EqPreset())
+                AddPresetScreen(viewModel = editPresetViewModel, navController = navController)
+            }
         }
     }
 }

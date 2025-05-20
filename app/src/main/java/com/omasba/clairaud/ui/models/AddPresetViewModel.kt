@@ -8,6 +8,7 @@ import com.omasba.clairaud.state.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.random.Random
 
 class AddPresetViewModel:ViewModel(){
     private val _eqPreset = MutableStateFlow(EqPreset(authorUid = -1).apply { name = "" })
@@ -35,16 +36,28 @@ class AddPresetViewModel:ViewModel(){
             it.copy(tags = it.tags - tag)
         }
     }
-    //aggiunge il preset
-    fun addPreset(bands: ArrayList<Pair<Int,Short>>):Boolean{
+    //aggiunge o modifica il preset
+    fun confirmPreset(bands: ArrayList<Pair<Int,Short>>):Boolean{
         if(_eqPreset.value.name.isBlank()){
             _showError.value = true
             return false
         }
-        _eqPreset.update {
-            it.copy(authorUid = UserRepo.currentUser.uid, bands = bands, author = UserRepo.currentUser.username)
+        if(_eqPreset.value.authorUid != UserRepo.currentUser.uid){
+            //vuol dire che è nuovo
+            _eqPreset.update {
+                it.copy(
+                    authorUid = UserRepo.currentUser.uid,
+                    bands = bands,
+                    author = UserRepo.currentUser.username,
+                    id = Random.nextInt(100,100000)
+                )
+            }
+            StoreRepo.addPreset(_eqPreset.value)
         }
-        StoreRepo.addPreset(_eqPreset.value)
+        else{
+            //vuol dire che lo sto modificando
+            StoreRepo.replacePreset(preset = _eqPreset.value)
+        }
         //resetta
         _showError.value = false
         this.changePreset(EqPreset(name = "")) //nuovo preset pulito

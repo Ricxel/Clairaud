@@ -1,6 +1,7 @@
 package com.omasba.clairaud.state
 
 data class EqPreset(
+    val id: Int = -1,
     var tags: Set<Tag> = emptySet(),
     var name: String = "DefaultPreset",
     var bands: ArrayList<Pair<Int,Short>> = arrayListOf( //default preset
@@ -12,5 +13,4 @@ data class EqPreset(
     ),
     var author: String = "",
     var authorUid: Int = -1,
-    val id: Int = -1
 )

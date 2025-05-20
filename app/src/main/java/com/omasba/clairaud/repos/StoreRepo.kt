@@ -5,6 +5,7 @@ import com.omasba.clairaud.state.Tag
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.isActive
 import kotlinx.coroutines.flow.update
 
 object StoreRepo {
@@ -16,6 +17,19 @@ object StoreRepo {
         _presets.update {
             it + preset
         }
+    }
+    fun removePreset(preset:EqPreset){
+        _presets.update {
+            it - preset
+        }
+    }
+    fun replacePreset(preset:EqPreset){
+        _presets.update {
+            it.filter{current ->
+                current.id != preset.id
+            }
+        }
+        this.addPreset(preset)
     }
     //restituisce i preset creati dall'utente
     fun getMyPresets(uid: Int):List<EqPreset>{

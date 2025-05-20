@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -68,12 +69,23 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
                 if(preset.authorUid == UserRepo.currentUser.uid){
                     IconButton(
                         onClick = {
-                            navController.navigate("addPreset")
+                            navController.navigate("editPreset/${preset.id}")
                         }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Edit preset",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            StoreRepo.removePreset(preset)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete preset",
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
