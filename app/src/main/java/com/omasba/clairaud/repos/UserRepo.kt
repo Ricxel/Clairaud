@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.update
 object UserRepo {
     var currentUser: User = User(
         uid = 101,
-        token = "skibidi",
+        token = "LucaToken",
         username = "LucaBandolero",
-        mail = "Luca.Bandolero@ziocan.com"
+        mail = "Luca.Bandolero@gmaio.com"
     )
     private val _favPresets = MutableStateFlow<Set<Int>>(currentUser.favPresets)
     val favPresets = _favPresets.asStateFlow()
@@ -20,6 +20,7 @@ object UserRepo {
         //prendo i preset dallo store
         var maxCount = 0
         var correctPreset = EqPreset()
+
         _favPresets.value.forEach{ id ->
             run {
                 val preset = StoreRepo.presets.value.find { it.id == id } ?: EqPreset()
@@ -35,6 +36,7 @@ object UserRepo {
     fun isFavorite(id:Int):Boolean{
         return _favPresets.value.contains(id);
     }
+
     fun addFavorite(id: Int){
 //        val tmp = mutableSetOf<Int>()
 //        tmp.addAll(_favPresets.value)
@@ -42,6 +44,7 @@ object UserRepo {
 //        _favPresets.value = tmp
         _favPresets.update { it + id }
     }
+
     fun removeFavorite(id: Int){
 //        val tmp = mutableSetOf<Int>()
 //        tmp.addAll(_favPresets.value)
@@ -49,6 +52,7 @@ object UserRepo {
 //        _favPresets.value = tmp
         _favPresets.update { it - id }
     }
+
     init {
     }
 }

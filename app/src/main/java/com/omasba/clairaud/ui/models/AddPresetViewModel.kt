@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.random.Random
 
+val TAG = "AddPresetViewModel"
+
 class AddPresetViewModel:ViewModel(){
     private val _eqPreset = MutableStateFlow(EqPreset(authorUid = -1).apply { name = "" })
     val eqPreset = _eqPreset.asStateFlow()

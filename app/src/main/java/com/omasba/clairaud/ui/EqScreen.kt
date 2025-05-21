@@ -63,9 +63,12 @@ import androidx.compose.ui.layout.positionInParent
 import com.omasba.clairaud.ui.components.EqNotFound
 import com.omasba.clairaud.ui.components.PresetGraph
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel
+import com.omasba.clairaud.ui.models.StoreViewModel
+
+val TAG = "EqScreen"
 
 @Composable
-fun EqScreen(eqViewModel:EqualizerViewModel,pcViewModel: PresetComparisonViewModel, navController: NavHostController){
+fun EqScreen(eqViewModel:EqualizerViewModel, storeViewModel: StoreViewModel, navController: NavHostController){
     val eq by EqRepo.eq.collectAsState()
     val context = LocalContext.current
     //si fa partire il servizio
@@ -87,9 +90,11 @@ fun EqScreen(eqViewModel:EqualizerViewModel,pcViewModel: PresetComparisonViewMod
                 .fillMaxWidth()
         ) {
             EqCard(viewModel = eqViewModel, navController = navController)
+            Log.d(TAG, "Eq card loaded")
             Spacer(modifier = Modifier.height(16.dp))
 
-            PresetComparisonCard(eqViewModel, pcViewModel)
+            PresetComparisonCard(eqViewModel, storeViewModel)
+            Log.d(TAG, "Preset card loaded")
         }
     }
     else{
@@ -100,7 +105,6 @@ fun EqScreen(eqViewModel:EqualizerViewModel,pcViewModel: PresetComparisonViewMod
 
 @Composable
 fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
-    val TAG = "EqScreen"
 
     val eqState by viewModel.eqState.collectAsState()
     val isOn = eqState.isOn
@@ -285,10 +289,15 @@ fun formatFrequency(hz: Int): String {
 }
 
 @Composable
-fun PresetComparisonCard(eqViewModel: EqualizerViewModel, pcViewModel: PresetComparisonViewModel) {
-    val presets by StoreRepo.presets.collectAsState()
+fun PresetComparisonCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel) {
+    val presets by storeViewModel.presets.collectAsState()
     var rightExpanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<EqPreset?>(null) }
+
+    LaunchedEffect(Unit) {
+        if(presets.isEmpty())
+            StoreRepo.fetchPresets()
+    }
 
     Card(
         modifier = Modifier
@@ -332,7 +341,7 @@ fun PresetComparisonCard(eqViewModel: EqualizerViewModel, pcViewModel: PresetCom
                             selected?.let { preset ->
                                 key (preset.name){
                                     PresetGraph(preset.name, EqRepo.getBandsFormatted(preset.bands))
-                                    Log.d("EqScreen", "graph changed")
+                                    Log.d(TAG, "graph changed")
                                 }
                             }
                         }

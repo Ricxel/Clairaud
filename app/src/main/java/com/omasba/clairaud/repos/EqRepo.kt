@@ -74,7 +74,6 @@ object EqRepo{
 
     fun setIsOn(isOn:Boolean){
         _eq.value?.setIsOn(isOn)
-        Log.d(TAG, "enabled: " + isOn.toString())
 
 
         _eqState.update{ currentState ->

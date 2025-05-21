@@ -22,7 +22,7 @@ class UserViewModel : ViewModel() {
 
         viewModelScope.launch {
             // Simula ritardo di rete
-            delay(500)
+            delay(250)
             _userData.value = User(
                 favPresets = emptySet(),
                 uid = 123,

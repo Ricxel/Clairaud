@@ -1,5 +1,6 @@
 package com.omasba.clairaud.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
         if(presets.isEmpty())
             StoreRepo.fetchPresets()
     }
+
     if(presets.isEmpty()){
         Box(
             modifier = Modifier
@@ -50,4 +52,5 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
 fun StoreScreenPreview(){
     val viewModel = StoreViewModel()
     StoreScreen(viewModel = viewModel, navController = rememberNavController())
+    Log.d(TAG, "Store loaded")
 }

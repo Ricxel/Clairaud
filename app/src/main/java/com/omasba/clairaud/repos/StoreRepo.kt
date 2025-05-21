@@ -1,5 +1,7 @@
 package com.omasba.clairaud.repos
 
+import android.util.Log
+import com.omasba.clairaud.repos.EqRepo.TAG
 import com.omasba.clairaud.state.EqPreset
 import com.omasba.clairaud.state.Tag
 import kotlinx.coroutines.delay
@@ -17,23 +19,32 @@ object StoreRepo {
         _presets.update {
             it + preset
         }
+
+        Log.d(TAG, "Preset added ~ ${preset.name}")
     }
     fun removePreset(preset:EqPreset){
         _presets.update {
             it - preset
         }
+
+        Log.d(TAG, "Preset removed ~ ${preset.name}")
     }
     fun replacePreset(preset:EqPreset){
+
         _presets.update {
             it.filter{current ->
                 current.id != preset.id
             }
         }
         this.addPreset(preset)
+
+        Log.d(TAG, "Preset replaced ~ current -> ${preset.name}")
     }
     //restituisce i preset creati dall'utente
     fun getMyPresets(uid: Int):List<EqPreset>{
         val myPresets = _presets.value.filter { it.authorUid == uid }
+        Log.d(TAG, "User presets created")
+
         return myPresets
     }
     suspend fun fetchPresets() {
@@ -92,13 +103,13 @@ object StoreRepo {
                     Tag(name = "pop"),
                     Tag(name = "mainstream")),
                 bands = arrayListOf(
-                    Pair<Int,Short>(1,200),
-                    Pair<Int,Short>(2,300),
-                    Pair<Int,Short>(3,400),
-                    Pair<Int,Short>(4,200),
-                    Pair<Int,Short>(5,100)),
+                    Pair<Int,Short>(0,200),
+                    Pair<Int,Short>(1,300),
+                    Pair<Int,Short>(2,400),
+                    Pair<Int,Short>(3,200),
+                    Pair<Int,Short>(4,100)),
                 id = 4,
-                author = "Francesco Rigatone"
+                author = "Marco Corradin"
             ),
 
             EqPreset(
@@ -113,7 +124,7 @@ object StoreRepo {
                     Pair<Int,Short>(3,100),
                     Pair<Int,Short>(4,200)),
                 id = 5,
-                author = "Francesco Rigatone"
+                author = "Mario Mazzaretto"
             ),
 
             EqPreset(
@@ -129,7 +140,7 @@ object StoreRepo {
                     Pair<Int,Short>(3,400),
                     Pair<Int,Short>(4,500)),
                 id = 6,
-                author = "Francesco Rigatone"
+                author = "Simone Simoncelli"
             ),
 
             EqPreset(
@@ -144,7 +155,7 @@ object StoreRepo {
                     Pair<Int,Short>(3,300),
                     Pair<Int,Short>(4,100)),
                 id = 7,
-                author = "Francesco Rigatone"
+                author = "Michele Ballaben"
             ),
 
             EqPreset(
@@ -159,7 +170,7 @@ object StoreRepo {
                     Pair<Int,Short>(3,300),
                     Pair<Int,Short>(4,400)),
                 id = 8,
-                author = "Francesco Rigatone"
+                author = "Nico Rapisarda"
             ),
 
             EqPreset(
@@ -174,7 +185,7 @@ object StoreRepo {
                     Pair<Int,Short>(3,100),
                     Pair<Int,Short>(4,0)),
                 id = 9,
-                author = "Francesco Rigatone"
+                author = "Alfonso Fusolini"
             ),
 
             EqPreset(
@@ -189,7 +200,7 @@ object StoreRepo {
                     Pair<Int,Short>(3,0),
                     Pair<Int,Short>(4,100)),
                 id = 10,
-                author = "Francesco Rigatone"
+                author = "Trevor Postelli"
             )
         )
         _presets.update {

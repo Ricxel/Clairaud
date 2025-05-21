@@ -87,7 +87,7 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
 //            val presets by StoreRepo.presets.collectAsState()
-            composable(BottomNavItem.Home.route) { EqScreen(eqViewModel = equalizerViewModel, pcViewModel, navController = navController) }
+            composable(BottomNavItem.Home.route) { EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController) }
             composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
             composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
 //            composable(BottomNavItem.Profile.route) { Text("Profilo") }
