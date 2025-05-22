@@ -68,8 +68,6 @@ class MusicDetectionService : NotificationListenerService() {
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
             .setTicker("Servizio in esecuzione")
-
-        // Assicurati che la notifica venga sempre creata correttamente
         Log.d("MusicDetection", "Notifica creata")
 
         return notificationBuilder.build()

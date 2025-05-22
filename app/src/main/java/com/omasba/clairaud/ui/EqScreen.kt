@@ -62,6 +62,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import com.omasba.clairaud.ui.components.EqNotFound
 import com.omasba.clairaud.ui.components.PresetGraph
+import com.omasba.clairaud.ui.components.store.TagList
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel
 import com.omasba.clairaud.ui.models.StoreViewModel
 
@@ -93,7 +94,7 @@ fun EqScreen(eqViewModel:EqualizerViewModel, storeViewModel: StoreViewModel, nav
             Log.d(TAG, "Eq card loaded")
             Spacer(modifier = Modifier.height(16.dp))
 
-            PresetComparisonCard(eqViewModel, storeViewModel)
+            ApplyPresetCard(eqViewModel, storeViewModel)
             Log.d(TAG, "Preset card loaded")
         }
     }
@@ -289,7 +290,7 @@ fun formatFrequency(hz: Int): String {
 }
 
 @Composable
-fun PresetComparisonCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel) {
+fun ApplyPresetCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel) {
     val presets by storeViewModel.presets.collectAsState()
     var rightExpanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<EqPreset?>(null) }
@@ -308,7 +309,7 @@ fun PresetComparisonCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreV
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Compare Presets",
+                text = "Apply preset",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -342,6 +343,30 @@ fun PresetComparisonCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreV
                                 key (preset.name){
                                     PresetGraph(preset.name, EqRepo.getBandsFormatted(preset.bands))
                                     Log.d(TAG, "graph changed")
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .padding(top = 8.dp)
+                                ){
+                                    Text(
+                                        text = "Author: ",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.tertiary
+                                    )
+                                    Text(
+                                        text = preset.author,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                }
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ){
+                                    Text(
+                                        text = "Tag ",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.tertiary
+                                    )
+                                    TagList(preset.tags)
                                 }
                             }
                         }
