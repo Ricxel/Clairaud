@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "124284435311",
+    "project_id": "clairaud-47653",
+    "storage_bucket": "clairaud-47653.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124284435311:android:d5445fecc2b8eb9126469a",
+        "android_client_info": {
+          "package_name": "com.omasba.clairaud"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsUirUFUu0ZqM562rfUAVAOXiuwJy64tA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

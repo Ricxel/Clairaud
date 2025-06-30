@@ -47,12 +47,16 @@ class StoreViewModel:ViewModel() {
             else items.filter { favPresets.value.contains(it.id) }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+
     //funzione per filtare i preset dalla search bar
     private val filteredPresetsByQuery: StateFlow<List<EqPreset>> =
         combine(_query, filteredPresetsByFav) { query, items ->
             if (query.isBlank()) items
             else items.filter { it.name.contains(query, ignoreCase = true) }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+
     //per mostrare solo quelli dell'utente
     private val userPresets: StateFlow<List<EqPreset>> =
         combine(filteredPresetsByQuery, _showUserPresets) { items, filter ->
@@ -64,8 +68,6 @@ class StoreViewModel:ViewModel() {
         if (tags.isEmpty()) items
         else items.filter { it.tags.any { tag -> tag in tags } }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
-
-
     fun onQueryChanged(newQuery: String){
         _query.value = newQuery
     }
