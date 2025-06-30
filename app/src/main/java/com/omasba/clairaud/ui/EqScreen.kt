@@ -217,10 +217,10 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
 
                                             layout(placeable.height, placeable.width) {
                                                 val layoutHeight = placeable.width
-                                                val x = dBx - placeable.width / 2.5f
-                                                val y = (layoutHeight - placeable.height) / 2
+                                                val x = dBx - placeable.width / 2.7f
+                                                val y = (layoutHeight - placeable.height) / 1.8f
 
-                                                placeable.placeRelative(x.toInt(), y)
+                                                placeable.placeRelative(x.toInt(), y.toInt())
 
                                             }
                                         }
