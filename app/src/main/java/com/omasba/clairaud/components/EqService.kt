@@ -12,11 +12,16 @@ import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.omasba.clairaud.repos.EqRepo
+import com.omasba.clairaud.utils.NotificationUtils
 
 class EqService : Service() {
 
     private val TAG = "EqService"
     var equalizer:Eq? = null
+
+    private val CHANNEL_ID = "equalizer_service_channel"
+    private val NOTIFICATION_ID = 1002 //id per la notifica permanente del servizio
+    private val notificationUtils = NotificationUtils(CHANNEL_ID)
 
     private val audioSessionReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -90,21 +95,23 @@ class EqService : Service() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startForegroundServiceWithNotification() {
-        val channelId = "eq_channel"
-        val channelName = "Equalizer Service"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val chan = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(chan)
-        }
+        //creo il channel per le notifiche del servizio
+        notificationUtils.createNotificationChannel(
+            this,
+            "Equalizer Service",
+            "Channel for Clairaud's equalizer service"
+        )
 
-        val notification = Notification.Builder(this, channelId)
-            .setContentTitle("Equalizer attivo")
-            .setContentText("In ascolto delle sessioni audio...")
-            .setSmallIcon(android.R.drawable.ic_media_play)
-            .setOngoing(true)
-            .build()
+        //creo la notifica
+        val notification = notificationUtils.createNotification(
+            this,
+            true, //per renderla permanente
+            "Equalizer service",
+            "Listening for audio sessions",
+            "Clairaud equalizer service"
+        )
 
+        //faccio partire il servizio in foreground con la notifica permanente
         startForeground(1, notification)
     }
 }
