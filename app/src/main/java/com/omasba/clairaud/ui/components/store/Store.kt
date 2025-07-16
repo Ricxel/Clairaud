@@ -15,9 +15,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Switch
@@ -35,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.omasba.clairaud.repos.StoreRepo
 import com.omasba.clairaud.ui.models.StoreViewModel
 import com.omasba.clairaud.ui.theme.ClairaudTheme
 
@@ -90,6 +95,7 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 }
             }
         )
+
         //filtro preferiti
         Row (
             modifier = Modifier
@@ -126,6 +132,29 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 onCheckedChange = {viewModel.toggleShowUserPresets()}
             )
         }
+
+        //Bottone di refresh
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 8.dp),
+            horizontalArrangement = Arrangement.End
+        ){
+            //TODO: Aggiungere animazioni
+            IconButton(
+                onClick = {
+                    StoreRepo.fetchPresets()
+                    //TODO: Sta roba va messa nel viewmodel
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "favorite icon",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+        }
+        
         if(filteredPresets.isEmpty()){
             Text(
                 text = "No presets found",

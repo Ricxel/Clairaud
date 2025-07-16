@@ -187,6 +187,9 @@ object StoreRepo {
     fun fetchPresets() {
         Log.d(TAG, "fetching")
 
+        //svuoto i preset per triggerare l'animazione
+        _presets.value = emptyList()
+
         presetsCollection.get()
             .addOnSuccessListener { result ->
                 val loadedPresets = result.documents.mapNotNull { doc ->
