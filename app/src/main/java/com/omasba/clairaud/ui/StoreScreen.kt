@@ -22,6 +22,11 @@ import androidx.navigation.NavController
 import com.omasba.clairaud.ui.theme.ClairaudTheme
 
 
+/**
+ * Store screen view, it renders all available presets and filters
+ * @param viewModel Store screen view model
+ * @param navController Nav host controller to be able to navigate around the screens
+ */
 @Composable
 fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
     val presets by viewModel.presets.collectAsState()

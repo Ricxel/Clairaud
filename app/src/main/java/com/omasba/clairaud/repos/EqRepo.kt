@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+ * Equalizer state holder repository
+ */
 object EqRepo{
     val TAG = "EqRepo"
     private val _eqState = MutableStateFlow(EqualizerUiState())
@@ -17,13 +20,23 @@ object EqRepo{
     private val _eq = MutableStateFlow<Eq?>(null)
     val eq = _eq.asStateFlow()
 
+    /**
+     * Set the current equalizer
+     * @param equalizer Equalizer to apply
+     */
     fun setEq(equalizer: Eq?){
         _eq.update { equalizer }
     }
 
+    /**
+     * Get a band
+     * @param hz Hz corresponding to the band
+     * @return The index of the band corresponding to the specified hz
+     */
     fun getBand(hz:Int):Int{
         return _eq.value?.getBand(hz) ?: -1
     }
+
     fun getBandsFormatted(bands:ArrayList<Pair<Int,Short>>):ArrayList<Pair<Int,Short>>{
         val newBands = _eq.value?.getBandsFormatted(bands) ?: ArrayList<Pair<Int,Short>>()
         return newBands

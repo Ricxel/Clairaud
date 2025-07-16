@@ -154,7 +154,7 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 )
             }
         }
-        
+
         if(filteredPresets.isEmpty()){
             Text(
                 text = "No presets found",

@@ -27,6 +27,10 @@ import com.omasba.clairaud.ui.models.EqualizerViewModel
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel
 import com.omasba.clairaud.ui.models.StoreViewModel
 
+
+/**
+ * Main screen composable function: it renders main components of the screen, such as the navigation bar
+ */
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()

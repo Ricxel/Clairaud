@@ -14,6 +14,9 @@ import androidx.annotation.RequiresApi
 import com.omasba.clairaud.repos.EqRepo
 import com.omasba.clairaud.utils.NotificationUtils
 
+/**
+ * Service that identify audio session ids of active audio sessions
+ */
 class EqService : Service() {
 
     private val TAG = "EqService"
@@ -21,8 +24,12 @@ class EqService : Service() {
 
     private val CHANNEL_ID = "equalizer_service_channel"
     private val NOTIFICATION_ID = 1002 //id per la notifica permanente del servizio
-    private val notificationUtils = NotificationUtils(CHANNEL_ID)
+    private val notificationUtils = NotificationUtils(CHANNEL_ID) //per gestire la notifica permanente
 
+
+    /**
+     * Receiver class that allows to receive music players signals
+     */
     private val audioSessionReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d(TAG, "Receive")
@@ -64,6 +71,9 @@ class EqService : Service() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
+    /**
+     * Initialize the event receiver
+     */
     override fun onCreate() {
         Log.d(TAG, "Service active")
         super.onCreate()
@@ -77,6 +87,9 @@ class EqService : Service() {
         )
     }
 
+    /**
+     * It start the service as a foreground one calling the proper function
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForegroundServiceWithNotification()
@@ -93,6 +106,9 @@ class EqService : Service() {
         return null // servizio non bound
     }
 
+    /**
+     * Start the service as a foreground one, and create the associated notification
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startForegroundServiceWithNotification() {
         //creo il channel per le notifiche del servizio

@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+ * Presets store state holder repository
+ */
 object StoreRepo {
     //funzione per fare la query che ritorna il flow di preset
     private val _presets = MutableStateFlow(emptyList<EqPreset>())
@@ -184,6 +187,9 @@ object StoreRepo {
     val db = Firebase.firestore
     private val presetsCollection = db.collection("presets")
 
+    /**
+     * Fetch user presets from firebase database
+     */
     fun fetchPresets() {
         Log.d(TAG, "fetching")
 
@@ -233,6 +239,10 @@ object StoreRepo {
             }
     }
 
+    /**
+     * Remove a preset
+     * @param preset Preset to be removed
+     */
     fun removePreset(preset: EqPreset) {
         presetsCollection.document(preset.id.toString())
             .delete()
@@ -244,6 +254,11 @@ object StoreRepo {
             }
     }
 
+    /**
+     * Convert database model EqPreset to an HashMap
+     * @param preset Preset to be converted
+     * @return Preset convertend in HashMap<String,Any> format
+     */
     fun presetMapFrom(preset:EqPreset):HashMap<String, Any>{
         val presetMap = hashMapOf(
             "name" to preset.name,
@@ -257,6 +272,10 @@ object StoreRepo {
         return presetMap
     }
 
+    /**
+     * Add a preset to firestore database
+     * @param preset Preset to be added
+     */
     fun addPreset(preset: EqPreset) {
         Log.d(TAG, "adding preset ${preset.name} to firebase5")
 
@@ -272,7 +291,10 @@ object StoreRepo {
         Log.d(TAG, "preset added succesfully to firebase")
     }
 
-
+    /**
+     * Replace a preset
+     * @param preset New preset, it will replace the current one with the same id
+     */
     fun replacePreset(preset: EqPreset) {
         addPreset(preset) // Firestore `set()` sovrascrive il documento
     }
