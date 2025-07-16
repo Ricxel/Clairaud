@@ -112,6 +112,6 @@ class EqService : Service() {
         )
 
         //faccio partire il servizio in foreground con la notifica permanente
-        startForeground(1, notification)
+        startForeground(NOTIFICATION_ID, notification)
     }
 }

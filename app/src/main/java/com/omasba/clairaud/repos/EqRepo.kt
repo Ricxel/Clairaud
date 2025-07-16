@@ -1,5 +1,7 @@
 package com.omasba.clairaud.repos
 
+import android.media.audiofx.Equalizer
+import android.os.Build
 import android.util.Log
 import com.omasba.clairaud.components.Eq
 import com.omasba.clairaud.state.EqPreset
