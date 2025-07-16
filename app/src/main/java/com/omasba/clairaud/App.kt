@@ -10,10 +10,12 @@ import androidx.compose.ui.platform.LocalContext
 import com.omasba.clairaud.components.Eq
 import com.omasba.clairaud.components.EqService
 import com.omasba.clairaud.repos.EqRepo
+import com.omasba.clairaud.utils.PermissionHandler
 
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
+
 
         //avvio il servizio per la rilevazione delle sessioni audio
         //Il servizio è necessario solo nelle versioni recenti di android (>=26) altrimenti è sufficiente creare l'eq con session_id = 0
