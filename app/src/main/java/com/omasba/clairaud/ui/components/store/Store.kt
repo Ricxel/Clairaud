@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.ui.models.StoreViewModel
+import com.omasba.clairaud.ui.theme.ClairaudTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +55,6 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(WindowInsets.statusBars.asPaddingValues())
     ) {
         SearchBar(
             query = viewModel.query.collectAsState().value,
@@ -155,5 +155,7 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
 )
 @Composable
 fun SearchablePresetListPreview() {
-    Store(StoreViewModel(), rememberNavController())
+    ClairaudTheme {
+        Store(StoreViewModel(), rememberNavController())
+    }
 }
