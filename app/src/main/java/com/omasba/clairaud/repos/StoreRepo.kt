@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.omasba.clairaud.components.Eq
 import com.omasba.clairaud.repos.EqRepo.TAG
 import com.omasba.clairaud.state.EqPreset
 import com.omasba.clairaud.state.Tag
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.update
 
 object StoreRepo {
     //funzione per fare la query che ritorna il flow di preset
-    private val _presets = MutableStateFlow(emptyList<EqPreset>())
+    private var _presets = MutableStateFlow(emptyList<EqPreset>())
     val presets = _presets.asStateFlow()
 
     fun tempAdd(){
@@ -183,6 +184,10 @@ object StoreRepo {
 
     val db = Firebase.firestore
     private val presetsCollection = db.collection("presets")
+
+    fun empty(){
+        _presets = MutableStateFlow(emptyList<EqPreset>())
+    }
 
     fun fetchPresets() {
         Log.d(TAG, "fetching")

@@ -1,5 +1,7 @@
 package com.omasba.clairaud.ui.models
 
+import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omasba.clairaud.repos.StoreRepo
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.update
 
 class StoreViewModel:ViewModel() {
     val presets = StoreRepo.presets
+    val TAG = "StoreViewModel"
 
     //per filtare con i tag
     private val _selectedTags = MutableStateFlow<Set<Tag>>(emptySet())
@@ -33,9 +36,13 @@ class StoreViewModel:ViewModel() {
     private val _filterByFavorites = MutableStateFlow(false)
     val filterByFavorites = _filterByFavorites.asStateFlow()
 
-    //flag per filtro sui preset dell'utente
+       //flag per filtro sui preset dell'utente
     private val _showUserPresets = MutableStateFlow(false)
     val showUserPresets = _showUserPresets.asStateFlow()
+
+    val favoritePresetsOnly: StateFlow<List<EqPreset>> = combine(presets, favPresets) { allPresets, favoritePresetIds ->
+        allPresets.filter { favoritePresetIds.contains(it.id) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     //filtra per preferiti
     private val filteredPresetsByFav: StateFlow<List<EqPreset>> = _filterByFavorites
@@ -63,6 +70,7 @@ class StoreViewModel:ViewModel() {
             if (!filter) items
             else items.filter { it.authorUid == UserRepo.currentUser.uid }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     //filtra per i tag
     val filteredItemsByTags = combine(userPresets, selectedTags) { items, tags ->
         if (tags.isEmpty()) items
@@ -79,6 +87,18 @@ class StoreViewModel:ViewModel() {
     }
     fun onTagSelected(tag: Tag) {
         _selectedTags.update { it + tag }
+    }
+
+    fun fetchPresets(){
+        StoreRepo.fetchPresets()
+    }
+
+    fun fetchFavPresets():List<EqPreset>{
+        return filteredPresetsByFav.value
+    }
+
+    fun empty(){
+        StoreRepo.empty()
     }
 
     fun onTagRemoved(tag: Tag) {

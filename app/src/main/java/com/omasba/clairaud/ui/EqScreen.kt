@@ -57,6 +57,7 @@ import com.omasba.clairaud.repos.StoreRepo
 import com.omasba.clairaud.state.EqPreset
 
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.key
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
@@ -288,16 +289,15 @@ fun formatFrequency(hz: Int): String {
     } + "Hz"
 
 }
-
 @Composable
 fun ApplyPresetCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel) {
-    val presets by storeViewModel.presets.collectAsState()
+    val presets = storeViewModel.fetchFavPresets()
     var rightExpanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<EqPreset?>(null) }
 
     LaunchedEffect(Unit) {
         if(presets.isEmpty())
-            StoreRepo.fetchPresets()
+            storeViewModel.fetchPresets()
     }
 
     Card(

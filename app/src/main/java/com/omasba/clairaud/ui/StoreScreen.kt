@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.omasba.clairaud.repos.StoreRepo
 import com.omasba.clairaud.ui.components.store.Store
 import com.omasba.clairaud.ui.models.StoreViewModel
 
@@ -23,7 +22,7 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
     val presets by viewModel.presets.collectAsState()
     LaunchedEffect(Unit) {
         //if(presets.isEmpty())
-            StoreRepo.fetchPresets()
+        viewModel.fetchPresets()
     }
 
     if(presets.isEmpty()){
