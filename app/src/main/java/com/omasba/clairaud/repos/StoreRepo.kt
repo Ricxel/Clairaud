@@ -188,16 +188,10 @@ object StoreRepo {
     val db = Firebase.firestore
     private val presetsCollection = db.collection("presets")
 
-<<<<<<< HEAD
     fun empty(){
         _presets = MutableStateFlow(emptyList<EqPreset>())
     }
 
-=======
-    /**
-     * Fetch user presets from firebase database
-     */
->>>>>>> 30c295451c46f10dc3bc56a8b475f461ad27df1e
     fun fetchPresets() {
         Log.d(TAG, "fetching")
 
