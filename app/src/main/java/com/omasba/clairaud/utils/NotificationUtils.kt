@@ -13,7 +13,15 @@ class NotificationUtils(
     private val channelId: String,
 ) {
 
-    //crea l'oggetto per la notifica
+    /**
+     * Create a notification object
+     * @param context Application context
+     * @param onGoing True if it is a permanent notification, false otherwise
+     * @param contentTitle Notification's title
+     * @param contentText Notification's text
+     * @param ticker Notification's ticker
+     * @return The notification object with the specified parameters
+     */
     fun createNotification(context: Context,
                            onGoing: Boolean,
                            contentTitle: String,
@@ -24,7 +32,7 @@ class NotificationUtils(
             .setContentTitle(contentTitle)
             .setContentText(contentText)
             .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(onGoing)
             .setTicker(ticker)
@@ -34,6 +42,12 @@ class NotificationUtils(
         return notificationBuilder.build()
     }
 
+    /**
+     * Create a notification channel with the specified channel ID
+     * @param context Application context
+     * @param channelName Name of the channel
+     * @param description Description of the channel
+     */
     fun createNotificationChannel(
         context: Context,
         channelName: String,
@@ -54,6 +68,12 @@ class NotificationUtils(
     }
 
 
+    /**
+     * Send a notification in the created channel
+     * @param context Application context
+     * @param notification The notification to send
+     * @param notificationId Notification ID
+     */
     fun sendNotification(
         context: Context,
         notification: Notification,

@@ -18,6 +18,11 @@ class PermissionHandler{
 
         private val NOTIFICATION_PERMISSION_CODE = 1
 
+        /**
+         *  Verify notification listener permission
+         *  @param context Context
+         *  @return Returns true if permission is granted, false otherwise
+         */
         fun isNotificationServiceEnabled(context: Context): Boolean {
             val pkgName = context.packageName
             val enabledListeners = Settings.Secure.getString(
@@ -27,11 +32,20 @@ class PermissionHandler{
             return enabledListeners?.contains(pkgName) == true
         }
 
+        /**
+         * Requests notification listener permission
+         * @param context Context
+         */
         fun requestNotificationAccess(context: Context) {
             val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
             context.startActivity(intent)
         }
 
+        /**
+         * Asks for post notification permission
+         * @param context Context
+         * @param activity Activity that will run the screen for granting the permission
+         */
         fun askPostNotificationPermission(context: Context, activity: Activity) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { //va controllato runtime sono da 12 in poi
                 if (ContextCompat.checkSelfPermission(

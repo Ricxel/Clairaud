@@ -48,7 +48,7 @@ class MusicDetectionService : NotificationListenerService() {
     private var lastArtist: String = ""
     private val NOTIFICATION_ID = 1001 //id della notifica che mostrerà il brano rilevato in quel momento
     private val CHANNEL_ID = "music_detection_channel" //id del canale di notifiche del servizio
-    private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val notificationUtils: NotificationUtils = NotificationUtils(CHANNEL_ID)
 
