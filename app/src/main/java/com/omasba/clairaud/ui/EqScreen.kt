@@ -280,13 +280,13 @@ fun formatFrequency(hz: Int): String {
 }
 @Composable
 fun ApplyPresetCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel) {
-    val presets = storeViewModel.fetchFavPresets()
+    val presets by storeViewModel.favoritePresetsOnly.collectAsState()
     var rightExpanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<EqPreset?>(null) }
 
     LaunchedEffect(Unit) {
-        if(presets.isEmpty())
-            storeViewModel.fetchPresets()
+        //if(presets.isEmpty())
+        storeViewModel.fetchPresets()
     }
 
     Card(
@@ -325,7 +325,8 @@ fun ApplyPresetCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewMo
                                     rightExpanded = false
 
                                     eqViewModel.newBands(it.bands)
-                                }
+                                },
+                                enabled = presets.isNotEmpty()
                             )
 
                             selected?.let { preset ->
@@ -374,7 +375,8 @@ fun PresetDropdown(
     expanded: Boolean,
     onExpandChange: (Boolean) -> Unit,
     presets: List<EqPreset>,
-    onPresetSelected: (EqPreset) -> Unit
+    onPresetSelected: (EqPreset) -> Unit,
+    enabled: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -384,7 +386,7 @@ fun PresetDropdown(
                 color = MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(4.dp)
             )
-            .clickable { onExpandChange(!expanded) }
+            .clickable(enabled = enabled) { onExpandChange(!expanded) }
             .padding(16.dp)
     ) {
         Row(
@@ -392,32 +394,36 @@ fun PresetDropdown(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = text,
+                text = if (presets.isNotEmpty()) text else "No favorite presets",
                 modifier = Modifier.weight(1f),
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
             Icon(
                 imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                contentDescription = if (expanded) "Collapse" else "Expand"
+                contentDescription = if (expanded) "Collapse" else "Expand",
+                tint = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
         }
 
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { onExpandChange(false) },
-            modifier = Modifier.fillMaxWidth(0.95f)
-        ) {
-            presets.forEach { preset ->
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = preset.name,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    },
-                    onClick = { onPresetSelected(preset) }
-                )
+        if (enabled) {
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { onExpandChange(false) },
+                modifier = Modifier.fillMaxWidth(0.95f)
+            ) {
+                presets.forEach { preset ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = preset.name,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        },
+                        onClick = { onPresetSelected(preset) }
+                    )
+                }
             }
         }
     }

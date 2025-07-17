@@ -93,14 +93,6 @@ class StoreViewModel:ViewModel() {
         StoreRepo.fetchPresets()
     }
 
-    fun fetchFavPresets():List<EqPreset>{
-        return filteredPresetsByFav.value
-    }
-
-    fun empty(){
-        StoreRepo.empty()
-    }
-
     fun onTagRemoved(tag: Tag) {
         _selectedTags.update { it - tag }
     }
