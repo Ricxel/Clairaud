@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+ * Presets store state holder repository
+ */
 object StoreRepo {
     //funzione per fare la query che ritorna il flow di preset
     private var _presets = MutableStateFlow(emptyList<EqPreset>())
@@ -185,12 +188,21 @@ object StoreRepo {
     val db = Firebase.firestore
     private val presetsCollection = db.collection("presets")
 
+<<<<<<< HEAD
     fun empty(){
         _presets = MutableStateFlow(emptyList<EqPreset>())
     }
 
+=======
+    /**
+     * Fetch user presets from firebase database
+     */
+>>>>>>> 30c295451c46f10dc3bc56a8b475f461ad27df1e
     fun fetchPresets() {
         Log.d(TAG, "fetching")
+
+        //svuoto i preset per triggerare l'animazione
+        _presets.value = emptyList()
 
         presetsCollection.get()
             .addOnSuccessListener { result ->
@@ -235,6 +247,10 @@ object StoreRepo {
             }
     }
 
+    /**
+     * Remove a preset
+     * @param preset Preset to be removed
+     */
     fun removePreset(preset: EqPreset) {
         presetsCollection.document(preset.id.toString())
             .delete()
@@ -246,6 +262,11 @@ object StoreRepo {
             }
     }
 
+    /**
+     * Convert database model EqPreset to an HashMap
+     * @param preset Preset to be converted
+     * @return Preset convertend in HashMap<String,Any> format
+     */
     fun presetMapFrom(preset:EqPreset):HashMap<String, Any>{
         val presetMap = hashMapOf(
             "name" to preset.name,
@@ -259,6 +280,10 @@ object StoreRepo {
         return presetMap
     }
 
+    /**
+     * Add a preset to firestore database
+     * @param preset Preset to be added
+     */
     fun addPreset(preset: EqPreset) {
         Log.d(TAG, "adding preset ${preset.name} to firebase5")
 
@@ -274,7 +299,10 @@ object StoreRepo {
         Log.d(TAG, "preset added succesfully to firebase")
     }
 
-
+    /**
+     * Replace a preset
+     * @param preset New preset, it will replace the current one with the same id
+     */
     fun replacePreset(preset: EqPreset) {
         addPreset(preset) // Firestore `set()` sovrascrive il documento
     }

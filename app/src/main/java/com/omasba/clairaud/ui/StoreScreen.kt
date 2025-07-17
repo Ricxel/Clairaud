@@ -11,12 +11,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.ui.components.store.Store
 import com.omasba.clairaud.ui.models.StoreViewModel
+import androidx.navigation.NavController
+import com.omasba.clairaud.ui.theme.ClairaudTheme
 
+
+/**
+ * Store screen view, it renders all available presets and filters
+ * @param viewModel Store screen view model
+ * @param navController Nav host controller to be able to navigate around the screens
+ */
 @Composable
 fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
     val presets by viewModel.presets.collectAsState()
@@ -37,7 +46,7 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
     else {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Store(viewModel = viewModel, navController)
+                Store(viewModel, navController)
             }
         }
     }
@@ -49,7 +58,8 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
     showBackground = true
 )
 fun StoreScreenPreview(){
-    val viewModel = StoreViewModel()
-    StoreScreen(viewModel = viewModel, navController = rememberNavController())
-    Log.d(TAG, "Store loaded")
+    ClairaudTheme {
+        val viewModel = StoreViewModel()
+        StoreScreen(viewModel = viewModel, navController = NavHostController(context = LocalContext.current))
+    }
 }

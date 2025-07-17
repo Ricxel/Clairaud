@@ -20,6 +20,7 @@ import com.omasba.clairaud.state.Tag
 import com.omasba.clairaud.network.API_KEY
 import com.omasba.clairaud.network.LastFmApi
 import com.omasba.clairaud.repos.UserRepo
+import com.omasba.clairaud.utils.NotificationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -28,6 +29,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
 import kotlin.coroutines.cancellation.CancellationException
 
 class MusicDetectionService : NotificationListenerService() {
@@ -44,33 +46,23 @@ class MusicDetectionService : NotificationListenerService() {
     private lateinit var sessionManager: MediaSessionManager
     private var lastTitle: String = ""
     private var lastArtist: String = ""
-    private val NOTIFICATION_ID = 1001
-    private val CHANNEL_ID = "music_detection_channel"
-    private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val NOTIFICATION_ID = 1001 //id della notifica che mostrerà il brano rilevato in quel momento
+    private val CHANNEL_ID = "music_detection_channel" //id del canale di notifiche del servizio
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
+    private val notificationUtils: NotificationUtils = NotificationUtils(CHANNEL_ID)
 
     override fun onCreate() {
         super.onCreate()
         Log.d("MusicDetection", "Service created")
         sessionManager = getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
-        createNotificationChannel()
+
+        //creo il channel per le notifiche
+        notificationUtils.createNotificationChannel(this,"Music Detection", "Clairaud's music detection service notification channel")
 
         // Avvia il servizio come foreground per mantenerlo attivo in background
-        startForeground(NOTIFICATION_ID, createForegroundNotification())
+//        startForeground(NOTIFICATION_ID, createForegroundNotification())
         observeAutoEqState()
-
-    }
-    private fun createForegroundNotification(): Notification {
-        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Rilevamento Musica in corso")
-            .setContentText("Il servizio è attivo.")
-            .setSmallIcon(android.R.drawable.ic_media_play)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
-            .setTicker("Servizio in esecuzione")
-        Log.d("MusicDetection", "Notifica creata")
-
-        return notificationBuilder.build()
     }
 
     override fun onListenerConnected() {
@@ -83,29 +75,32 @@ class MusicDetectionService : NotificationListenerService() {
 
     }
     private fun observeAutoEqState() {
+        val applicationContext = this // per poter creare la notifica
+
         serviceScope.launch {
             AutoEqStateHolder.uiState.collectLatest { state ->
                 if (state.isOn && !isPollingActive()) {
                     Log.d("MusicDetection", "Starting polling...")
+
+                    //mando la notifica per segnalare il servizio on
+                    val notification = notificationUtils.createNotification(
+                        applicationContext,
+                        false,
+                        "Music detection",
+                        "Detecting the song playing",
+                        "Music detection service"
+                    )
+                    notificationUtils.sendNotification(applicationContext, notification, NOTIFICATION_ID)
+
                     checkForActiveSessions()
                 } else if (!state.isOn && isPollingActive()) {
                     stopPolling()
                     Log.d("MusicDetection", "Stopping polling...")
+
+                    //chiudo anche la notifica
+                    notificationUtils.cancelNotification(applicationContext, NOTIFICATION_ID)
                 }
             }
-        }
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Rilevamento Musica",
-                NotificationManager.IMPORTANCE_LOW
-            )
-            channel.description = "Notifiche per il rilevamento della musica in riproduzione"
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
         }
     }
 
@@ -155,10 +150,22 @@ class MusicDetectionService : NotificationListenerService() {
                                     lastArtist = artist
 
                                     val preset = UserRepo.getPresetToApply(tags.toSet())
-                                    AutoEqStateHolder.changePreset(preset)
-                                    EqRepo.newBands(preset.bands)
-                                    Log.d("MusicDetection","Bande cambiate")
-                                    showMusicNotification(title, artist, preset.name)
+
+                                    if(preset.id != -1){ //cambio il preset solamente se ne trovo uno applicabile che non sia il default
+                                        AutoEqStateHolder.changePreset(preset)
+                                        EqRepo.newBands(preset.bands)
+                                        Log.d("MusicDetection","Bande cambiate")
+                                    }
+                                    //cambio la notifica mettendo il testo per le canzoni rilevate
+                                    val updateNotification = notificationUtils.createNotification(
+                                        applicationContext,
+                                        false,
+                                        "Music detection",
+                                        "Detected $title by $artist\n" +
+                                                "Applied preset: ${if(preset.id == -1) "Not detected" else preset.name}",
+                                        "Music detection service"
+                                    )
+                                    notificationUtils.sendNotification(applicationContext, updateNotification, NOTIFICATION_ID)
                                 }
 
                                 foundMusic = true
@@ -188,17 +195,7 @@ class MusicDetectionService : NotificationListenerService() {
         }
     }
 
-    private fun showMusicNotification(title: String, artist: String, genre: String) {
-        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("🎵 In riproduzione")
-            .setContentText("$title - $genre")
-            .setSmallIcon(android.R.drawable.ic_media_play)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(false)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
-    }
 
     override fun onDestroy() {
         super.onDestroy()

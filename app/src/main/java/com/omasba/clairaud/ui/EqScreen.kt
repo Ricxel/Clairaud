@@ -72,17 +72,6 @@ val TAG = "EqScreen"
 @Composable
 fun EqScreen(eqViewModel:EqualizerViewModel, storeViewModel: StoreViewModel, navController: NavHostController){
     val eq by EqRepo.eq.collectAsState()
-    val context = LocalContext.current
-    //si fa partire il servizio
-    LaunchedEffect(Unit) {
-        val serviceIntent = Intent(context, EqService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(serviceIntent)
-        } else {
-            context.startService(serviceIntent)
-        }
-        Log.d("EqScreen","Lanciato!")
-    }
 
     if (eq != null) {
         Column(

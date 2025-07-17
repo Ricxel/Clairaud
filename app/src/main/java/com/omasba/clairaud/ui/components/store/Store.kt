@@ -1,5 +1,6 @@
 package com.omasba.clairaud.ui.components.store
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,12 +15,18 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,12 +37,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.omasba.clairaud.repos.StoreRepo
 import com.omasba.clairaud.ui.models.StoreViewModel
+import com.omasba.clairaud.ui.theme.ClairaudTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +64,6 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(WindowInsets.statusBars.asPaddingValues())
     ) {
         SearchBar(
             query = viewModel.query.collectAsState().value,
@@ -90,6 +99,7 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 }
             }
         )
+
         //filtro preferiti
         Row (
             modifier = Modifier
@@ -126,6 +136,29 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 onCheckedChange = {viewModel.toggleShowUserPresets()}
             )
         }
+
+        //Bottone di refresh
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 8.dp),
+            horizontalArrangement = Arrangement.End
+        ){
+            //TODO: Aggiungere animazioni
+            IconButton(
+                onClick = {
+                    StoreRepo.fetchPresets()
+                    //TODO: Sta roba va messa nel viewmodel
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "favorite icon",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+        }
+
         if(filteredPresets.isEmpty()){
             Text(
                 text = "No presets found",
@@ -140,8 +173,9 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
             LazyColumn(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
+                modifier = Modifier
+                    .fillMaxSize()
+                    ) {
                 items(filteredPresets) { preset ->
                     PresetCard(preset, viewModel.favPresets.collectAsState(), navController = navController)
                 }
@@ -155,5 +189,7 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
 )
 @Composable
 fun SearchablePresetListPreview() {
-    Store(StoreViewModel(), rememberNavController())
+    ClairaudTheme {
+        Store(StoreViewModel(), rememberNavController())
+    }
 }

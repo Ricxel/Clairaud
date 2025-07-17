@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+ * User state holder repository
+ */
 object UserRepo {
     var currentUser: User = User(
         uid = 101,
@@ -33,10 +36,19 @@ object UserRepo {
         }
         return correctPreset
     }
+
+    /**
+     * @param id Preset ID
+     * @return true if the specified preset is a favourite one by the current user
+     */
     fun isFavorite(id:Int):Boolean{
         return _favPresets.value.contains(id);
     }
 
+    /**
+     * Add to user's favourites a preset
+     * @param id Preset Id
+     */
     fun addFavorite(id: Int){
 //        val tmp = mutableSetOf<Int>()
 //        tmp.addAll(_favPresets.value)
@@ -45,6 +57,10 @@ object UserRepo {
         _favPresets.update { it + id }
     }
 
+    /**
+     * Remove a preset from the user's favourites
+     * @param id Preset ID to remove
+     */
     fun removeFavorite(id: Int){
 //        val tmp = mutableSetOf<Int>()
 //        tmp.addAll(_favPresets.value)
