@@ -23,6 +23,7 @@ import com.omasba.clairaud.repos.StoreRepo
 import com.omasba.clairaud.state.BottomNavItem
 import com.omasba.clairaud.state.EqPreset
 import com.omasba.clairaud.ui.models.AddPresetViewModel
+import com.omasba.clairaud.ui.models.AuthViewModel
 import com.omasba.clairaud.ui.models.EqualizerViewModel
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel
 import com.omasba.clairaud.ui.models.StoreViewModel
@@ -93,7 +94,9 @@ fun MainScreen() {
 //            val presets by StoreRepo.presets.collectAsState()
             composable(BottomNavItem.Home.route) { EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController) }
             composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
-            composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
+//            composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
+            composable(BottomNavItem.Profile.route) { LoginScreen(viewModel = AuthViewModel()) }
+
 //            composable(BottomNavItem.Profile.route) { Text("Profilo") }
             //add preset
             composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
