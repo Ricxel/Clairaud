@@ -55,7 +55,7 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 color = MaterialTheme.colorScheme.primary
             )
             //area dell'eq
-            val rawBands = if(eqPreset.authorUid > 0) eqPreset.bands else eqState.bands
+            val rawBands = if(eqPreset.authorUid != "") eqPreset.bands else eqState.bands
             val bands = EqRepo.getBandsFormatted(rawBands)
             PresetGraph(presetName = eqPreset.name, bands = bands)
             Spacer(modifier = Modifier.height(8.dp))

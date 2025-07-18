@@ -63,13 +63,14 @@ import androidx.compose.ui.layout.positionInParent
 import com.omasba.clairaud.ui.components.EqNotFound
 import com.omasba.clairaud.ui.components.PresetGraph
 import com.omasba.clairaud.ui.components.store.TagList
+import com.omasba.clairaud.ui.models.AuthViewModel
 import com.omasba.clairaud.ui.models.PresetComparisonViewModel
 import com.omasba.clairaud.ui.models.StoreViewModel
 
 val TAG = "EqScreen"
 
 @Composable
-fun EqScreen(eqViewModel:EqualizerViewModel, storeViewModel: StoreViewModel, navController: NavHostController){
+fun EqScreen(eqViewModel:EqualizerViewModel, storeViewModel: StoreViewModel, navController: NavHostController, isAuthenticated: () -> Boolean){
     val eq by EqRepo.eq.collectAsState()
 
     if (eq != null) {
@@ -83,8 +84,11 @@ fun EqScreen(eqViewModel:EqualizerViewModel, storeViewModel: StoreViewModel, nav
             Log.d(TAG, "Eq card loaded")
             Spacer(modifier = Modifier.height(16.dp))
 
-            ApplyPresetCard(eqViewModel, storeViewModel)
-            Log.d(TAG, "Preset card loaded")
+            //sezione da proteggere, i preset applicabili sono solo i preferiti quindi bisogna essere autenticati
+            if(isAuthenticated()){
+                ApplyPresetCard(eqViewModel, storeViewModel)
+                Log.d(TAG, "Preset card loaded")
+            }
         }
     }
     else{

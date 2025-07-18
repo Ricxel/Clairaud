@@ -38,6 +38,10 @@ fun MainScreen() {
     val storeViewModel = StoreViewModel()
     val equalizerViewModel = EqualizerViewModel()
     val pcViewModel = PresetComparisonViewModel()
+
+    val authViewModelLogin = AuthViewModel()
+    val authViewModelRegister = AuthViewModel()
+
     val bands = arrayListOf(
         Pair<Int,Short>(0,0),
         Pair<Int,Short>(1,0),
@@ -92,14 +96,27 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
 //            val presets by StoreRepo.presets.collectAsState()
-            composable(BottomNavItem.Home.route) { EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController) }
-            composable(BottomNavItem.Store.route) { StoreScreen(viewModel = storeViewModel, navController = navController) }
+            composable(BottomNavItem.Home.route) {
+                EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController){
+                    //funzione isAuthenticated per vericicare l'autenticazione, viene usata per decidere se caricare o meno i preset
+                    authViewModelLogin.isAuthenticated() || authViewModelRegister.isAuthenticated()
+                }
+            }
+            composable(BottomNavItem.Store.route) {
+                //per accedere allo store, è necessario essere loggati, controllo in viewmodel auth
+                if(authViewModelRegister.isAuthenticated() || authViewModelLogin.isAuthenticated())
+                    StoreScreen(viewModel = storeViewModel, navController = navController)
+                else NotAuthenticatedScreen()
+            }
 //            composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = UserViewModel(), navController = navController) }
-            composable(BottomNavItem.Profile.route) { LoginScreen(viewModel = AuthViewModel()) }
+            composable(BottomNavItem.Profile.route) { LoginScreen(viewModel = authViewModelLogin, navController) }
 
 //            composable(BottomNavItem.Profile.route) { Text("Profilo") }
             //add preset
             composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
+            composable("register"){ RegisterScreen(viewModel = authViewModelRegister, navController)}
+            composable("login"){ LoginScreen(viewModel = authViewModelLogin, navController)}
+
             composable("editPreset/{presetId}"){backStackEntry ->
                 //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare
                 //e aggiornare il viewModel di conseguenza

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.omasba.clairaud.data.repository.AuthRepo
@@ -32,7 +30,7 @@ import com.omasba.clairaud.state.UserProfile
 import com.omasba.clairaud.ui.models.AuthViewModel
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
+fun RegisterScreen(viewModel: AuthViewModel, navController: NavHostController){
 
     val uiState by viewModel.uiState.collectAsState()
 
@@ -41,12 +39,19 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
             .fillMaxSize()
             .padding(16.dp)
     ){
-        //casella per username
+        //casella per email
         OutlinedTextField(
             value = uiState.email,
             onValueChange = { viewModel.onEmailChanged(it) },
             label = {Text("Email", color = MaterialTheme.colorScheme.secondary)},
-            textStyle = TextStyle(color = MaterialTheme.colorScheme.secondary)
+        )
+
+
+        //casella per username
+        OutlinedTextField(
+            value = uiState.username,
+            onValueChange = { viewModel.onUsernameChange(it) },
+            label = {Text("Username", color = MaterialTheme.colorScheme.secondary)},
         )
 
         //casella per password
@@ -56,42 +61,31 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
             label = {Text("Password", color = MaterialTheme.colorScheme.secondary)},
         )
 
+
+
         Row {
-            //bottone login
+            //bottone registrazione
             Button(
                 onClick = {
-                    viewModel.login()
+                    viewModel.register()
                 },
                 enabled = !uiState.isLoading
             ) {
-                Text("Login")
+                Text("Register")
             }
 
-            //collegamento con la registrazione
+            //collegamento con il login
             TextButton(
                 onClick = {
-                    navController.navigate("register")
+                    navController.navigate("login")
                 }
             ) {
-                Text("Registrati")
+                Text("Esegui il login")
             }
         }
-
-
         if(uiState.isLoggedIn) {
             Text("Loggato!", color = Color.Green)
-
-            val user = FirebaseAuth.getInstance().currentUser
-            val uid = user?.uid ?: ""
-
-            LaunchedEffect(uid) {
-                val userProfile = AuthRepo.getUserProfile(uid).getOrNull() ?: UserProfile(uid = uid, username = "prova", mail = "skibidi")
-                UserRepo.currentUserProfile = userProfile
-            }
-            Text("Profilo: \n${UserRepo.currentUserProfile}", color = MaterialTheme.colorScheme.secondary)
         }
-
-
         uiState.error?.let {
             Text("Errore: $it", color = Color.Red)
         }

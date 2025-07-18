@@ -61,7 +61,7 @@ class StoreViewModel:ViewModel() {
     private val userPresets: StateFlow<List<EqPreset>> =
         combine(filteredPresetsByQuery, _showUserPresets) { items, filter ->
             if (!filter) items
-            else items.filter { it.authorUid == UserRepo.currentUser.uid }
+            else items.filter { it.authorUid == UserRepo.currentUserProfile.uid }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
     //filtra per i tag
     val filteredItemsByTags = combine(userPresets, selectedTags) { items, tags ->

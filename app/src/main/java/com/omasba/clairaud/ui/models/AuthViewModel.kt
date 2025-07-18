@@ -1,13 +1,18 @@
 package com.omasba.clairaud.ui.models
 
+import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.omasba.clairaud.data.repository.AuthRepo
+import com.omasba.clairaud.repos.UserRepo
 import com.omasba.clairaud.state.AuthUiState
+import com.omasba.clairaud.state.UserProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -17,6 +22,10 @@ class AuthViewModel: ViewModel(){
     private var _uiState = MutableStateFlow<AuthUiState>(AuthUiState())
     var uiState = _uiState.asStateFlow()
 
+    fun isAuthenticated():Boolean{
+        return _uiState.value.isLoggedIn
+    }
+
     fun onEmailChanged(email: String){
         _uiState.update { it.copy(email = email) }
     }
@@ -25,6 +34,9 @@ class AuthViewModel: ViewModel(){
         _uiState.update { it.copy(password = password) }
     }
 
+    fun onUsernameChange(username: String){
+        _uiState.update { it.copy(username = username) }
+    }
     fun login(){
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) } //metto a loading
@@ -32,7 +44,12 @@ class AuthViewModel: ViewModel(){
             val result = AuthRepo.login(_uiState.value.email, _uiState.value.password)
             _uiState.update {
                 if (result.isSuccess){
-                    it.copy(isLoading = false, isLoggedIn = true)
+                    val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                    val profile = AuthRepo.getUserProfile(uid).getOrNull() ?: UserProfile()
+
+                    UserRepo.currentUserProfile = profile
+                    Log.d("auth", "Current impostato $profile")
+                    it.copy(isLoading = false, isLoggedIn = true, email = "", password = "")
                 }
                 else{
                     //ritorno l'oggetto con un errore
@@ -52,7 +69,20 @@ class AuthViewModel: ViewModel(){
             val result = AuthRepo.register(_uiState.value.email, _uiState.value.password)
             _uiState.update {
                 if (result.isSuccess){
-                    it.copy(isLoading = false, isLoggedIn = true)
+                    val user = FirebaseAuth.getInstance().currentUser //prendo l'utente per avere l'id e creare il profilo
+
+                    if(user != null){
+                        val profile = UserProfile(
+                            uid = user.uid,
+                            username = _uiState.value.username,
+                            mail = _uiState.value.email,
+                        )
+
+                        AuthRepo.createUserProfile(user.uid, profile) //creo il profilo
+                        UserRepo.currentUserProfile = profile
+                        it.copy(isLoading = false, isLoggedIn = true, email = "", password = "", username = "")
+                    }
+                    else it
                 }
                 else{
                     //ritorno l'oggetto con un errore
