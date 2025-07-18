@@ -55,6 +55,7 @@ class AuthViewModel: ViewModel(){
                 }
             }
 
+            UserRepo.getFavPresets()
         }
     }
     fun register(){

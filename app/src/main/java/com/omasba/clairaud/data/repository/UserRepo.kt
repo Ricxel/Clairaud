@@ -1,8 +1,6 @@
 package com.omasba.clairaud.data.repository
 
 import android.util.Log
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.omasba.clairaud.presentation.auth.state.UserProfile
@@ -11,8 +9,6 @@ import com.omasba.clairaud.presentation.store.state.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 /**
  * User state holder repository
@@ -22,6 +18,7 @@ object UserRepo {
     var currentUserProfile: UserProfile = UserProfile()
     private var _favPresets = MutableStateFlow<Set<Int>>(currentUserProfile.favPresets)
     val favPresets = _favPresets.asStateFlow()
+
     fun getPresetToApply(tags: Set<Tag>): EqPreset {
         //prendo i preset dallo store
         var maxCount = 0
@@ -56,19 +53,31 @@ object UserRepo {
 
     }
 
-    suspend fun getFavPresets(){
+    fun getFavPresets() {
         val uid = currentUserProfile.uid
-
         try {
-            val document = Firebase.firestore.collection("users").document(uid).get().await()
-            val list = document.get("favPresets") as? List<*> ?: emptyList<Any>()
-            val set = list.mapNotNull { (it as? Number)?.toInt() }.toSet()
-            _favPresets.value = set
-            Log.d(TAG, "Preferiti caricati correttamente")
-        } catch (e: Exception) {
-            Log.e(TAG, "Errore nel caricamento dei preferiti", e)
+            Firebase.firestore.collection("users").document(uid).get()
+                .addOnSuccessListener { result ->
+                    try {
+                        val favs = result.get("favPresets") as? List<*>
+                        val ids = favs?.mapNotNull { (it as? Number)?.toInt() }?.toSet() ?: emptySet()
+
+                        _favPresets.value = ids // ✅ aggiorni lo StateFlow
+
+                        Log.d(TAG, "Preferiti caricati: $ids")
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Errore parsing favPresets: ${e.message}")
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "Errore Firestore get(): ${e.message}")
+                }
+        }catch (e:Exception){
+            Log.e(TAG, e.message.toString())
         }
+
     }
+
 
     /**
      * @param id Preset ID
@@ -97,5 +106,6 @@ object UserRepo {
     }
 
     init {
+        //getFavPresets()
     }
 }
