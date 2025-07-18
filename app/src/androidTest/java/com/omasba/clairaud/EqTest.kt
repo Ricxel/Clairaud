@@ -1,7 +1,7 @@
 package com.omasba.clairaud
 
 import android.util.Log
-import com.omasba.clairaud.components.Eq
+import com.omasba.clairaud.service.eq.Eq
 import org.junit.Test
 
 class EqTest{

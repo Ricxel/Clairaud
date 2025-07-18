@@ -46,8 +46,8 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.omasba.clairaud.autoeq.ui.AutoEq
-import com.omasba.clairaud.autoeq.ui.AutoEqViewModel
+import com.omasba.clairaud.service.autoeq.presentation.AutoEq
+import com.omasba.clairaud.service.autoeq.presentation.model.AutoEqViewModel
 import com.omasba.clairaud.data.repository.EqRepo
 import com.omasba.clairaud.presentation.store.state.EqPreset
 

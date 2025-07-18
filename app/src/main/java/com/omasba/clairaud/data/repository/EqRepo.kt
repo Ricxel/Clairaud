@@ -1,7 +1,7 @@
 package com.omasba.clairaud.data.repository
 
 import android.util.Log
-import com.omasba.clairaud.components.Eq
+import com.omasba.clairaud.service.eq.Eq
 import com.omasba.clairaud.presentation.home.state.EqualizerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

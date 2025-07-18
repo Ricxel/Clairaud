@@ -1,10 +1,10 @@
-package com.omasba.clairaud.components
+package com.omasba.clairaud.service.eq
 
 import android.media.audiofx.Equalizer
 import android.util.Log
 import com.omasba.clairaud.data.repository.EqRepo
 
-data class Eq(private val sessionId: Int, private val eq:Eq? = null) {
+data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     private var equalizer: Equalizer? = null
     val TAG = "Eq"
 

@@ -1,4 +1,4 @@
-package com.omasba.clairaud.components
+package com.omasba.clairaud.service.eq
 
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -19,7 +19,7 @@ import com.omasba.clairaud.core.util.NotificationUtils
 class EqService : Service() {
 
     private val TAG = "EqService"
-    var equalizer:Eq? = null
+    var equalizer: Eq? = null
 
     private val CHANNEL_ID = "equalizer_service_channel"
     private val NOTIFICATION_ID = 1002 //id per la notifica permanente del servizio

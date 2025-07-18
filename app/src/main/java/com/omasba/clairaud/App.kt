@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.omasba.clairaud.components.Eq
-import com.omasba.clairaud.components.EqService
+import com.omasba.clairaud.service.eq.Eq
+import com.omasba.clairaud.service.eq.EqService
 import com.omasba.clairaud.data.repository.EqRepo
 
 class App: Application() {
