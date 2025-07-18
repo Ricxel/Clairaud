@@ -1,9 +1,9 @@
 package com.omasba.clairaud
 
 import android.util.Log
-import com.omasba.clairaud.state.EqPreset
-import com.omasba.clairaud.state.Tag
-import com.omasba.clairaud.state.UserProfile
+import com.omasba.clairaud.presentation.store.state.EqPreset
+import com.omasba.clairaud.presentation.store.state.Tag
+import com.omasba.clairaud.presentation.auth.state.UserProfile
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -16,15 +16,18 @@ class AutoEqualizerUtilsTest {
             username = "Ziopedro",
             mail = "skibidi123@gmail.com"
         )
-        currentUserProfile.presets.add(EqPreset(
+        currentUserProfile.presets.add(
+            EqPreset(
             tags = mutableSetOf(Tag("rap"), Tag("hip hop"), Tag("hip-hop")),
             id = 1
-        ))
+        )
+        )
         currentUserProfile.presets.add(
             EqPreset(
                 tags = mutableSetOf(Tag("hip-hop")),
                 id = 2
-        ))
+        )
+        )
         currentUserProfile.favPresets.addAll(arrayOf(1,2))
         //tags ricevute dalla query
         val tags: Set<Tag> = setOf(Tag(name = "rap"), Tag(name = "hip-hop"))

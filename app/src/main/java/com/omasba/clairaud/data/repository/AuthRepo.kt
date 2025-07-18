@@ -7,8 +7,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.omasba.clairaud.data.interfaces.AuthRepoI
 import com.omasba.clairaud.data.interfaces.GoogleAuthRepoI
-import com.omasba.clairaud.state.UserProfile
-import com.omasba.clairaud.state.UserProfileDTO
+import com.omasba.clairaud.presentation.auth.state.UserProfile
+import com.omasba.clairaud.presentation.auth.state.UserProfileDTO
 import kotlinx.coroutines.tasks.await
 
 object AuthRepo: AuthRepoI, GoogleAuthRepoI {

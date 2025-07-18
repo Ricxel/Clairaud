@@ -1,6 +1,5 @@
 package com.omasba.clairaud.autoeq
 
-import android.app.Notification
 import android.content.ComponentName
 import android.content.Intent
 import android.media.MediaMetadata
@@ -9,18 +8,13 @@ import android.os.IBinder
 import android.service.notification.NotificationListenerService
 import android.content.Context
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import android.app.NotificationManager
-import android.app.NotificationChannel
-import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-import android.os.Build
 import com.omasba.clairaud.autoeq.state.AutoEqStateHolder
-import com.omasba.clairaud.repos.EqRepo
-import com.omasba.clairaud.state.Tag
-import com.omasba.clairaud.network.API_KEY
-import com.omasba.clairaud.network.LastFmApi
-import com.omasba.clairaud.repos.UserRepo
-import com.omasba.clairaud.utils.NotificationUtils
+import com.omasba.clairaud.data.repository.EqRepo
+import com.omasba.clairaud.presentation.store.state.Tag
+import com.omasba.clairaud.core.network.API_KEY
+import com.omasba.clairaud.core.network.LastFmApi
+import com.omasba.clairaud.data.repository.UserRepo
+import com.omasba.clairaud.core.util.NotificationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,7 +23,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import okhttp3.internal.notify
 import kotlin.coroutines.cancellation.CancellationException
 
 class MusicDetectionService : NotificationListenerService() {

@@ -7,12 +7,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.audiofx.AudioEffect
 import android.os.Build
-import android.app.*
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.omasba.clairaud.repos.EqRepo
-import com.omasba.clairaud.utils.NotificationUtils
+import com.omasba.clairaud.data.repository.EqRepo
+import com.omasba.clairaud.core.util.NotificationUtils
 
 /**
  * Service that identify audio session ids of active audio sessions

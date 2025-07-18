@@ -1,6 +1,6 @@
 package com.omasba.clairaud.autoeq.state
 
-import com.omasba.clairaud.state.EqPreset
+import com.omasba.clairaud.presentation.store.state.EqPreset
 
 /**
  * Class that describe the state of the AutoEq feature

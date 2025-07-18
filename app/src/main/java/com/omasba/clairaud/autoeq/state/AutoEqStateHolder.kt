@@ -1,6 +1,6 @@
 package com.omasba.clairaud.autoeq.state
 
-import com.omasba.clairaud.state.EqPreset
+import com.omasba.clairaud.presentation.store.state.EqPreset
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
