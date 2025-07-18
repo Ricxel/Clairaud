@@ -1,56 +1,45 @@
-package com.omasba.clairaud.ui
+package com.omasba.clairaud.ui.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
-import com.omasba.clairaud.data.repository.AuthRepo
 import com.omasba.clairaud.ui.models.AuthViewModel
 
+
 @Composable
-fun LoginScreen(viewModel: AuthViewModel){
+fun RegisterScreen(viewModel: AuthViewModel){
 
     val uiState by viewModel.uiState.collectAsState()
 
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ){
         //casella per username
         OutlinedTextField(
             value = uiState.email,
             onValueChange = { viewModel.onEmailChanged(it) },
-            label = {Text("Email", color = MaterialTheme.colorScheme.secondary)},
-            textStyle = TextStyle(color = MaterialTheme.colorScheme.secondary)
+            label = { Text("Email") }
         )
 
         //casella per password
         OutlinedTextField(
             value = uiState.password,
             onValueChange = { viewModel.onPasswordChange(it) },
-            label = {Text("Password", color = MaterialTheme.colorScheme.secondary)},
+            label = { Text("Password") }
         )
 
         //bottone login
         Button(
             onClick = {
-                viewModel.login()
+                viewModel.register()
             },
             enabled = !uiState.isLoading
         ) {
@@ -58,7 +47,7 @@ fun LoginScreen(viewModel: AuthViewModel){
         }
 
         if(uiState.isLoggedIn) {
-            Text("Loggato!", color = Color.Green)
+            Text("Loggato!")
         }
         uiState.error?.let {
             Text("Errore: $it", color = Color.Red)
