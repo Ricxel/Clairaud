@@ -15,10 +15,6 @@ class UserViewModel : ViewModel() {
 
     private var initialized = false
 
-    init {
-        loadUser()
-    }
-
     fun loadUser() {
         if (initialized) return
 

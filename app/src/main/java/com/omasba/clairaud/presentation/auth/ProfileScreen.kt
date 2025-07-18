@@ -2,6 +2,7 @@ package com.omasba.clairaud.presentation.auth
 
 import com.omasba.clairaud.presentation.auth.model.UserViewModel
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,32 +38,79 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.omasba.clairaud.data.repository.UserRepo
+import com.omasba.clairaud.presentation.auth.components.LogoutButton
+import com.omasba.clairaud.presentation.auth.model.AuthViewModel
 import com.omasba.clairaud.presentation.auth.state.UserProfile
 
 @Composable
-fun ProfileScreen(navController: NavHostController, viewModel: UserViewModel) {
-    // Carica i dati dell'utente all'avvio
-    LaunchedEffect(Unit) {
-        viewModel.loadUser()
-    }
+fun ProfileScreen(viewModel: AuthViewModel, navController: NavHostController) {
 
-    val user by viewModel.userProfileData.collectAsState()
+//    val user by viewModel.userProfileData.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    if (user == null) {
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        if (!uiState.isLoggedIn) {
+            //se l'utente non è autenticato, mostro dei pulsanti per andare alle schermate di login/registrazione
+            Row (
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+            ){
+                Text(text = "You are not autheticated", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //bottone per il login
+                Button(
+                    onClick = {
+                        navController.navigate("login")
+                    }
+                ) {
+                    Text("Login")
+                }
+                Spacer(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                )
+                Text("or")
+
+                //bottone per la registrazione
+                TextButton(
+                    onClick = {
+                        navController.navigate("register")
+                    }
+                ) {
+                    Text(text = "register here", color = MaterialTheme.colorScheme.secondary)
+                }
+            }
+        } else {
+            /*
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            ProfileHeader(user!!)
-            Spacer(modifier = Modifier.height(32.dp))
-            ProfileInfoCard(user!!, navController)
-            Spacer(modifier = Modifier.weight(1f))
-            ProfileActions(navController)
+         */
+            ProfileHeader(UserRepo.currentUserProfile)
+            ProfileInfoCard(UserRepo.currentUserProfile, navController)
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp),
+                horizontalArrangement = Arrangement.End
+            ){
+                LogoutButton {
+                    viewModel.logout()
+                }
+            }
         }
     }
 }
@@ -70,7 +119,9 @@ fun ProfileScreen(navController: NavHostController, viewModel: UserViewModel) {
 fun ProfileHeader(userProfile: UserProfile) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         // Immagine del profilo con iniziale
         Box(
@@ -172,42 +223,6 @@ fun ProfileInfoRow(icon: ImageVector, label: String, value: String) {
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 2.dp)
             )
-        }
-    }
-}
-
-@Composable
-fun ProfileActions(navController: NavHostController) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Button(
-            onClick = { /* Azione impostazioni */ },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Text("Impostazioni Account")
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = {
-                // Logout logic
-                navController.navigate("login") {
-                    popUpTo("profile") { inclusive = true }
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.error
-            ),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Text("Logout")
         }
     }
 }
