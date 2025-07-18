@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.omasba.clairaud.data.repository.StoreRepo
 import com.omasba.clairaud.presentation.NotAuthenticatedScreen
 import com.omasba.clairaud.presentation.auth.LoginScreen
+import com.omasba.clairaud.presentation.auth.ProfileScreen
 import com.omasba.clairaud.presentation.auth.RegisterScreen
 import com.omasba.clairaud.presentation.auth.model.AuthViewModel
 import com.omasba.clairaud.presentation.home.AddPresetScreen
@@ -29,8 +30,7 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
 
     val pcViewModel = PresetComparisonViewModel()
 
-    val authViewModelLogin = AuthViewModel()
-    val authViewModelRegister = AuthViewModel()
+    val authViewModel = AuthViewModel()
     val storeViewModel = StoreViewModel()
     val addPresetViewModel = AddPresetViewModel()
     val presets by StoreRepo.presets.collectAsState()
@@ -47,23 +47,23 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
         composable(BottomNavItem.Home.route) {
             EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController){
                 //funzione isAuthenticated per vericicare l'autenticazione, viene usata per decidere se caricare o meno i preset
-                authViewModelLogin.isAuthenticated() || authViewModelRegister.isAuthenticated()
+                authViewModel.isAuthenticated()
             }
         }
         composable(BottomNavItem.Store.route) {
             //per accedere allo store, è necessario essere loggati, controllo in viewmodel auth
-            if(authViewModelRegister.isAuthenticated() || authViewModelLogin.isAuthenticated())
+            if(authViewModel.isAuthenticated())
                 StoreScreen(viewModel = storeViewModel, navController = navController)
             else NotAuthenticatedScreen()
         }
-//            composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = com.omasba.clairaud.presentation.auth.model.UserViewModel(), navController = navController) }
-        composable(BottomNavItem.Profile.route) { LoginScreen(viewModel = authViewModelLogin, navController) }
+        composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = authViewModel, navController = navController) }
+//        composable(BottomNavItem.Profile.route) { LoginScreen(viewModel = authViewModelLogin, navController) }
 
 //            composable(BottomNavItem.Profile.route) { Text("Profilo") }
         //add preset
         composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
-        composable("register"){ RegisterScreen(viewModel = authViewModelRegister, navController) }
-        composable("login"){ LoginScreen(viewModel = authViewModelLogin, navController) }
+        composable("register"){ RegisterScreen(viewModel = authViewModel, navController) }
+        composable("login"){ LoginScreen(viewModel = authViewModel, navController) }
 
         composable("editPreset/{presetId}"){backStackEntry ->
             //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare

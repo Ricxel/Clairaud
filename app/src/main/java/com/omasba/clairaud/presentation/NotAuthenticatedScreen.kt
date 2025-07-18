@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +21,9 @@ fun NotAuthenticatedScreen(){
             .padding(16.dp)
     ){
         Text(
-            text = "You are not authenticated, please login or register",
+            text = "You are not authenticated",
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.tertiary
         )
     }
 }

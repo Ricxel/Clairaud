@@ -93,6 +93,7 @@ class AuthViewModel: ViewModel(){
     fun logout(){
         AuthRepo.logout() //logiut
         _uiState.value = AuthUiState() // resetto anche la ui
+        UserRepo.currentUserProfile = UserProfile() //resetto anche il profilo utente
     }
 
 }
