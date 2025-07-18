@@ -12,5 +12,5 @@ data class EqPreset(
         Pair(4, 0),
     ),
     var author: String = "",
-    var authorUid: Int = -1,
+    var authorUid: String = "",
 )

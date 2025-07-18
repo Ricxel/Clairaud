@@ -2,7 +2,7 @@ package com.omasba.clairaud.repos
 
 import com.omasba.clairaud.state.EqPreset
 import com.omasba.clairaud.state.Tag
-import com.omasba.clairaud.state.User
+import com.omasba.clairaud.state.UserProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -11,13 +11,8 @@ import kotlinx.coroutines.flow.update
  * User state holder repository
  */
 object UserRepo {
-    var currentUser: User = User(
-        uid = 101,
-        token = "LucaToken",
-        username = "LucaBandolero",
-        mail = "Luca.Bandolero@gmaio.com"
-    )
-    private val _favPresets = MutableStateFlow<Set<Int>>(currentUser.favPresets)
+    var currentUserProfile: UserProfile = UserProfile()
+    private val _favPresets = MutableStateFlow<Set<Int>>(currentUserProfile!!.favPresets)
     val favPresets = _favPresets.asStateFlow()
     fun getPresetToApply(tags: Set<Tag>): EqPreset{
         //prendo i preset dallo store

@@ -13,7 +13,7 @@ import kotlin.random.Random
 val TAG = "AddPresetViewModel"
 
 class AddPresetViewModel:ViewModel(){
-    private val _eqPreset = MutableStateFlow(EqPreset(authorUid = -1).apply { name = "" })
+    private val _eqPreset = MutableStateFlow(EqPreset(authorUid = "").apply { name = "" })
     val eqPreset = _eqPreset.asStateFlow()
 
     private val _showError = MutableStateFlow(false)
@@ -44,13 +44,13 @@ class AddPresetViewModel:ViewModel(){
             _showError.value = true
             return false
         }
-        if(_eqPreset.value.authorUid != UserRepo.currentUser.uid){
+        if(_eqPreset.value.authorUid != (UserRepo.currentUserProfile?.uid ?: "")){
             //vuol dire che è nuovo
             _eqPreset.update {
                 it.copy(
-                    authorUid = UserRepo.currentUser.uid,
+                    authorUid = UserRepo.currentUserProfile!!.uid,
                     bands = bands,
-                    author = UserRepo.currentUser.username,
+                    author = UserRepo.currentUserProfile!!.username,
                     id = Random.nextInt(100,100000)
                 )
             }

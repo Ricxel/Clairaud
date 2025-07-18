@@ -1,6 +1,6 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.omasba.clairaud.state.User
+import com.omasba.clairaud.state.UserProfile
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UserViewModel : ViewModel() {
-    private val _userData = MutableStateFlow<User?>(null)
-    val userData: StateFlow<User?> = _userData.asStateFlow()
+    private val _userProfileData = MutableStateFlow<UserProfile?>(null)
+    val userProfileData: StateFlow<UserProfile?> = _userProfileData.asStateFlow()
 
     private var initialized = false
 
@@ -23,10 +23,9 @@ class UserViewModel : ViewModel() {
         viewModelScope.launch {
             // Simula ritardo di rete
             delay(250)
-            _userData.value = User(
+            _userProfileData.value = UserProfile(
                 favPresets = emptySet(),
-                uid = 123,
-                token = "authToken123",
+                uid = "123",
                 username = "ClairaudUser",
                 mail = "user@clairaud.com"
             )

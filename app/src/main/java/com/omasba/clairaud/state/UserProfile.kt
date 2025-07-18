@@ -1,9 +1,8 @@
 package com.omasba.clairaud.state
 
-data class User (
+data class UserProfile (
     var favPresets: Set<Int> = emptySet(), // lista degli id dei preset preferitit
-    var uid: Int,
-    var token: String,
-    var username: String,
-    var mail: String
+    var uid: String = "",
+    var username: String = "",
+    var mail: String = ""
 )

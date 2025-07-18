@@ -12,7 +12,12 @@
           "package_name": "com.omasba.clairaud"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "124284435311-09p6urp2tvj2che8vthfa04c53ssd3oo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCsUirUFUu0ZqM562rfUAVAOXiuwJy64tA"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124284435311-09p6urp2tvj2che8vthfa04c53ssd3oo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

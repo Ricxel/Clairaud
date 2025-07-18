@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.omasba.clairaud.state.User
+import com.omasba.clairaud.state.UserProfile
 
 @Composable
 fun ProfileScreen(navController: NavHostController, viewModel: UserViewModel) {
@@ -45,7 +45,7 @@ fun ProfileScreen(navController: NavHostController, viewModel: UserViewModel) {
         viewModel.loadUser()
     }
 
-    val user by viewModel.userData.collectAsState()
+    val user by viewModel.userProfileData.collectAsState()
 
     if (user == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -67,7 +67,7 @@ fun ProfileScreen(navController: NavHostController, viewModel: UserViewModel) {
 }
 
 @Composable
-fun ProfileHeader(user: User) {
+fun ProfileHeader(userProfile: UserProfile) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
@@ -81,7 +81,7 @@ fun ProfileHeader(user: User) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = user.username.take(1).uppercase(),
+                text = userProfile.username.take(1).uppercase(),
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.onPrimary
             )
@@ -90,13 +90,13 @@ fun ProfileHeader(user: User) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = user.username,
+            text = userProfile.username,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
 
         Text(
-            text = user.mail,
+            text = userProfile.mail,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
         )
@@ -104,7 +104,7 @@ fun ProfileHeader(user: User) {
 }
 
 @Composable
-fun ProfileInfoCard(user: User, navController: NavHostController) {
+fun ProfileInfoCard(userProfile: UserProfile, navController: NavHostController) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -116,7 +116,7 @@ fun ProfileInfoCard(user: User, navController: NavHostController) {
             ProfileInfoRow(
                 icon = Icons.Default.Person,
                 label = "Username",
-                value = user.username
+                value = userProfile.username
             )
 
             Divider(
@@ -127,7 +127,7 @@ fun ProfileInfoCard(user: User, navController: NavHostController) {
             ProfileInfoRow(
                 icon = Icons.Default.Email,
                 label = "Email",
-                value = user.mail
+                value = userProfile.mail
             )
 
             Spacer(modifier = Modifier.height(16.dp))

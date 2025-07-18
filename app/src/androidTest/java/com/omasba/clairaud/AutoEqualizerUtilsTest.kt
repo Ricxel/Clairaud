@@ -3,32 +3,32 @@ package com.omasba.clairaud
 import android.util.Log
 import com.omasba.clairaud.state.EqPreset
 import com.omasba.clairaud.state.Tag
-import com.omasba.clairaud.state.User
+import com.omasba.clairaud.state.UserProfile
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AutoEqualizerUtilsTest {
     @Test
     fun getIntersectionWithUserPresets(){
-        val currentUser = User(
+        val currentUserProfile = UserProfile(
             uid = "12",
             token = "alsdaksd",
             username = "Ziopedro",
             mail = "skibidi123@gmail.com"
         )
-        currentUser.presets.add(EqPreset(
+        currentUserProfile.presets.add(EqPreset(
             tags = mutableSetOf(Tag("rap"), Tag("hip hop"), Tag("hip-hop")),
             id = 1
         ))
-        currentUser.presets.add(
+        currentUserProfile.presets.add(
             EqPreset(
                 tags = mutableSetOf(Tag("hip-hop")),
                 id = 2
         ))
-        currentUser.favPresets.addAll(arrayOf(1,2))
+        currentUserProfile.favPresets.addAll(arrayOf(1,2))
         //tags ricevute dalla query
         val tags: Set<Tag> = setOf(Tag(name = "rap"), Tag(name = "hip-hop"))
-        val presetToApply = currentUser.getPresetToApply(tags)
+        val presetToApply = currentUserProfile.getPresetToApply(tags)
         Log.d("preset", "id: " + presetToApply.id)
         assertTrue(presetToApply.id == 1)
     }
