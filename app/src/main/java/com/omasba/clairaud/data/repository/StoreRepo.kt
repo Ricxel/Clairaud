@@ -9,6 +9,7 @@ import com.omasba.clairaud.presentation.store.state.EqPreset
 import com.omasba.clairaud.presentation.store.state.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * Presets store state holder repository
@@ -18,17 +19,25 @@ object StoreRepo {
     private var _presets = MutableStateFlow(emptyList<EqPreset>())
     val presets = _presets.asStateFlow()
 
+    //per segnalare che i preset sono caricati
+    private val _presetsLoaded = MutableStateFlow(false)
+    val presetsLoaded = _presetsLoaded.asStateFlow()
+
     private val presetsCollection = Firebase.firestore.collection("presets")
 
     fun empty(){
         _presets = MutableStateFlow(emptyList<EqPreset>())
     }
 
+    fun reset(){
+        _presets.update { emptyList() }
+    }
     fun fetchPresets() {
         Log.d(TAG, "fetching")
 
         //svuoto i preset per triggerare l'animazione
         _presets.value = emptyList()
+        _presetsLoaded.update { false }
 
         presetsCollection.get()
             .addOnSuccessListener { result ->
@@ -64,9 +73,8 @@ object StoreRepo {
 
                 Log.d(TAG, "fetched$loadedPresets")
 
-
-
                 _presets.value = loadedPresets
+                _presetsLoaded.update { true }
             }
             .addOnFailureListener {
                 Log.e(TAG, "Errore fetch preset: ${it.message}")
@@ -86,6 +94,7 @@ object StoreRepo {
             .addOnFailureListener {
                 Log.e(TAG, "Failed to delete preset: ${it.message}")
             }
+        fetchPresets()
     }
 
     /**
@@ -123,6 +132,7 @@ object StoreRepo {
             }
 
         Log.d(TAG, "preset added succesfully to firebase")
+        fetchPresets()
     }
 
     /**
@@ -131,5 +141,6 @@ object StoreRepo {
      */
     fun replacePreset(preset: EqPreset) {
         addPreset(preset) // Firestore `set()` sovrascrive il documento
+        fetchPresets()
     }
 }

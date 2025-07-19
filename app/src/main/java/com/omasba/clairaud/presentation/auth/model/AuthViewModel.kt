@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.auth.User
 import com.omasba.clairaud.data.repository.AuthRepo
 import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.auth.state.AuthUiState
@@ -94,7 +95,7 @@ class AuthViewModel: ViewModel(){
     fun logout(){
         AuthRepo.logout() //logiut
         _uiState.value = AuthUiState() // resetto anche la ui
-        UserRepo.currentUserProfile = UserProfile() //resetto anche il profilo utente
+        UserRepo.logout()
     }
 
 }

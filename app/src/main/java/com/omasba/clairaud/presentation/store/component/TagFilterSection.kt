@@ -39,7 +39,7 @@ fun TagFilterSection(
 ) {
     val scrollState = rememberScrollState()
     var expanded by remember{ mutableStateOf(false) }
-    var maxHeight = if(expanded) 300.dp else 65.dp
+    val maxHeight = if(expanded) 300.dp else 65.dp
     val animatedHeight by animateDpAsState(targetValue = maxHeight, label = "CardHeight")
 
 

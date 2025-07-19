@@ -1,6 +1,5 @@
 package com.omasba.clairaud.presentation.auth
 
-import com.omasba.clairaud.presentation.auth.model.UserViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,23 +13,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,77 +42,64 @@ import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.auth.components.LogoutButton
 import com.omasba.clairaud.presentation.auth.model.AuthViewModel
 import com.omasba.clairaud.presentation.auth.state.UserProfile
+import com.omasba.clairaud.presentation.component.NotAuthenticated
 
 @Composable
 fun ProfileScreen(viewModel: AuthViewModel, navController: NavHostController) {
 
-//    val user by viewModel.userProfileData.collectAsState()
-    val uiState by viewModel.uiState.collectAsState()
+    //controllo, se dovesse sloggarsi, lo rimando alla schermata di login
+    var isAuthenticated by remember { mutableStateOf<Boolean?>(null) } //per capire quando si è autenticati
 
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        if (!uiState.isLoggedIn) {
-            //se l'utente non è autenticato, mostro dei pulsanti per andare alle schermate di login/registrazione
-            Row (
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-            ){
-                Text(text = "You are not autheticated", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                //bottone per il login
-                Button(
-                    onClick = {
-                        navController.navigate("login")
-                    }
-                ) {
-                    Text("Login")
-                }
-                Spacer(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                )
-                Text("or")
-
-                //bottone per la registrazione
-                TextButton(
-                    onClick = {
-                        navController.navigate("register")
-                    }
-                ) {
-                    Text(text = "register here", color = MaterialTheme.colorScheme.secondary)
-                }
-            }
-        } else {
-            /*
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-         */
-            ProfileHeader(UserRepo.currentUserProfile)
-            ProfileInfoCard(UserRepo.currentUserProfile, navController)
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 6.dp),
-                horizontalArrangement = Arrangement.End
-            ){
-                LogoutButton {
-                    viewModel.logout()
-                }
+    LaunchedEffect(Unit) {
+        isAuthenticated =
+            UserRepo.isLogged() //si verifica se l'utente è loggato e anche la validità del token
+        if (isAuthenticated == false) {
+            navController.navigate("login") {
+                popUpTo("store") { inclusive = true }
             }
         }
     }
+
+    when(isAuthenticated){
+        true -> {
+            Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                ProfileHeader(UserRepo.currentUserProfile)
+                ProfileInfoCard(UserRepo.currentUserProfile, navController)
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp),
+                    horizontalArrangement = Arrangement.End
+                ){
+                    LogoutButton {
+                        viewModel.logout()
+                        navController.navigate("login")
+                    }
+                }
+            }
+        }
+        null -> {
+            // aspetto il risultato
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        false -> {
+            //niente
+        }
+    }
+
+
 }
 
 @Composable
@@ -185,7 +172,7 @@ fun ProfileInfoCard(userProfile: UserProfile, navController: NavHostController) 
 
             Button(
                 onClick = {
-                    navController.navigate("edit_profile") {
+                    navController.navigate("editProfile") {
                         // Passa i dati correnti come argomenti
                         launchSingleTop = true
                     }

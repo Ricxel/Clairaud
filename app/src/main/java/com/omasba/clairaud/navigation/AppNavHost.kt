@@ -1,8 +1,12 @@
 package com.omasba.clairaud.navigation
 
 import android.util.Log
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -11,11 +15,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.omasba.clairaud.data.repository.StoreRepo
+import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.NotAuthenticatedScreen
+import com.omasba.clairaud.presentation.auth.EditAccountScreen
 import com.omasba.clairaud.presentation.auth.LoginScreen
 import com.omasba.clairaud.presentation.auth.ProfileScreen
 import com.omasba.clairaud.presentation.auth.RegisterScreen
 import com.omasba.clairaud.presentation.auth.model.AuthViewModel
+import com.omasba.clairaud.presentation.auth.model.EditViewModel
 import com.omasba.clairaud.presentation.home.AddPresetScreen
 import com.omasba.clairaud.presentation.home.EqScreen
 import com.omasba.clairaud.presentation.home.model.AddPresetViewModel
@@ -41,29 +48,40 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
         navController = navController,
         startDestination = BottomNavItem.Home.route,
         modifier = Modifier
-            .padding(top = 32.dp)
+            .padding(top = 32.dp),
+        enterTransition = {
+            fadeIn(tween(100))
+        },
+        exitTransition = {
+            fadeOut(tween(100))
+        }
     ) {
 //            val presets by StoreRepo.presets.collectAsState()
         composable(BottomNavItem.Home.route) {
-            EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController){
-                //funzione isAuthenticated per vericicare l'autenticazione, viene usata per decidere se caricare o meno i preset
-                authViewModel.isAuthenticated()
-            }
+            EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController)
         }
         composable(BottomNavItem.Store.route) {
             //per accedere allo store, è necessario essere loggati, controllo in viewmodel auth
-            if(authViewModel.isAuthenticated())
-                StoreScreen(viewModel = storeViewModel, navController = navController)
-            else NotAuthenticatedScreen()
+            StoreScreen(viewModel = storeViewModel, navController = navController)
         }
-        composable(BottomNavItem.Profile.route) { ProfileScreen(viewModel = authViewModel, navController = navController) }
+        composable(BottomNavItem.Profile.route) {
+            ProfileScreen(viewModel = authViewModel, navController = navController)
+//            else {
+//                //rimando al login
+//                LaunchedEffect(Unit){
+//                    navController.navigate("login")
+//                }
+//            }
+        }
 //        composable(BottomNavItem.Profile.route) { LoginScreen(viewModel = authViewModelLogin, navController) }
 
 //            composable(BottomNavItem.Profile.route) { Text("Profilo") }
         //add preset
+        composable("notAuth"){ NotAuthenticatedScreen(navController) }
         composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
         composable("register"){ RegisterScreen(viewModel = authViewModel, navController) }
         composable("login"){ LoginScreen(viewModel = authViewModel, navController) }
+        composable("editProfile"){ EditAccountScreen(viewModel = EditViewModel()) }
 
         composable("editPreset/{presetId}"){backStackEntry ->
             //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare

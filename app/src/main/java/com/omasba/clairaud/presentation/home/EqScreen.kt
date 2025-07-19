@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,6 +57,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.key
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
+import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.component.EqNotFound
 import com.omasba.clairaud.presentation.component.PresetGraph
 import com.omasba.clairaud.presentation.store.component.TagList
@@ -63,8 +66,15 @@ import com.omasba.clairaud.presentation.store.model.StoreViewModel
 val TAG = "EqScreen"
 
 @Composable
-fun EqScreen(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel, navController: NavHostController, isAuthenticated: () -> Boolean){
+fun EqScreen(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel, navController: NavHostController){
     val eq by EqRepo.eq.collectAsState()
+
+    var isAuthenticated by remember { mutableStateOf<Boolean?>(null) } //per capire quando si è autenticati
+
+    LaunchedEffect(Unit) {
+        isAuthenticated =
+            UserRepo.isLogged() //si verifica se l'utente è loggato e anche la validità del token
+    }
 
     if (eq != null) {
         Column(
@@ -78,9 +88,22 @@ fun EqScreen(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel, na
             Spacer(modifier = Modifier.height(16.dp))
 
             //sezione da proteggere, i preset applicabili sono solo i preferiti quindi bisogna essere autenticati
-            if(isAuthenticated()){
-                ApplyPresetCard(eqViewModel, storeViewModel)
-                Log.d(TAG, "Preset card loaded")
+            when(isAuthenticated){
+                true -> {
+                    ApplyPresetCard(eqViewModel, storeViewModel)
+                }
+                false -> {
+                    //niente
+                }
+                null -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
         }
     }

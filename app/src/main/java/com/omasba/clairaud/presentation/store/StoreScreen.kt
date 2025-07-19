@@ -8,11 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.store.component.Store
 import com.omasba.clairaud.presentation.store.model.StoreViewModel
 import com.omasba.clairaud.presentation.theme.ClairaudTheme
@@ -24,39 +28,60 @@ import com.omasba.clairaud.presentation.theme.ClairaudTheme
  * @param navController Nav host controller to be able to navigate around the screens
  */
 @Composable
-fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController){
+fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController) {
     val presets by viewModel.presets.collectAsState()
-    LaunchedEffect(Unit) {
-        //if(presets.isEmpty())
-        viewModel.fetchPresets()
-    }
+    val presetsLoaded by viewModel.presetsLoaded.collectAsState()
 
-    if(presets.isEmpty()){
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ){
-            CircularProgressIndicator()
-        }
-    }
-    else {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Store(viewModel, navController)
+    var isAuthenticated by remember { mutableStateOf<Boolean?>(null) } //per capire quando si è autenticati
+
+    LaunchedEffect(Unit) {
+        isAuthenticated =
+            UserRepo.isLogged() //si verifica se l'utente è loggato e anche la validità del token
+        if (isAuthenticated == false) {
+            navController.navigate("notAuth") {
+                popUpTo("store") { inclusive = true }
             }
         }
+        else if (presets.isEmpty())
+            viewModel.fetchPresets()
     }
 
-}
 
-@Composable
-@Preview(
-    showBackground = true
-)
-fun StoreScreenPreview(){
-    ClairaudTheme {
-        val viewModel = StoreViewModel()
-        StoreScreen(viewModel = viewModel, navController = NavHostController(context = LocalContext.current))
+    when (isAuthenticated) {
+        null -> {
+            // aspetto il risultato
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        true -> {
+            // autenticazione verificata
+            if(presetsLoaded){
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Store(viewModel, navController)
+                    }
+                }
+            }
+            else{
+                // aspetto il fetch
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+
+        else -> {//niente, in questo caso viene fatto il redirect, ci pensa già in primo LaunchedEffect}
+        }
+
     }
 }

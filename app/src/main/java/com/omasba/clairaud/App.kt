@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.omasba.clairaud.data.repository.AuthRepo
 import com.omasba.clairaud.service.eq.Eq
 import com.omasba.clairaud.service.eq.EqService
 import com.omasba.clairaud.data.repository.EqRepo
+import com.omasba.clairaud.data.repository.UserRepo
 
 class App: Application() {
     override fun onCreate() {
@@ -32,5 +34,10 @@ class App: Application() {
 
         startForegroundService(serviceIntent)
         Log.d("EqScreen","Lanciato!")
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        UserRepo.logout()
     }
 }

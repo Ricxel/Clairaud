@@ -1,6 +1,8 @@
 package com.omasba.clairaud.data.repository
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.omasba.clairaud.presentation.auth.state.UserProfile
@@ -9,12 +11,18 @@ import com.omasba.clairaud.presentation.store.state.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.tasks.await
+import okhttp3.internal.userAgent
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * User state holder repository
  */
 object UserRepo {
+
     private const val TAG = "UserRepo"
+
     var currentUserProfile: UserProfile = UserProfile()
     private var _favPresets = MutableStateFlow<Set<Int>>(currentUserProfile.favPresets)
     val favPresets = _favPresets.asStateFlow()
@@ -105,6 +113,32 @@ object UserRepo {
         setFavPresets()
     }
 
+    /**
+     * Verify if the user is logged, and token's validity
+     */
+    suspend fun isLogged(): Boolean{
+        //controllo firebase
+        val firebaseUser: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return false
+
+        //controllo l'utente locale
+        if(currentUserProfile.uid == "") //se ha l'uid di default non è valido
+            return false
+
+        return try {
+            // Forza un refresh del token per verificarne la validità
+            val tokenResult = firebaseUser.getIdToken(true).await()
+            tokenResult.token != null
+        } catch (e: Exception) {
+            // Se c'è un errore nel refresh del token, l'utente non è autenticato
+            false
+        }
+    }
+
+    fun logout(){
+        AuthRepo.logout()
+        currentUserProfile = UserProfile()
+        StoreRepo.reset()
+    }
     init {
         //getFavPresets()
     }

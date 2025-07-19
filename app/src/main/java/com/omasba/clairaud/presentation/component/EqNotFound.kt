@@ -25,7 +25,7 @@ fun EqNotFound(){
             Text(
                 text = "Media session not found",
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.tertiary
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }

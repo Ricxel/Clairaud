@@ -1,5 +1,7 @@
 package com.omasba.clairaud.presentation.store.model
 
+import androidx.compose.lint.Names.Runtime.MutableStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omasba.clairaud.data.repository.StoreRepo
@@ -18,6 +20,9 @@ import kotlinx.coroutines.flow.update
 class StoreViewModel:ViewModel() {
     val presets = StoreRepo.presets
     val TAG = "StoreViewModel"
+
+    //per vedere se i preset sono caricati
+    val presetsLoaded = StoreRepo.presetsLoaded
 
     //per filtare con i tag
     private val _selectedTags = MutableStateFlow<Set<Tag>>(emptySet())

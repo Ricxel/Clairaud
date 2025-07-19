@@ -1,6 +1,5 @@
 package com.omasba.clairaud.presentation.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -10,27 +9,14 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.omasba.clairaud.data.repository.StoreRepo
 import com.omasba.clairaud.navigation.AppNavHost
-import com.omasba.clairaud.presentation.auth.LoginScreen
-import com.omasba.clairaud.presentation.auth.RegisterScreen
-import com.omasba.clairaud.presentation.store.StoreScreen
 import com.omasba.clairaud.navigation.BottomNavItem
-import com.omasba.clairaud.presentation.store.state.EqPreset
-import com.omasba.clairaud.presentation.NotAuthenticatedScreen
-import com.omasba.clairaud.presentation.home.model.AddPresetViewModel
-import com.omasba.clairaud.presentation.auth.model.AuthViewModel
 import com.omasba.clairaud.presentation.home.model.EqualizerViewModel
-import com.omasba.clairaud.presentation.home.model.PresetComparisonViewModel
-import com.omasba.clairaud.presentation.store.model.StoreViewModel
 
 
 /**
@@ -69,7 +55,7 @@ fun MainScreen() {
                         ),
                         onClick = {
                             if (currentRoute != item.route) {
-                                navController.navigate(item.route) {
+                                navController.navigate(item.route) { //naviga resettando lo stato delle schermate
                                     popUpTo(navController.graph.startDestinationId) { saveState = true }
                                     launchSingleTop = true
                                     restoreState = true
