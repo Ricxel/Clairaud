@@ -1,10 +1,12 @@
 package com.omasba.clairaud.data.repository
 
 import android.util.Log
+import androidx.test.espresso.core.internal.deps.dagger.Reusable
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.omasba.clairaud.data.interfaces.AuthRepoI
 import com.omasba.clairaud.data.interfaces.GoogleAuthRepoI
 import com.omasba.clairaud.presentation.auth.state.UserProfile
@@ -40,6 +42,7 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
         Log.d("auth","Creato $tmp")
     }
 
+
     override suspend fun getUserProfile(uid: String): Result<UserProfile> = runCatching {
         val snapshot = FirebaseFirestore.getInstance()
             .collection("users")
@@ -68,6 +71,31 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
 
     override fun logout() {
         firebaseAuth.signOut()
+    }
+
+    override suspend fun updateUserData(profile: UserProfile): Result<Unit> = runCatching {
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser ?: throw IllegalStateException("User not logged in")
+
+        if (profile.mail != user.email) {
+            FirebaseAuth.getInstance().currentUser?.updateEmail(profile.mail)
+        }
+
+        val dto = UserProfileDTO(
+            favPresets = UserRepo.currentUserProfile.favPresets.toList(),
+            uid = user.uid,
+            username = profile.username,
+            mail = profile.mail
+        )
+
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(user.uid)
+            .set(dto) // sovrascrive tutto il documento
+            .await()
+        //aggiorno anche il currentUserProfile nel repo
+        UserRepo.currentUserProfile = UserRepo.currentUserProfile.copy(username = profile.username, mail = profile.mail)
+        Log.d("auth", "Cambiato profilo")
     }
 
     override suspend fun loginWithGoogle(idToken: String): Result<Unit> = runCatching {

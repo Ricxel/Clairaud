@@ -70,13 +70,23 @@ fun ProfileScreen(viewModel: AuthViewModel, navController: NavHostController) {
                 verticalArrangement = Arrangement.Center
             ) {
                 ProfileHeader(UserRepo.currentUserProfile)
-                ProfileInfoCard(UserRepo.currentUserProfile, navController)
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 6.dp),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.Center
                 ){
+                    Button(
+                        onClick = {
+                            navController.navigate("editProfile") {
+                                // Passa i dati correnti come argomenti
+                                launchSingleTop = true
+                            }
+                        },
+                        modifier = Modifier.padding(end = 6.dp),
+                    ) {
+                        Text("Modifica Profilo")
+                    }
                     LogoutButton {
                         viewModel.logout()
                         navController.navigate("login")
@@ -170,18 +180,7 @@ fun ProfileInfoCard(userProfile: UserProfile, navController: NavHostController) 
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = {
-                    navController.navigate("editProfile") {
-                        // Passa i dati correnti come argomenti
-                        launchSingleTop = true
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text("Modifica Profilo")
-            }
+
         }
     }
 }

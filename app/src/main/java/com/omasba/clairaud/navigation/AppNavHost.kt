@@ -79,9 +79,9 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
         //add preset
         composable("notAuth"){ NotAuthenticatedScreen(navController) }
         composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
-        composable("register"){ RegisterScreen(viewModel = authViewModel, navController) }
-        composable("login"){ LoginScreen(viewModel = authViewModel, navController) }
-        composable("editProfile"){ EditAccountScreen(viewModel = EditViewModel()) }
+        composable("register"){ RegisterScreen(viewModel = authViewModel, navController = navController) }
+        composable("login"){ LoginScreen(viewModel = authViewModel, navController = navController) }
+        composable("editProfile"){ EditAccountScreen(viewModel = EditViewModel(UserRepo.currentUserProfile.username, UserRepo.currentUserProfile.mail), navController = navController)}
 
         composable("editPreset/{presetId}"){backStackEntry ->
             //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare

@@ -10,4 +10,5 @@ interface AuthRepoI {
     suspend fun createUserProfile(uid: String, profile: UserProfile): Result<Unit>
     suspend fun getUserProfile(uid: String): Result<UserProfile>
     fun logout()
+    suspend fun updateUserData(profile: UserProfile): Result<Unit>
 }
