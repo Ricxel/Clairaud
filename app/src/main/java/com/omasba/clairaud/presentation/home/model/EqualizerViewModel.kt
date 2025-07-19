@@ -8,9 +8,6 @@ class EqualizerViewModel : ViewModel() {
     val TAG:String = "EqViewModel"
     val eqState = EqRepo.eqState
 
-//    var isOn by mutableStateOf(false)
-//        private set
-
     init {
         val bands = arrayListOf(
             Pair<Int,Short>(0,0),
@@ -20,24 +17,28 @@ class EqualizerViewModel : ViewModel() {
             Pair<Int,Short>(4,0))
         newBands(bands)
     }
-    fun setBandByHz(hz:Int, level:Short){
-        EqRepo.setBand(EqRepo.getBand(hz*1000), level)
-    }
-    fun getFreqByIndex(index: Short):Int{
-        return EqRepo.getFreq(index)
-    }
+
+    /**
+     * Sets the level of a specific equalizer band
+     * @param index The index (0 to 4) of the band to modify
+     * @param level The new level for the band
+     */
     fun setBand(index:Int, level:Short){
         Log.d(TAG, "Setting band $index to $level")
         EqRepo.setBand(index, level)
     }
-    fun updateBandLevel(freq: Int, newValue: Short){
-        EqRepo.changeBandLevel(freq, newValue)
-    }
 
+    /**
+     * Sets a new set of bands
+     * @param newBands The list of new bands
+     */
     fun newBands(newBands: ArrayList<Pair<Int, Short>>){
         EqRepo.newBands(newBands)
     }
 
+    /**
+     * Toggles the equalizer on or off
+     */
     fun toggleEq(){
         Log.d(TAG, "Equalizer toggled")
         EqRepo.setIsOn(!eqState.value.isOn)

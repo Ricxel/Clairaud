@@ -33,6 +33,10 @@ class AuthViewModel: ViewModel(){
     fun onUsernameChange(username: String){
         _uiState.update { it.copy(username = username) }
     }
+    /**
+     * Logs in a user with the provided email and password
+     * Then fetches the user profile and favorite presets
+     */
     fun login(){
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) } //metto a loading
@@ -59,6 +63,10 @@ class AuthViewModel: ViewModel(){
             UserRepo.getFavPresets()
         }
     }
+    
+    /**
+     * Registers a new user with the provided email, password, and username
+     */
     fun register(){
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) } //metto a loading
@@ -92,6 +100,10 @@ class AuthViewModel: ViewModel(){
 
         }
     }
+
+    /**
+     * Logs out the current user
+     */
     fun logout(){
         AuthRepo.logout() //logiut
         _uiState.value = AuthUiState() // resetto anche la ui
