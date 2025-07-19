@@ -21,10 +21,10 @@ object StoreRepo {
 
     private val presetsCollection = Firebase.firestore.collection("presets")
 
-    fun empty(){
-        _presets = MutableStateFlow(emptyList<EqPreset>())
-    }
-
+    /**
+     * Fetches all presets from Firebase and includes the author name.
+     * Updates the presets StateFlow with the result.
+     */
     fun fetchPresets() {
         Log.d(TAG, "fetching")
 
