@@ -48,6 +48,7 @@ fun AutoEq(viewModel: AutoEqViewModel) {
                 .padding(18.dp,5.dp),
             color = MaterialTheme.colorScheme.secondary
         )
+
         Switch(
             checked = state.isOn,
             onCheckedChange = {checked ->

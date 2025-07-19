@@ -62,6 +62,7 @@ import com.omasba.clairaud.presentation.component.EqNotFound
 import com.omasba.clairaud.presentation.component.PresetGraph
 import com.omasba.clairaud.presentation.store.component.TagList
 import com.omasba.clairaud.presentation.store.model.StoreViewModel
+import com.omasba.clairaud.service.autoeq.presentation.state.AutoEqStateHolder
 
 val TAG = "EqScreen"
 
@@ -123,6 +124,11 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
     Log.d(TAG, "bands: $bands.toString()")
     val autoEqModel = AutoEqViewModel()
 
+    var isEnabled by remember { mutableStateOf(false) } // per capire se l'utente è autenticato
+    LaunchedEffect(Unit) {
+        isEnabled = UserRepo.isLogged() // per l'aggiunta di un preset
+    }
+
     Log.d("EqScreen", "eq card ${eq}")
 
     BoxWithConstraints(
@@ -159,7 +165,8 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                         onClick = {
                             //navigazione all'aggiunta del preset
                             navController.navigate("addPreset")
-                        }
+                        },
+                        enabled = isEnabled
                     ) {
                         Icon(
                             imageVector = Icons.Default.Share,
