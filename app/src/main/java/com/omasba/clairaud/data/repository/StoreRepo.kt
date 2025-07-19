@@ -1,6 +1,7 @@
 package com.omasba.clairaud.data.repository
 
 import android.util.Log
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -27,46 +28,54 @@ object StoreRepo {
     fun fetchPresets() {
         Log.d(TAG, "fetching")
 
-        //svuoto i preset per triggerare l'animazione
+        // Svuoto i preset per triggerare l'animazione
         _presets.value = emptyList()
 
         presetsCollection.get()
             .addOnSuccessListener { result ->
-                val loadedPresets = result.documents.mapNotNull { doc ->
-                    try {
-                        val name = doc.getString("name") ?: return@mapNotNull null
-                        val id = doc.getLong("id")?.toInt() ?: return@mapNotNull null
-                        val author = doc.getString("author") ?: ""
-                        val authorUid = doc.getString("authorUid") ?: ""
-                        val tagsList = doc.get("tags") as? List<String> ?: emptyList()
-                        val tags = tagsList.map { Tag(it) }.toSet()
+                val presetDocs = result.documents
 
-                        val bandsList = doc.get("bands") as? List<Map<String, Any>> ?: emptyList()
-                        val bands = bandsList.mapNotNull { map ->
-                            val index = (map["index"] as? Long)?.toInt()
-                            val gain = (map["gain"] as? Long)?.toShort()
-                            if (index != null && gain != null) Pair(index, gain) else null
-                        }
+                // Lista di Task per fetch paralleli
+                val tasks = presetDocs.mapNotNull { doc ->
+                    val name = doc.getString("name") ?: return@mapNotNull null
+                    val id = doc.getLong("id")?.toInt() ?: return@mapNotNull null
+                    val authorUid = doc.getString("authorUid") ?: return@mapNotNull null
+                    val tagsList = doc.get("tags") as? List<String> ?: emptyList()
+                    val tags = tagsList.map { Tag(it) }.toSet()
 
-                        EqPreset(
-                            name = name,
-                            tags = tags,
-                            bands = ArrayList(bands),
-                            id = id,
-                            author = author,
-                            authorUid = authorUid
-                        )
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Errore parsing preset: ${e.message}")
-                        null
+                    val bandsList = doc.get("bands") as? List<Map<String, Any>> ?: emptyList()
+                    val bands = bandsList.mapNotNull { map ->
+                        val index = (map["index"] as? Long)?.toInt()
+                        val gain = (map["gain"] as? Long)?.toShort()
+                        if (index != null && gain != null) Pair(index, gain) else null
                     }
+
+                    // Task per ottenere il nome autore da users
+                    Firebase.firestore.collection("users").document(authorUid).get()
+                        .continueWith { task ->
+                            val userDoc = task.result
+                            val authorName = userDoc?.getString("username") ?: "Sconosciuto"
+
+                            EqPreset(
+                                name = name,
+                                tags = tags,
+                                bands = ArrayList(bands),
+                                id = id,
+                                author = authorName,
+                                authorUid = authorUid
+                            )
+                        }
                 }
 
-                Log.d(TAG, "fetched$loadedPresets")
-
-
-
-                _presets.value = loadedPresets
+                // Quando tutte le chiamate sono completate
+                Tasks.whenAllSuccess<EqPreset>(tasks)
+                    .addOnSuccessListener { loadedPresets ->
+                        Log.d(TAG, "fetched $loadedPresets")
+                        _presets.value = loadedPresets
+                    }
+                    .addOnFailureListener {
+                        Log.e(TAG, "Errore durante il fetch utenti: ${it.message}")
+                    }
             }
             .addOnFailureListener {
                 Log.e(TAG, "Errore fetch preset: ${it.message}")
@@ -99,7 +108,7 @@ object StoreRepo {
             "tags" to preset.tags.map { it.name }.toList(),
             "id" to preset.id,
             "author" to preset.author,
-            "authorUid" to preset.authorUid.toString(),
+            "authorUid" to preset.authorUid,
             "bands" to preset.bands.map { mapOf("index" to it.first, "gain" to it.second.toInt()) } // <-- conversione
         )
 
