@@ -81,8 +81,7 @@ fun EqScreen(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel, na
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState(), enabled = true)
-                .padding(top = 32.dp)
-                .padding(bottom = 116.dp)
+                .padding(bottom = 16.dp)
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
         ) {

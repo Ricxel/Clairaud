@@ -62,11 +62,7 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController) {
         true -> {
             // autenticazione verificata
             if(presetsLoaded){
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Store(viewModel, navController)
-                    }
-                }
+                Store(viewModel, navController)
             }
             else{
                 // aspetto il fetch

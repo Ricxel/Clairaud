@@ -1,6 +1,7 @@
 package com.omasba.clairaud.presentation.store.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +44,6 @@ import com.omasba.clairaud.presentation.theme.ClairaudTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Store(viewModel: StoreViewModel, navController: NavHostController) {
-    val presets by viewModel.presets.collectAsState()
     val filteredPresets by viewModel.filteredPresets.collectAsState() // per tags
     val showUserPresets by viewModel.showUserPresets.collectAsState()
     val filterByFavorites by viewModel.filterByFavorites.collectAsState()
@@ -90,33 +92,36 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
             }
         )
 
-        //filtro preferiti
+
         Row (
+            //filtro preferiti
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, top = 5.dp),
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically,
             ){
+
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+            ){
+                Text(
+                    text = "Favorites",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(Modifier.width(8.dp))
+                Switch(
+                    checked = filterByFavorites,
+                    onCheckedChange = {viewModel.toggleFavoriteFilter()}
+                )
+            }
+
+
+            // filtro sui preset fatti dall'utente
             Text(
-                text = "Show only favourites",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.secondary
-            )
-            Spacer(Modifier.width(8.dp))
-            Switch(
-                checked = filterByFavorites,
-                onCheckedChange = {viewModel.toggleFavoriteFilter()}
-            )
-        }
-        // filtro sui preset fatti dall'utente
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ){
-            Text(
-                text = "Show only my presets",
+                text = "My preset",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -125,6 +130,14 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 checked = showUserPresets,
                 onCheckedChange = {viewModel.toggleShowUserPresets()}
             )
+        }
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ){
+
         }
 
         //Bottone di refresh
