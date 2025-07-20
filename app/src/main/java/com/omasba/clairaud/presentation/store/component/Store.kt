@@ -43,7 +43,7 @@ import com.omasba.clairaud.presentation.theme.ClairaudTheme
 fun Store(viewModel: StoreViewModel, navController: NavHostController) {
     val presets by viewModel.presets.collectAsState()
 //    val filteredPresets by viewModel.filteredPresets.collectAsState() //per barra di ricerca
-    val filteredPresets by viewModel.filteredItemsByTags.collectAsState() // per tags
+    val filteredPresets by viewModel.filteredPresets.collectAsState() // per tags
     val showUserPresets by viewModel.showUserPresets.collectAsState()
     val filterByFavorites by viewModel.filterByFavorites.collectAsState()
     val selectedTags by viewModel.selectedTags.collectAsState()

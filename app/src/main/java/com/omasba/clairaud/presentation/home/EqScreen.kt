@@ -306,7 +306,7 @@ fun formatFrequency(hz: Int): String {
 }
 @Composable
 fun ApplyPresetCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel) {
-    val presets by storeViewModel.favoritePresetsOnly.collectAsState()
+    val presets by storeViewModel.favoritePresets.collectAsState() //solo i preferiti per il drop down
     var rightExpanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf<EqPreset?>(null) }
 
