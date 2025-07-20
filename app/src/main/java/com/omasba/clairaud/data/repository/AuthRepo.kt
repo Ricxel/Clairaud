@@ -1,7 +1,12 @@
 package com.omasba.clairaud.data.repository
 
 import android.util.Log
+import androidx.credentials.Credential
+import androidx.credentials.CustomCredential
 import androidx.test.espresso.core.internal.deps.dagger.Reusable
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -11,12 +16,14 @@ import com.omasba.clairaud.data.interfaces.AuthRepoI
 import com.omasba.clairaud.data.interfaces.GoogleAuthRepoI
 import com.omasba.clairaud.presentation.auth.state.UserProfile
 import com.omasba.clairaud.presentation.auth.state.UserProfileDTO
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 /**
  * User state auth repository
  */
-object AuthRepo: AuthRepoI, GoogleAuthRepoI {
+object AuthRepo: AuthRepoI {
+    private val TAG = "auth"
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance() //per l'auth
 
     /**
@@ -127,10 +134,5 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
         //aggiorna anche il currentUserProfile nel repo
         UserRepo.currentUserProfile = UserRepo.currentUserProfile.copy(username = profile.username, mail = profile.mail)
         Log.d("auth", "Cambiato profilo")
-    }
-
-    override suspend fun loginWithGoogle(idToken: String): Result<Unit> = runCatching {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        firebaseAuth.signInWithCredential(credential).await()
     }
 }
