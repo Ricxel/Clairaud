@@ -26,6 +26,8 @@ object AuthRepo: AuthRepoI {
     private val TAG = "auth"
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance() //per l'auth
 
+    val USERNAME_MAX_DIM = 30
+
     /**
      * Authenticates the user
      * @param email user's email

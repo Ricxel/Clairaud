@@ -1,6 +1,7 @@
 package com.omasba.clairaud.presentation.auth.model
 
 import android.util.Log
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -31,10 +32,40 @@ class AuthViewModel: ViewModel(){
     }
 
     /**
+     * Checks provided params
+     * @param checkUsername Specify if the function must check the username or not
+     * @return True if all params are valid, false otherwise
+     */
+    private fun checkParams(checkUsername: Boolean = false): Boolean{
+        _uiState.update {
+            it.copy(
+                username = it.username.trim(),
+                email = it.email.trim(),
+            )
+        }
+        if(_uiState.value.email.isBlank()){
+            _uiState.update { it.copy(error = "Email is blank") }
+            return false
+        }
+        if((_uiState.value.username.isBlank() || _uiState.value.username.length >= AuthRepo.USERNAME_MAX_DIM)&& checkUsername){
+            _uiState.update { it.copy(error = "Username is not valid") }
+            return false
+        }
+        if(_uiState.value.password.isBlank()){
+            _uiState.update { it.copy(error = "Password is blank") }
+            return false
+        }
+
+        return true
+    }
+    /**
      * Logs in a user with the provided email and password
      * Then fetches the user profile and favorite presets
      */
     fun login(){
+        //filtro e sanifica
+        if(!checkParams()) return
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) } //metto a loading
 
@@ -65,6 +96,9 @@ class AuthViewModel: ViewModel(){
      * Registers a new user with the provided email, password, and username
      */
     fun register(){
+        //filtro e sanifica
+        if(!checkParams(true)) return
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) } //metto a loading
 
