@@ -13,21 +13,42 @@ import com.omasba.clairaud.presentation.auth.state.UserProfile
 import com.omasba.clairaud.presentation.auth.state.UserProfileDTO
 import kotlinx.coroutines.tasks.await
 
+/**
+ * User state auth repository
+ */
 object AuthRepo: AuthRepoI, GoogleAuthRepoI {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance() //per l'auth
 
+    /**
+     * Authenticates the user
+     * @param email user's email
+     * @param password user's password
+     */
     override suspend fun login(email: String, password: String): Result<Unit> = runCatching {
         firebaseAuth.signInWithEmailAndPassword(email, password).await()
     }
 
+    /**
+     * Registers a new user
+     * @param email user's email
+     * @param password user's password
+     */
     override suspend fun register(email: String, password: String): Result<Unit> = runCatching {
         firebaseAuth.createUserWithEmailAndPassword(email, password).await()
     }
 
+    /**
+     * @return the current authenticated user
+     */
     override fun getCurrentUser(): FirebaseUser?{
         return firebaseAuth.currentUser
     }
 
+    /**
+     * Creates a new user profile
+     * @param uid the user's uid
+     * @param profile the user's email and password
+     */
     override suspend fun createUserProfile(uid: String, profile: UserProfile): Result<Unit> = runCatching{
         Log.d("auth","Inizio profilo")
 
