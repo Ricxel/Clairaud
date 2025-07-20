@@ -80,8 +80,10 @@ fun EqScreen(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel, na
     if (eq != null) {
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .verticalScroll(rememberScrollState(), enabled = true)
+                .padding(top = 32.dp)
+                .padding(bottom = 116.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
         ) {
             EqCard(viewModel = eqViewModel, navController = navController)
