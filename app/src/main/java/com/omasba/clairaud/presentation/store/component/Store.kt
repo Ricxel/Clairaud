@@ -1,5 +1,7 @@
 package com.omasba.clairaud.presentation.store.component
 
+import android.widget.Space
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,12 +19,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -93,8 +98,8 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
         )
 
 
+        //riga dei filtri
         Row (
-            //filtro preferiti
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
@@ -102,9 +107,10 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
             verticalAlignment = Alignment.CenterVertically,
             ){
 
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
+            //filtro sui preferiti
+            Row (
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ){
                 Text(
                     text = "Favorites",
@@ -118,35 +124,26 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 )
             }
 
+            Spacer(Modifier.width(6.dp))
 
             // filtro sui preset fatti dall'utente
-            Text(
-                text = "My preset",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.secondary
-            )
-            Spacer(Modifier.width(8.dp))
-            Switch(
-                checked = showUserPresets,
-                onCheckedChange = {viewModel.toggleShowUserPresets()}
-            )
-        }
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ){
+            Row (
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "My preset",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(Modifier.width(8.dp))
+                Switch(
+                    checked = showUserPresets,
+                    onCheckedChange = { viewModel.toggleShowUserPresets() }
+                )
+            }
 
-        }
-
-        //Bottone di refresh
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 8.dp),
-            horizontalArrangement = Arrangement.End
-        ){
+            //Bottone di refresh
             IconButton(
                 onClick = {
                     viewModel.fetchPresets()
@@ -159,6 +156,7 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 )
             }
         }
+        HorizontalDivider(Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
 
         if(filteredPresets.isEmpty()){
             Text(
