@@ -20,6 +20,9 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
         Log.d(TAG, "Equalizer init: ${this.properties().toString()}")
     }
 
+    /**
+     * @return the current Equalizer settings
+     */
     fun properties(): Equalizer.Settings? {
         return equalizer?.properties
     }
@@ -36,32 +39,51 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
         return newBands
     }
 
+    /**
+     * Sets the level of a specific equalizer band
+     * @param band The index (0 to 4) of the band to modify
+     * @param level The new level for the band
+     */
     fun setBandLevel(band: Int, level: Short) {
         equalizer?.setBandLevel(band.toShort(), level)
         Log.d(TAG, "band $band set to $level")
     }
 
+    /**
+     * Retrieves a given band level
+     * @param band the band index
+     * @return the level of the band
+     */
     fun getBandLevel(band: Int): Short {
         return equalizer?.getBandLevel(band.toShort()) ?: 0
     }
+
+    /**
+     * @return the level of a band given it index
+     */
     fun getFreq(index: Short):Int{
         val freq = equalizer!!.getCenterFreq(index) /1000
         return freq
     }
 
-    fun getBand(hz:Int):Int?{
-        return equalizer?.getBand(hz * 1000)?.toInt()
-    }
-
+    /**
+     * @return the number of bands of the device
+     */
     fun getNumberOfBands(): Int {
         return equalizer?.numberOfBands?.toInt() ?: 0
     }
 
+    /**
+     * @return each frequency range of every band
+     */
     fun getBandRange(): Pair<Short, Short> {
         val range = equalizer?.bandLevelRange
         return Pair(range?.get(0) ?: 0, range?.get(1) ?: 0)
     }
 
+    /**
+     * @return all bands paired with each band level
+     */
     fun getAllBands():ArrayList<Pair<Int, Short>>{
         val nBands = this.getNumberOfBands()
         val result:ArrayList<Pair<Int, Short>> = ArrayList<Pair<Int, Short>>()
@@ -73,6 +95,10 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
         return result
     }
 
+    /**
+     * Sets all bands to new given levels
+     * @param bands the new level of bands
+     */
     fun setAllBands(bands: ArrayList<Pair<Int, Short>>) {
 
         try {
@@ -87,12 +113,17 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
         Log.d(TAG, equalizer?.properties.toString())
     }
 
+    /**
+     * Toggles the Equalizer on or off
+     */
     fun setIsOn(isOn:Boolean){
         Log.d(TAG, "Equalizer enabled: $isOn")
         equalizer?.enabled = isOn
     }
 
-
+    /**
+     * Releases the memory allocated from the equalizer
+     */
     fun release() { // IMPORTANTE
         Log.d(TAG, "releasing equalizer")
         equalizer?.release()

@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.omasba.clairaud.presentation.store.state.Tag
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TagFilterSection(
     availableTags: Set<Tag>,

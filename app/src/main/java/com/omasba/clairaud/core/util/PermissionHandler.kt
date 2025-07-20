@@ -43,7 +43,7 @@ class PermissionHandler{
          * @param activity Activity that will run the screen for granting the permission
          */
         fun askPostNotificationPermission(context: Context, activity: Activity) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { //va controllato runtime sono da 12 in poi
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // controlla a runtime la versione di android (>12)
                 if (ContextCompat.checkSelfPermission(
                         context,
                         android.Manifest.permission.POST_NOTIFICATIONS

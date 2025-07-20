@@ -29,18 +29,16 @@ class StoreViewModel : ViewModel() {
     private val _selectedTags = MutableStateFlow<Set<Tag>>(emptySet())
     val selectedTags = _selectedTags.asStateFlow()
 
-    //query per la funzione di ricerca
+    //per la funzione di ricerca
     private val _query = MutableStateFlow("")
     val query = _query.asStateFlow()
 
     //per gestire i preferiti
     val favPresets = UserRepo.favPresets
 
-    //flag per filtro sui preferiti
     private val _filterByFavorites = MutableStateFlow(false)
     val filterByFavorites = _filterByFavorites.asStateFlow()
 
-    //flag per filtro sui preset dell'utente
     private val _showUserPresets = MutableStateFlow(false)
     val showUserPresets = _showUserPresets.asStateFlow()
 
@@ -65,7 +63,7 @@ class StoreViewModel : ViewModel() {
         _showUserPresets,
         _filterByFavorites
     ) { values ->
-        //devo fare cast perchè con 6 parametri non c'è type inference
+        //obbligatorio il cast perchè con 6 parametri non c'è type inference
         val allPresets: List<EqPreset> = values[0] as List<EqPreset>
         val favIds: Set<Int> = values[1] as Set<Int>
         val tags: Set<Tag> = values[2] as Set<Tag>

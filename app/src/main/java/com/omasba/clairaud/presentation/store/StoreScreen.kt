@@ -80,7 +80,7 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController) {
             }
         }
 
-        else -> {//niente, in questo caso viene fatto il redirect, ci pensa già in primo LaunchedEffect}
+        else -> {//niente, in questo caso viene fatto il redirect, ci pensa già in primo LaunchedEffect
         }
 
     }

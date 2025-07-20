@@ -18,24 +18,23 @@ import java.lang.Thread.sleep
 object StoreRepo {
     const val TAG = "store"
 
-    //funzione per fare la query che ritorna il flow di preset
+    // ritorna il flow di preset
     private var _presets = MutableStateFlow(emptyList<EqPreset>())
     val presets = _presets.asStateFlow()
 
-    //per segnalare che i preset sono caricati
+    // segnala che i preset sono caricati (caricamento dello store)
     private val _presetsLoaded = MutableStateFlow(false)
     val presetsLoaded = _presetsLoaded.asStateFlow()
 
     private val presetsCollection = Firebase.firestore.collection("presets")
 
-    fun empty(){
-        _presets = MutableStateFlow(emptyList<EqPreset>())
-    }
-
+    /**
+     * Clears all the presets in the state flow
+     */
     fun reset(){
-        Log.d(TAG, "reset begin")
+        // per poter rifare la query a firebase
         _presets.update { emptyList() }
-        Log.d(TAG, "reset end")
+        Log.d(TAG, "Store reset done")
 
     }
 
@@ -46,7 +45,7 @@ object StoreRepo {
     fun fetchPresets() {
         Log.d(TAG, "fetching")
 
-        // Svuoto i preset per triggerare l'animazione
+        // svuoto i preset per triggerare l'animazione
         _presets.value = emptyList()
         _presetsLoaded.update { false }
 
@@ -54,7 +53,7 @@ object StoreRepo {
             .addOnSuccessListener { result ->
                 val presetDocs = result.documents
 
-                // Lista di Task per fetch paralleli
+                // Task per fare 2 query a diverse tabelle di firebase ed unire i risultati
                 val tasks = presetDocs.mapNotNull { doc ->
                     val name = doc.getString("name") ?: return@mapNotNull null
                     val id = doc.getLong("id")?.toInt() ?: return@mapNotNull null
@@ -76,7 +75,7 @@ object StoreRepo {
                         if (index != null && gain != null) Pair(index, gain) else null
                     }
 
-                    // Task per ottenere il nome autore da users
+                    // ottengo il nome autore da users
                     Firebase.firestore.collection("users").document(authorUid).get()
                         .continueWith { task ->
                             val userDoc = task.result
@@ -93,7 +92,7 @@ object StoreRepo {
                         }
                 }
 
-                // Quando tutte le chiamate sono completate
+                // tutte chiamate sono completate
                 Tasks.whenAllSuccess<EqPreset>(tasks)
                     .addOnSuccessListener { loadedPresets ->
                         Log.d(TAG, "fetched $loadedPresets")
@@ -135,9 +134,8 @@ object StoreRepo {
             "name" to preset.name,
             "tags" to preset.tags.map { it.name }.toList(),
             "id" to preset.id,
-            "author" to preset.author,
-            "authorUid" to preset.authorUid.toString(),
-            "bands" to preset.bands.map { mapOf("index" to it.first, "gain" to it.second.toInt()) } // <-- conversione
+            "authorUid" to preset.authorUid,
+            "bands" to preset.bands.map { mapOf("index" to it.first, "gain" to it.second.toInt()) } // conversione per firebase
         )
 
         return presetMap
@@ -148,18 +146,17 @@ object StoreRepo {
      * @param preset Preset to be added
      */
     fun addPreset(preset: EqPreset) {
-        Log.d(TAG, "adding preset ${preset.name} to firebase5")
+        Log.d(TAG, "Aggiunto preset ${preset.name} su Firestore")
 
         presetsCollection.document(preset.id.toString())
             .set(presetMapFrom(preset), SetOptions.merge())
             .addOnSuccessListener {
-                Log.d(TAG, "Preset salvato su Firestore: ${preset.name}")
+                Log.d(TAG, "Preset ${preset.name} salvato su Firestore")
             }
             .addOnFailureListener {
                 Log.e(TAG, "Errore salvataggio: ${it.message}")
             }
 
-        Log.d(TAG, "preset added succesfully to firebase")
         fetchPresets()
     }
 
@@ -168,7 +165,7 @@ object StoreRepo {
      * @param preset New preset, it will replace the current one with the same id
      */
     fun replacePreset(preset: EqPreset) {
-        addPreset(preset) // Firestore `set()` sovrascrive il documento
+        addPreset(preset) // 'set()' sovrascrive il documento su firebase
         fetchPresets()
     }
 }

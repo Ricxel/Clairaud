@@ -63,7 +63,10 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
         Log.d("auth","Creato $tmp")
     }
 
-
+    /**
+     * @param uid the user's you are looking for
+     * @return the given user's profile
+     */
     override suspend fun getUserProfile(uid: String): Result<UserProfile> = runCatching {
         val snapshot = FirebaseFirestore.getInstance()
             .collection("users")
@@ -89,11 +92,17 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
         )
     }
 
-
+    /**
+     * logs out the current user
+     */
     override fun logout() {
         firebaseAuth.signOut()
     }
 
+    /**
+     * Update's the user profile
+     * @param profile the user's profile
+     */
     override suspend fun updateUserData(profile: UserProfile): Result<Unit> = runCatching {
         val auth = FirebaseAuth.getInstance()
         val user = auth.currentUser ?: throw IllegalStateException("User not logged in")
@@ -114,7 +123,8 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
             .document(user.uid)
             .set(dto) // sovrascrive tutto il documento
             .await()
-        //aggiorno anche il currentUserProfile nel repo
+
+        //aggiorna anche il currentUserProfile nel repo
         UserRepo.currentUserProfile = UserRepo.currentUserProfile.copy(username = profile.username, mail = profile.mail)
         Log.d("auth", "Cambiato profilo")
     }

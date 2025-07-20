@@ -25,23 +25,27 @@ object EqRepo{
         _eq.update { equalizer }
     }
 
-    /**
-     * Get a band
-     * @param hz Hz corresponding to the band
-     * @return The index of the band corresponding to the specified hz
-     */
-    fun getBand(hz:Int):Int{
-        return _eq.value?.getBand(hz) ?: -1
-    }
 
+    /**
+     * Formats the equalizer bands
+     */
     fun getBandsFormatted(bands:ArrayList<Pair<Int,Short>>):ArrayList<Pair<Int,Short>>{
         val newBands = _eq.value?.getBandsFormatted(bands) ?: ArrayList<Pair<Int,Short>>()
         return newBands
     }
 
-        fun getFreq(index:Short):Int{
+    /**
+     *
+     */
+    fun getFreq(index:Short):Int{
         return _eq.value?.getFreq(index) ?: -1
     }
+
+    /**
+     * Sets a band to a new band level
+     * @param index
+     * @param level
+     */
     fun setBand(index:Int, level:Short){
         _eq.value?.setBandLevel(index, (level))
 
@@ -58,14 +62,9 @@ object EqRepo{
         }
     }
 
-    fun changeBandLevel(freq: Int, newValue: Short){
-        _eq.update { currentEq ->
-            val newEq = currentEq?.copy()
-            newEq?.setBandLevel(band = freq, level = newValue)
-            newEq
-        }
-    }
-
+    /**
+     * Sets all bands to new levels
+     */
     fun newBands(newBands: ArrayList<Pair<Int, Short>>) {
         try{
             Log.d(TAG, "bande: " + newBands.toList().toString())
@@ -84,6 +83,9 @@ object EqRepo{
 
     }
 
+    /**
+     * Toggles the equalizer on or off
+     */
     fun setIsOn(isOn:Boolean){
         _eq.value?.setIsOn(isOn)
 

@@ -141,22 +141,12 @@ fun RegisterScreen(viewModel: AuthViewModel, navController: NavHostController){
             }
         }
 
-        //animazione di caricamento
+        // caricamento
         if(uiState.isLoading){
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         }
-
-//        if(uiState.isLoggedIn) {
-//            Text("Loggato!", color = Color.Green)
-//
-//            Text("Profilo: \n${UserRepo.currentUserProfile}", color = MaterialTheme.colorScheme.secondary)
-//            LogoutButton {
-//                viewModel.logout()
-//            }
-//        }
-
 
         uiState.error?.let {
             Text("Error: $it", color = Color.Red)

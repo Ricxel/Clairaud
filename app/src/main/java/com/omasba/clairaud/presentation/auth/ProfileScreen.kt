@@ -105,7 +105,7 @@ fun ProfileScreen(viewModel: AuthViewModel, navController: NavHostController) {
             }
         }
         false -> {
-            //niente
+            // niente
         }
     }
 
@@ -120,7 +120,7 @@ fun ProfileHeader(userProfile: UserProfile) {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        // Immagine del profilo con iniziale
+        // immagine del profilo con iniziale
         Box(
             modifier = Modifier
                 .size(120.dp)
@@ -148,67 +148,5 @@ fun ProfileHeader(userProfile: UserProfile) {
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
         )
-    }
-}
-
-@Composable
-fun ProfileInfoCard(userProfile: UserProfile, navController: NavHostController) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            ProfileInfoRow(
-                icon = Icons.Default.Person,
-                label = "Username",
-                value = userProfile.username
-            )
-
-            Divider(
-                modifier = Modifier.padding(vertical = 8.dp),
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
-            )
-
-            ProfileInfoRow(
-                icon = Icons.Default.Email,
-                label = "Email",
-                value = userProfile.mail
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-        }
-    }
-}
-
-@Composable
-fun ProfileInfoRow(icon: ImageVector, label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            modifier = Modifier.size(24.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-            )
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top = 2.dp)
-            )
-        }
     }
 }

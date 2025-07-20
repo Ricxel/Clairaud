@@ -42,7 +42,6 @@ import com.omasba.clairaud.presentation.theme.ClairaudTheme
 @Composable
 fun Store(viewModel: StoreViewModel, navController: NavHostController) {
     val presets by viewModel.presets.collectAsState()
-//    val filteredPresets by viewModel.filteredPresets.collectAsState() //per barra di ricerca
     val filteredPresets by viewModel.filteredPresets.collectAsState() // per tags
     val showUserPresets by viewModel.showUserPresets.collectAsState()
     val filterByFavorites by viewModel.filterByFavorites.collectAsState()
@@ -135,11 +134,9 @@ fun Store(viewModel: StoreViewModel, navController: NavHostController) {
                 .padding(end = 8.dp),
             horizontalArrangement = Arrangement.End
         ){
-            //TODO: Aggiungere animazioni
             IconButton(
                 onClick = {
-                    StoreRepo.fetchPresets()
-                    //TODO: Sta roba va messa nel viewmodel
+                    viewModel.fetchPresets()
                 },
             ) {
                 Icon(

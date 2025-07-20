@@ -54,18 +54,13 @@ class MusicDetectionService : NotificationListenerService() {
         notificationUtils.createNotificationChannel(this,"Music Detection", "Clairaud's music detection service notification channel")
 
         // Avvia il servizio come foreground per mantenerlo attivo in background
-//        startForeground(NOTIFICATION_ID, createForegroundNotification())
         observeAutoEqState()
     }
 
     override fun onListenerConnected() {
         super.onListenerConnected()
         Log.d("MusicDetection", "Listener connected")
-        // Avvia il polling delle sessioni media
-//        if(AutoEqStateHolder.uiState.value.isOn){
-//            checkForActiveSessions()
-//        }
-
+        // avvia il polling delle sessioni media
     }
     private fun observeAutoEqState() {
         val applicationContext = this // per poter creare la notifica
@@ -167,7 +162,7 @@ class MusicDetectionService : NotificationListenerService() {
                         }
 
                         if (!foundMusic && lastTitle.isNotEmpty()) {
-                            // Nessuna musica attiva, resetta lo stato
+                            // nessuna musica attiva, resetta lo stato
                             lastTitle = ""
                             lastArtist = ""
                         }
@@ -175,7 +170,7 @@ class MusicDetectionService : NotificationListenerService() {
                         Log.e("MusicDetection", "Error checking sessions", e)
                     }
 
-                    // Aspetta 5 secondi prima del prossimo controllo
+                    // aspetta 5 secondi prima del prossimo controllo
                     Log.d("MusicDetection", "Waiting...")
                     Thread.sleep(5000)
                 }

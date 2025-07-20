@@ -14,11 +14,4 @@ class AutoEqViewModel : ViewModel() {
         AutoEqStateHolder.setIsOn(value)
         Log.d("autoeq", "isOn: ${uiState.value.isOn}")
     }
-
-    fun toggleIsOn(){
-        AutoEqStateHolder.setIsOn(!uiState.value.isOn)
-    }
-    fun changePreset(preset: EqPreset) {
-        AutoEqStateHolder.changePreset(preset)
-    }
 }

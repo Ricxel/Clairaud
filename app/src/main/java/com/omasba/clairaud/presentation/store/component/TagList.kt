@@ -10,7 +10,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.omasba.clairaud.presentation.store.state.Tag
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TagList(tags: Set<Tag>, onTagClick: (Tag) -> Unit = {}){
     FlowRow(

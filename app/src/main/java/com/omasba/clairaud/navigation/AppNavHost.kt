@@ -27,15 +27,12 @@ import com.omasba.clairaud.presentation.home.AddPresetScreen
 import com.omasba.clairaud.presentation.home.EqScreen
 import com.omasba.clairaud.presentation.home.model.AddPresetViewModel
 import com.omasba.clairaud.presentation.home.model.EqualizerViewModel
-import com.omasba.clairaud.presentation.home.model.PresetComparisonViewModel
 import com.omasba.clairaud.presentation.store.StoreScreen
 import com.omasba.clairaud.presentation.store.model.StoreViewModel
 import com.omasba.clairaud.presentation.store.state.EqPreset
 
 @Composable
 fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerViewModel, modifier: Modifier = Modifier) {
-
-    val pcViewModel = PresetComparisonViewModel()
 
     val authViewModel = AuthViewModel()
     val storeViewModel = StoreViewModel()
@@ -56,7 +53,6 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
             fadeOut(tween(100))
         }
     ) {
-//            val presets by StoreRepo.presets.collectAsState()
         composable(BottomNavItem.Home.route) {
             EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController)
         }
@@ -66,16 +62,9 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
         }
         composable(BottomNavItem.Profile.route) {
             ProfileScreen(viewModel = authViewModel, navController = navController)
-//            else {
-//                //rimando al login
-//                LaunchedEffect(Unit){
-//                    navController.navigate("login")
-//                }
-//            }
-        }
-//        composable(BottomNavItem.Profile.route) { LoginScreen(viewModel = authViewModelLogin, navController) }
 
-//            composable(BottomNavItem.Profile.route) { Text("Profilo") }
+        }
+
         //add preset
         composable("notAuth"){ NotAuthenticatedScreen(navController) }
         composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
@@ -84,8 +73,7 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
         composable("editProfile"){ EditAccountScreen(viewModel = EditViewModel(UserRepo.currentUserProfile.username, UserRepo.currentUserProfile.mail), navController = navController)}
 
         composable("editPreset/{presetId}"){backStackEntry ->
-            //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare
-            //e aggiornare il viewModel di conseguenza
+            //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare e aggiornare il viewModel di conseguenza
             val presetId = backStackEntry.arguments?.getString("presetId")?.toInt()
             Log.d("route", "id passato alla route: ${presetId}")
             val preset = presets.find { it.id == presetId }

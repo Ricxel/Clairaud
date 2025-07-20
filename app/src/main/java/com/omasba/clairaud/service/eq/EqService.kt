@@ -62,7 +62,6 @@ class EqService : Service() {
 
                 AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION -> {
                     Log.d(TAG, "Audio session closed: $sessionId")
-//                    equalizer?.release()
                 }
             }
         }

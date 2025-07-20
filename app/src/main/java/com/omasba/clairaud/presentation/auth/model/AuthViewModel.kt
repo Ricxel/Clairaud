@@ -18,10 +18,6 @@ class AuthViewModel: ViewModel(){
     private var _uiState = MutableStateFlow<AuthUiState>(AuthUiState())
     var uiState = _uiState.asStateFlow()
 
-    fun isAuthenticated():Boolean{
-        return _uiState.value.isLoggedIn
-    }
-
     fun onEmailChanged(email: String){
         _uiState.update { it.copy(email = email) }
     }
@@ -33,6 +29,7 @@ class AuthViewModel: ViewModel(){
     fun onUsernameChange(username: String){
         _uiState.update { it.copy(username = username) }
     }
+
     /**
      * Logs in a user with the provided email and password
      * Then fetches the user profile and favorite presets
@@ -105,7 +102,7 @@ class AuthViewModel: ViewModel(){
      * Logs out the current user
      */
     fun logout(){
-        AuthRepo.logout() //logiut
+        AuthRepo.logout()
         _uiState.value = AuthUiState() // resetto anche la ui
         UserRepo.logout()
     }

@@ -50,10 +50,8 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-//            .background(MaterialTheme.colorScheme.surface)
             .animateContentSize(animationSpec = tween(0)), // fluidità altezza
         shape = RoundedCornerShape(50.dp),
-//        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         onClick = {expanded = !expanded}
     ) {
         Column(

@@ -152,16 +152,6 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
             }
         }
 
-//        if(uiState.isLoggedIn) {
-//            Text("Loggato!", color = Color.Green)
-//
-//            Text("Profilo: \n${UserRepo.currentUserProfile}", color = MaterialTheme.colorScheme.secondary)
-//            LogoutButton {
-//                viewModel.logout()
-//            }
-//        }
-
-
         uiState.error?.let {
             Text("Error: $it", color = Color.Red)
         }

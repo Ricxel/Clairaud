@@ -84,7 +84,6 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                     color = MaterialTheme.colorScheme.secondary
                 )
             TagList(eqPreset.tags){tag ->
-                //viene eseguita al click di un assist chip
                 viewModel.removeTag(tag)
             }
             OutlinedTextField(

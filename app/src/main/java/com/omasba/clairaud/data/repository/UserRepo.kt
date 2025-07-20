@@ -28,8 +28,9 @@ object UserRepo {
     private var _favPresets = MutableStateFlow<Set<Int>>(currentUserProfile.favPresets)
     val favPresets = _favPresets.asStateFlow()
 
+
     fun getPresetToApply(tags: Set<Tag>): EqPreset {
-        //prendo i preset dallo store
+        // prendo i preset dallo store
         var maxCount = 0
         var correctPreset = EqPreset()
 
@@ -46,10 +47,13 @@ object UserRepo {
         return correctPreset
     }
 
+    /**
+     * Uploads to Firestore a new list of favourite presets (for the current user)
+     */
     fun setFavPresets(){
         val uid = currentUserProfile.uid
 
-        val favList = _favPresets.value.toList()  // List<Int> will be saved as array
+        val favList = _favPresets.value.toList()  // List<Int> sara' salvata come array su Firestore
 
         Firebase.firestore.collection("users").document(uid)
             .update("favPresets", favList)
@@ -62,6 +66,9 @@ object UserRepo {
 
     }
 
+    /**
+     * Retrieves the current user's favourite presets from Firestore
+     */
     fun getFavPresets() {
         val uid = currentUserProfile.uid
         try {
@@ -71,7 +78,7 @@ object UserRepo {
                         val favs = result.get("favPresets") as? List<*>
                         val ids = favs?.mapNotNull { (it as? Number)?.toInt() }?.toSet() ?: emptySet()
 
-                        _favPresets.value = ids // ✅ aggiorni lo StateFlow
+                        _favPresets.value = ids // aggiorna lo StateFlow
 
                         Log.d(TAG, "Preferiti caricati: $ids")
                     } catch (e: Exception) {
@@ -86,7 +93,6 @@ object UserRepo {
         }
 
     }
-
 
     /**
      * @param id Preset ID
@@ -126,22 +132,22 @@ object UserRepo {
             return false
 
         return try {
-            // Forza un refresh del token per verificarne la validità
+            // forza un refresh del token per verificarne la validità
             val tokenResult = firebaseUser.getIdToken(true).await()
             tokenResult.token != null
         } catch (e: Exception) {
-            // Se c'è un errore nel refresh del token, l'utente non è autenticato
+            //  l'utente non è autenticato
             false
         }
     }
 
+    /**
+     * Logs out the current user
+     */
     fun logout(){
         AuthRepo.logout()
         currentUserProfile = UserProfile()
         StoreRepo.reset()
         AutoEqStateHolder.setIsOn(false)
-    }
-    init {
-        //getFavPresets()
     }
 }

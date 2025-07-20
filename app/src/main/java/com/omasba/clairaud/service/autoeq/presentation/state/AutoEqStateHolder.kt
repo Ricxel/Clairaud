@@ -23,8 +23,4 @@ object AutoEqStateHolder {
     fun changePreset(preset: EqPreset) {
         _uiState.update { it.copy(currentPreset = preset) }
     }
-    fun reload(){
-        _uiState.update { it.copy(isOn = false) }
-        _uiState.update { it.copy(isOn = true) }
-    }
 }

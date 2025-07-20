@@ -19,9 +19,6 @@ import com.omasba.clairaud.navigation.BottomNavItem
 import com.omasba.clairaud.presentation.home.model.EqualizerViewModel
 
 
-/**
- * Main screen composable function: it renders main components of the screen, such as the navigation bar
- */
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()

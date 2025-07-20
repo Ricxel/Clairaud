@@ -129,7 +129,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
         isEnabled = UserRepo.isLogged() // per l'aggiunta di un preset
     }
 
-    Log.d("EqScreen", "eq card ${eq}")
+    Log.d("EqScreen", "eq card $eq")
 
     BoxWithConstraints(
         modifier = Modifier
@@ -144,13 +144,12 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
 
-
             Column(
                 modifier = Modifier
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Prima riga: Titolo e switch
+                // titolo e switch
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
@@ -182,7 +181,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Seconda riga: Colonne con dB, slider e Hz
+                // colonne con dB, slider e Hz
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
@@ -215,9 +214,8 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                             //Slider verticale libero dai vincoli della colonna
                             Box(
                                 modifier = Modifier
-                                    .height(250.dp) // Altezza totale della zona slider
-                                    .width(250.dp),  // Larghezza effettiva dello slider verticale
-//                                .background(Color.Blue)
+                                    .height(250.dp) // altezza totale della zona slider
+                                    .width(250.dp),  // larghezza effettiva dello slider verticale
                                 contentAlignment = Alignment.Center
                             ) {
                                 Box(
@@ -251,14 +249,9 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                                             .fillMaxWidth(),
                                         value = sliderValue.toFloat(),
                                         onValueChange = { newValue ->
-//                                            val updatedBands = bands
-//                                            updatedBands[index] =
-//                                                band.first to (newValue).toInt().toShort()
-
                                             sliderValue = newValue.toInt()
                                             Log.d(TAG, "on change: $newValue")
                                             viewModel.setBand(index, (sliderValue * 100).toShort())
-//                                            viewModel.setBandByHz(band.first, (sliderValue*100).toShort())
                                         },
 
                                         valueRange = -15f..15f,
@@ -274,7 +267,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                                 }
                             }
 
-                            // Frequenza
+                            // Hz
                             Text(
                                 text = formatFrequency(EqRepo.getFreq(index.toShort())),
                                 style = MaterialTheme.typography.bodySmall,
@@ -289,7 +282,7 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
 
 
                 Spacer(modifier = Modifier.height(24.dp))
-                // Terza riga: AutoEQ
+                // AutoEQ
                 AutoEq(autoEqModel)
 
             }
@@ -330,7 +323,6 @@ fun ApplyPresetCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewMo
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Comparison Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

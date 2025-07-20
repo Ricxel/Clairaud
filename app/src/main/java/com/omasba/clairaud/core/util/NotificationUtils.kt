@@ -83,7 +83,11 @@ class NotificationUtils(
         manager.notify(notificationId, notification)
     }
 
-
+    /**
+     * Cancels a notification
+     * @param context the context of the notification
+     * @param notificationId the id of the notification to cancel
+     */
     fun cancelNotification(
         context: Context,
         notificationId: Int
