@@ -44,8 +44,6 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
     NavHost(
         navController = navController,
         startDestination = BottomNavItem.Home.route,
-        modifier = Modifier
-            .padding(top = 32.dp),
         enterTransition = {
             fadeIn(tween(100))
         },

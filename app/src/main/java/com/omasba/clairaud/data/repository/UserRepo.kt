@@ -127,9 +127,6 @@ object UserRepo {
         //controllo firebase
         val firebaseUser: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return false
 
-        //controllo l'utente locale
-        if(currentUserProfile.uid == "") //se ha l'uid di default non è valido
-            return false
 
         return try {
             // forza un refresh del token per verificarne la validità
@@ -149,5 +146,19 @@ object UserRepo {
         currentUserProfile = UserProfile()
         StoreRepo.reset()
         AutoEqStateHolder.setIsOn(false)
+    }
+
+    /**
+     * Checks user authentication and set the local user
+     */
+    suspend fun authOnStart(){
+        //controllo la validità del token
+        if (isLogged()){
+            //imposto l'utente locale
+            val uid = AuthRepo.getCurrentUser()?.uid
+
+            if(uid != null)
+                currentUserProfile = AuthRepo.getUserProfile(uid).getOrNull() ?: UserProfile()
+        }
     }
 }

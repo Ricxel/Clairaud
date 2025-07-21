@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.media.audiofx.AudioEffect
 import android.os.Build
 import android.os.IBinder
+import android.provider.MediaStore.Audio
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.omasba.clairaud.data.repository.EqRepo
@@ -19,53 +20,12 @@ import com.omasba.clairaud.core.util.NotificationUtils
 class EqService : Service() {
 
     private val TAG = "EqService"
-    var equalizer: Eq? = null
-
     private val CHANNEL_ID = "equalizer_service_channel"
     private val NOTIFICATION_ID = 1002 //id per la notifica permanente del servizio
     private val notificationUtils = NotificationUtils(CHANNEL_ID) //per gestire la notifica permanente
 
 
-    /**
-     * Receiver class that allows to receive music players signals
-     */
-    private val audioSessionReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            Log.d(TAG, "Receive")
-
-            if (intent == null) return
-            val sessionId = intent.getIntExtra(AudioEffect.EXTRA_AUDIO_SESSION, AudioEffect.ERROR)
-
-            if (sessionId == AudioEffect.ERROR) return
-
-
-            when (intent.action) {
-                AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION -> {
-                    Log.d(TAG, "Audio session opened: $sessionId")
-
-                    try {
-                        if(EqRepo.eq.value == null){
-                            equalizer = Eq(sessionId)
-                            EqRepo.setEq(equalizer)
-
-                            Log.d(TAG, "Built a new equalizer")
-                        }else{
-                            equalizer = Eq(sessionId, EqRepo.eq.value)
-                            EqRepo.setEq(equalizer)
-
-                            Log.d(TAG, "Cloned last equalizer")
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Equalizer error: ${e.message}")
-                    }
-                }
-
-                AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION -> {
-                    Log.d(TAG, "Audio session closed: $sessionId")
-                }
-            }
-        }
-    }
+    private val audioSessionReceiver = AudioSessionReceiver()
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -96,7 +56,7 @@ class EqService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        equalizer?.release()
+        audioSessionReceiver.releaseEq() //tolgo l'eq
         unregisterReceiver(audioSessionReceiver)
     }
 

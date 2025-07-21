@@ -89,7 +89,6 @@ object EqRepo{
     fun setIsOn(isOn:Boolean){
         _eq.value?.setIsOn(isOn)
 
-
         _eqState.update{ currentState ->
             currentState.copy(isOn = isOn)
         }

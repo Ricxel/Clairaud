@@ -56,7 +56,23 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
             )
             //area dell'eq
             val rawBands = if(eqPreset.authorUid != "") eqPreset.bands else eqState.bands
-            val bands = EqRepo.getBandsFormatted(rawBands)
+
+            //se non c'è una sessione attiva, non si posso ottenere le bande vere, quindi bisogna usare le rawbands
+            var bands = ArrayList(rawBands)
+
+            if(EqRepo.getFreq(0) != -1){
+                //vuol dire che c'è un eq attivo
+                bands = EqRepo.getBandsFormatted(bands)
+            }
+            else{
+                //non attivo
+                bands.clear()
+                rawBands.forEach{band ->
+                    bands.add(Pair<Int,Short>(band.first, (band.second/100).toShort()))
+                }
+
+            }
+
             PresetGraph(presetName = eqPreset.name, bands = bands)
             Spacer(modifier = Modifier.height(8.dp))
             //area per le altre info del preset

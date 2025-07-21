@@ -17,6 +17,7 @@ class EditViewModel(
     val username: String,
     val email: String
 ): ViewModel(){
+    private val USERNAME_MAX_DIM = 30
     private val _uiState = MutableStateFlow(AccountState(username, email))
     val uiState = _uiState.asStateFlow()
 
@@ -25,9 +26,26 @@ class EditViewModel(
     }
 
     fun onEmailChanged(email: String){
-        _uiState.update { it.copy(email = email) }
+        _uiState.update { it.copy(email = email.trim()) }
     }
     fun updateUserProfile(){
+        //sanifico
+        _uiState.update {
+            it.copy(
+                username = it.username.trim(),
+                email = it.email.trim()
+            )
+        }
+        val value = _uiState.value
+        if(value.email.isBlank()){
+            _uiState.update { it.copy(error = "Email field cannot be blank") }
+            return
+        }
+        if(value.username.isBlank() || value.username.length >= USERNAME_MAX_DIM){
+            _uiState.update { it.copy(error = "Username canot be blank or have more than $USERNAME_MAX_DIM characters") }
+            return
+        }
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 

@@ -19,6 +19,8 @@ class AddPresetViewModel:ViewModel(){
     private val _showError = MutableStateFlow(false)
     val showError = _showError.asStateFlow()
 
+    private val TAG_MAX_DIM = 10
+
     fun changePreset(preset: EqPreset){
         _eqPreset.value = preset
     }
@@ -28,8 +30,11 @@ class AddPresetViewModel:ViewModel(){
         }
     }
     fun addTag(tag: Tag){
+        val name = tag.name.trim() //sanitizzazione
+        if(name.isBlank() || name.length > TAG_MAX_DIM) return
+
         _eqPreset.update {
-            it.copy(tags = it.tags + tag)
+            it.copy(tags = it.tags + tag.copy(name = name))
         }
     }
 
@@ -40,17 +45,20 @@ class AddPresetViewModel:ViewModel(){
     }
     //aggiunge o modifica il preset
     fun confirmPreset(bands: ArrayList<Pair<Int,Short>>):Boolean{
+        //sanifico
+        _eqPreset.update { it.copy(name = it.name.trim()) }
         if(_eqPreset.value.name.isBlank()){
             _showError.value = true
             return false
         }
-        if(_eqPreset.value.authorUid != (UserRepo.currentUserProfile?.uid ?: "")){
+
+        if(_eqPreset.value.authorUid != (UserRepo.currentUserProfile.uid ?: "")){
             //vuol dire che è nuovo
             _eqPreset.update {
                 it.copy(
-                    authorUid = UserRepo.currentUserProfile!!.uid,
+                    authorUid = UserRepo.currentUserProfile.uid,
                     bands = bands,
-                    author = UserRepo.currentUserProfile!!.username,
+                    author = UserRepo.currentUserProfile.username,
                     id = Random.nextInt(100,100000)
                 )
             }

@@ -42,17 +42,6 @@ fun EditAccountScreen(viewModel: EditViewModel, navController: NavHostController
             color = MaterialTheme.colorScheme.primary
         )
 
-        //casella per mail
-        OutlinedTextField(
-            value = uiState.email,
-            onValueChange = { viewModel.onEmailChanged(it) },
-            label = { Text("Email", color = MaterialTheme.colorScheme.secondary) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            ),
-        )
         //username
         OutlinedTextField(
             value = uiState.username,

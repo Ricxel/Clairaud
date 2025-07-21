@@ -78,11 +78,18 @@ dependencies {
     implementation(libs.mpandroidchart)
 
     // firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.animation.core.lint)
+    implementation(libs.firebase.auth)
+
+    // Also add the dependencies for the Credential Manager libraries and specify their versions
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
