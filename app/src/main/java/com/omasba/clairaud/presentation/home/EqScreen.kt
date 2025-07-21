@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -48,8 +47,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.omasba.clairaud.service.autoeq.presentation.AutoEq
-import com.omasba.clairaud.service.autoeq.presentation.model.AutoEqViewModel
+import com.omasba.clairaud.presentation.home.model.AutoEqViewModel
 import com.omasba.clairaud.data.repository.EqRepo
 import com.omasba.clairaud.presentation.store.state.EqPreset
 
@@ -62,7 +60,6 @@ import com.omasba.clairaud.presentation.component.EqNotFound
 import com.omasba.clairaud.presentation.component.PresetGraph
 import com.omasba.clairaud.presentation.store.component.TagList
 import com.omasba.clairaud.presentation.store.model.StoreViewModel
-import com.omasba.clairaud.service.autoeq.presentation.state.AutoEqStateHolder
 
 val TAG = "EqScreen"
 

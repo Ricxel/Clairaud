@@ -8,7 +8,7 @@ import android.os.IBinder
 import android.service.notification.NotificationListenerService
 import android.content.Context
 import android.util.Log
-import com.omasba.clairaud.service.autoeq.presentation.state.AutoEqStateHolder
+import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
 import com.omasba.clairaud.data.repository.EqRepo
 import com.omasba.clairaud.presentation.store.state.Tag
 import com.omasba.clairaud.core.network.API_KEY

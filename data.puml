@@ -1,0 +1,81 @@
+@startuml
+interface com.omasba.clairaud.data.interfaces.AuthRepoI {
++ Result<Unit> login(String,String)
++ Result<Unit> register(String,String)
++ FirebaseUser? getCurrentUser()
++ Result<Unit> createUserProfile(String,UserProfile)
++ Result<UserProfile> getUserProfile(String)
++ void logout()
++ Result<Unit> updateUserData(UserProfile)
+}
+
+class com.omasba.clairaud.data.repository.UserRepo {
+-  TAG
++ UserProfile currentUserProfile
+-  _favPresets
++  favPresets
++ EqPreset getPresetToApply(Set<Tag>)
++ void setFavPresets()
++ void getFavPresets()
++ Boolean isFavorite(Int)
++ void addFavorite(Int)
++ void removeFavorite(Int)
++ Boolean isLogged()
++ void logout()
++ void authOnStart()
+}
+
+
+interface com.omasba.clairaud.data.interfaces.GoogleAuthRepoI {
++ Result<Unit> loginWithGoogle(String)
+}
+
+class com.omasba.clairaud.data.repository.StoreRepo {
++  TAG
+-  _presets
++  presets
+-  _presetsLoaded
++  presetsLoaded
+-  presetsCollection
++ void reset()
++ void fetchPresets()
++ void removePreset(EqPreset)
++ HashMap<String, Any> presetMapFrom(EqPreset)
++ void addPreset(EqPreset)
++ void replacePreset(EqPreset)
+}
+
+
+class com.omasba.clairaud.data.repository.AuthRepo {
+-  TAG
+- FirebaseAuth firebaseAuth
++  USERNAME_MAX_DIM
++ Result<Unit> login(String,String)
++ Result<Unit> register(String,String)
++ FirebaseUser? getCurrentUser()
++ Result<Unit> createUserProfile(String,UserProfile)
++ Result<UserProfile> getUserProfile(String)
++ void logout()
++ Result<Unit> updateUserData(UserProfile)
+}
+
+
+class com.omasba.clairaud.data.repository.EqRepo {
++  TAG
+-  _eqState
++  eqState
+-  _eq
++  eq
++ void setEq(Eq?)
++ ArrayList<Pair<Int,Short>> getBandsFormatted(ArrayList<Pair<Int,Short>>)
++ Int getFreq(Short)
++ void setBand(Int,Short)
++ void newBands(ArrayList<Pair<Int, Short>>)
++ void setIsOn(Boolean)
+}
+
+
+
+
+com.omasba.clairaud.data.interfaces.AuthRepoI <|.. com.omasba.clairaud.data.repository.AuthRepo
+@enduml

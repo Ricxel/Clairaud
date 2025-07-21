@@ -1,0 +1,308 @@
+@startuml
+class com.omasba.clairaud.presentation.auth.model.AuthViewModel {
+-  _uiState
++  uiState
++ void onEmailChanged(String)
++ void onPasswordChange(String)
++ void onUsernameChange(String)
+- Boolean checkParams(Boolean)
++ void login()
++ void register()
++ void logout()
+}
+
+
+class com.omasba.clairaud.data.repository.StoreRepo {
++  TAG
+-  _presets
++  presets
+-  _presetsLoaded
++  presetsLoaded
+-  presetsCollection
++ void reset()
++ void fetchPresets()
++ void removePreset(EqPreset)
++ HashMap<String, Any> presetMapFrom(EqPreset)
++ void addPreset(EqPreset)
++ void replacePreset(EqPreset)
+}
+
+
+class com.omasba.clairaud.data.repository.AuthRepo {
+-  TAG
+- FirebaseAuth firebaseAuth
++  USERNAME_MAX_DIM
++ Result<Unit> login(String,String)
++ Result<Unit> register(String,String)
++ FirebaseUser? getCurrentUser()
++ Result<Unit> createUserProfile(String,UserProfile)
++ Result<UserProfile> getUserProfile(String)
++ void logout()
++ Result<Unit> updateUserData(UserProfile)
+}
+
+
+class com.omasba.clairaud.presentation.auth.model.EditViewModel {
+-  USERNAME_MAX_DIM
+-  _uiState
++  uiState
++ void onUsernameChanged(String)
++ void onEmailChanged(String)
++ void updateUserProfile()
+}
+
+
+class com.omasba.clairaud.service.autoeq.MusicDetectionService {
+- Job? pollingJob
+- MediaSessionManager sessionManager
+- String lastTitle
+- String lastArtist
+-  NOTIFICATION_ID
+-  CHANNEL_ID
+-  serviceScope
+- NotificationUtils notificationUtils
+- void isPollingActive()
+- void stopPolling()
++ void onCreate()
++ void onListenerConnected()
+- void observeAutoEqState()
+- void checkForActiveSessions()
++ void onDestroy()
++ IBinder? onBind(Intent?)
+}
+
+
+class com.omasba.clairaud.service.autoeq.presentation.model.AutoEqViewModel {
++ StateFlow<AutoEqUiState> uiState
++ void changeIsOn(Boolean)
+}
+
+
+class com.omasba.clairaud.App {
++ void onCreate()
+- void startEqService()
++ void onTerminate()
+}
+
+interface com.omasba.clairaud.core.network.LastFmApiService {
++ TopTagsResponse getTopTags(String,String,String,String,String)
+}
+
+class com.omasba.clairaud.core.network.LastFmApi {
++ LastFmApiService retrofitService
+}
+
+class com.omasba.clairaud.data.repository.UserRepo {
+-  TAG
++ UserProfile currentUserProfile
+-  _favPresets
++  favPresets
++ EqPreset getPresetToApply(Set<Tag>)
++ void setFavPresets()
++ void getFavPresets()
++ Boolean isFavorite(Int)
++ void addFavorite(Int)
++ void removeFavorite(Int)
++ Boolean isLogged()
++ void logout()
++ void authOnStart()
+}
+
+
+interface com.omasba.clairaud.data.interfaces.GoogleAuthRepoI {
++ Result<Unit> loginWithGoogle(String)
+}
+
+class com.omasba.clairaud.service.eq.AudioSessionReceiver {
+- Eq? equalizer
+-  TAG
++ void onReceive(Context?,Intent?)
++ void releaseEq()
+}
+
+
+class com.omasba.clairaud.presentation.home.model.EqualizerViewModel {
++ String TAG
++  eqState
++ void setBand(Int,Short)
++ void newBands(ArrayList<Pair<Int, Short>>)
++ void toggleEq()
+}
+
+
+class com.omasba.clairaud.navigation.BottomNavItem$Home {
+}
+class com.omasba.clairaud.navigation.BottomNavItem$Store {
+}
+class com.omasba.clairaud.navigation.BottomNavItem$Profile {
+}
+class com.omasba.clairaud.navigation.BottomNavItem {
+}
+class com.omasba.clairaud.presentation.auth.state.UserProfile {
+}
+interface com.omasba.clairaud.data.interfaces.AuthRepoI {
++ Result<Unit> login(String,String)
++ Result<Unit> register(String,String)
++ FirebaseUser? getCurrentUser()
++ Result<Unit> createUserProfile(String,UserProfile)
++ Result<UserProfile> getUserProfile(String)
++ void logout()
++ Result<Unit> updateUserData(UserProfile)
+}
+
+class com.omasba.clairaud.presentation.auth.state.AccountState {
+}
+class com.omasba.clairaud.core.network.TopTagsResponse {
+}
+class com.omasba.clairaud.presentation.auth.state.AuthUiState {
+}
+class com.omasba.clairaud.presentation.store.model.StoreViewModel {
++  presets
++  TAG
++  presetsLoaded
+-  _selectedTags
++  selectedTags
+-  _query
++  query
++  favPresets
+-  _filterByFavorites
++  filterByFavorites
+-  _showUserPresets
++  showUserPresets
++ StateFlow<List<EqPreset>> favoritePresets
++ StateFlow<List<EqPreset>> filteredPresets
++ void onQueryChanged(String)
++ void toggleFavoriteFilter()
++ void toggleShowUserPresets()
++ void onTagSelected(Tag)
++ void fetchPresets()
++ void onTagRemoved(Tag)
+}
+
+
+class com.omasba.clairaud.service.eq.EqService {
+-  TAG
+-  CHANNEL_ID
+-  NOTIFICATION_ID
+-  notificationUtils
+-  audioSessionReceiver
++ void onCreate()
++ Int onStartCommand(Intent?,Int,Int)
++ void onDestroy()
++ IBinder? onBind(Intent?)
+- void startForegroundServiceWithNotification()
+}
+
+
+class com.omasba.clairaud.presentation.store.state.Tag {
++ Boolean equals(Any?)
++ Int hashCode()
+}
+
+class com.omasba.clairaud.presentation.home.state.EqualizerUiState {
+}
+class com.omasba.clairaud.service.autoeq.presentation.state.AutoEqStateHolder {
+-  _uiState
++  uiState
++ void setIsOn(Boolean)
++ void changePreset(EqPreset)
+}
+
+
+class com.omasba.clairaud.data.repository.EqRepo {
++  TAG
+-  _eqState
++  eqState
+-  _eq
++  eq
++ void setEq(Eq?)
++ ArrayList<Pair<Int,Short>> getBandsFormatted(ArrayList<Pair<Int,Short>>)
++ Int getFreq(Short)
++ void setBand(Int,Short)
++ void newBands(ArrayList<Pair<Int, Short>>)
++ void setIsOn(Boolean)
+}
+
+
+class com.omasba.clairaud.presentation.store.state.EqPreset {
+}
+class com.omasba.clairaud.core.util.NotificationUtils {
++ Notification createNotification(Context,Boolean,String,String,String)
++ void createNotificationChannel(Context,String,String)
++ void sendNotification(Context,Notification,Int)
++ void cancelNotification(Context,Int)
+}
+
+class com.omasba.clairaud.MainActivity {
++ void onCreate(Bundle?)
+}
+
+class com.omasba.clairaud.presentation.auth.state.UserProfileDTO {
+}
+class com.omasba.clairaud.service.eq.Eq {
+- Equalizer? equalizer
++  TAG
++ Equalizer.Settings? properties()
++ ArrayList<Pair<Int,Short>> getBandsFormatted(ArrayList<Pair<Int,Short>>)
++ void setBandLevel(Int,Short)
++ Short getBandLevel(Int)
++ Int getFreq(Short)
++ Int getNumberOfBands()
++ Pair<Short, Short> getBandRange()
++ ArrayList<Pair<Int, Short>> getAllBands()
++ void setAllBands(ArrayList<Pair<Int, Short>>)
++ void setIsOn(Boolean)
++ void release()
+}
+
+
+class com.omasba.clairaud.service.autoeq.presentation.state.AutoEqUiState {
+}
+class com.omasba.clairaud.presentation.store.state.TopTags {
+}
+class com.omasba.clairaud.core.util.PermissionHandler$Companion {
+-  NOTIFICATION_PERMISSION_CODE
++ Boolean isNotificationServiceEnabled(Context)
++ void requestNotificationAccess(Context)
++ void askPostNotificationPermission(Context,Activity)
+}
+
+
+class com.omasba.clairaud.core.util.PermissionHandler {
+}
+class com.omasba.clairaud.presentation.home.model.AddPresetViewModel {
+-  _eqPreset
++  eqPreset
+-  _showError
++  showError
+-  TAG_MAX_DIM
++ void changePreset(EqPreset)
++ void updatePresetName(String)
++ void addTag(Tag)
++ void removeTag(Tag)
++ Boolean confirmPreset(ArrayList<Pair<Int,Short>>)
+}
+
+
+
+
+androidx.lifecycle.ViewModel <|-- com.omasba.clairaud.presentation.auth.model.AuthViewModel
+com.omasba.clairaud.data.interfaces.AuthRepoI <|.. com.omasba.clairaud.data.repository.AuthRepo
+androidx.lifecycle.ViewModel <|-- com.omasba.clairaud.presentation.auth.model.EditViewModel
+android.service.notification.NotificationListenerService <|-- com.omasba.clairaud.service.autoeq.MusicDetectionService
+androidx.lifecycle.ViewModel <|-- com.omasba.clairaud.service.autoeq.presentation.model.AutoEqViewModel
+android.app.Application <|-- com.omasba.clairaud.App
+android.content.BroadcastReceiver <|-- com.omasba.clairaud.service.eq.AudioSessionReceiver
+androidx.lifecycle.ViewModel <|-- com.omasba.clairaud.presentation.home.model.EqualizerViewModel
+com.omasba.clairaud.navigation.BottomNavItem +.. com.omasba.clairaud.navigation.BottomNavItem$Home
+com.omasba.clairaud.navigation.BottomNavItem <|-- com.omasba.clairaud.navigation.BottomNavItem$Home
+com.omasba.clairaud.navigation.BottomNavItem +.. com.omasba.clairaud.navigation.BottomNavItem$Store
+com.omasba.clairaud.navigation.BottomNavItem <|-- com.omasba.clairaud.navigation.BottomNavItem$Store
+com.omasba.clairaud.navigation.BottomNavItem +.. com.omasba.clairaud.navigation.BottomNavItem$Profile
+com.omasba.clairaud.navigation.BottomNavItem <|-- com.omasba.clairaud.navigation.BottomNavItem$Profile
+androidx.lifecycle.ViewModel <|-- com.omasba.clairaud.presentation.store.model.StoreViewModel
+android.app.Service <|-- com.omasba.clairaud.service.eq.EqService
+androidx.activity.ComponentActivity <|-- com.omasba.clairaud.MainActivity
+com.omasba.clairaud.core.util.PermissionHandler +.. com.omasba.clairaud.core.util.PermissionHandler$Companion
+androidx.lifecycle.ViewModel <|-- com.omasba.clairaud.presentation.home.model.AddPresetViewModel
+@enduml

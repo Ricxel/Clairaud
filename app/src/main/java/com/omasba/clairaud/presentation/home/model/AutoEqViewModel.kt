@@ -1,10 +1,9 @@
-package com.omasba.clairaud.service.autoeq.presentation.model
+package com.omasba.clairaud.presentation.home.model
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.omasba.clairaud.service.autoeq.presentation.state.AutoEqStateHolder
-import com.omasba.clairaud.presentation.store.state.EqPreset
-import com.omasba.clairaud.service.autoeq.presentation.state.AutoEqUiState
+import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
+import com.omasba.clairaud.presentation.home.state.AutoEqUiState
 import kotlinx.coroutines.flow.StateFlow
 
 class AutoEqViewModel : ViewModel() {

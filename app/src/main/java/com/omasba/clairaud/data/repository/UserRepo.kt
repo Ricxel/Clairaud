@@ -8,14 +8,11 @@ import com.google.firebase.ktx.Firebase
 import com.omasba.clairaud.presentation.auth.state.UserProfile
 import com.omasba.clairaud.presentation.store.state.EqPreset
 import com.omasba.clairaud.presentation.store.state.Tag
-import com.omasba.clairaud.service.autoeq.presentation.state.AutoEqStateHolder
+import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
-import okhttp3.internal.userAgent
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * User state holder repository

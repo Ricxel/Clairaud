@@ -1,4 +1,4 @@
-package com.omasba.clairaud.service.autoeq.presentation
+package com.omasba.clairaud.presentation.home
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -16,8 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.omasba.clairaud.data.repository.UserRepo
-import com.omasba.clairaud.service.autoeq.presentation.model.AutoEqViewModel
-import com.omasba.clairaud.service.autoeq.presentation.state.AutoEqStateHolder
+import com.omasba.clairaud.presentation.home.model.AutoEqViewModel
+import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
 
 @Composable
 fun AutoEq(viewModel: AutoEqViewModel) {

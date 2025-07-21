@@ -1,0 +1,32 @@
+@startuml
+interface com.omasba.clairaud.core.network.LastFmApiService {
++ TopTagsResponse getTopTags(String,String,String,String,String)
+}
+
+class com.omasba.clairaud.core.network.LastFmApi {
++ LastFmApiService retrofitService
+}
+
+class com.omasba.clairaud.core.util.NotificationUtils {
++ Notification createNotification(Context,Boolean,String,String,String)
++ void createNotificationChannel(Context,String,String)
++ void sendNotification(Context,Notification,Int)
++ void cancelNotification(Context,Int)
+}
+
+class com.omasba.clairaud.core.network.TopTagsResponse {
+}
+class com.omasba.clairaud.core.util.PermissionHandler$Companion {
+-  NOTIFICATION_PERMISSION_CODE
++ Boolean isNotificationServiceEnabled(Context)
++ void requestNotificationAccess(Context)
++ void askPostNotificationPermission(Context,Activity)
+}
+
+
+class com.omasba.clairaud.core.util.PermissionHandler {
+}
+
+
+com.omasba.clairaud.core.util.PermissionHandler +.. com.omasba.clairaud.core.util.PermissionHandler$Companion
+@enduml
