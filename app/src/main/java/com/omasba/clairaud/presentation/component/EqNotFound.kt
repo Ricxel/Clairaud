@@ -27,6 +27,11 @@ fun EqNotFound(){
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )
+            Text(
+                text = "Start playing audio to activate the equalizer",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
