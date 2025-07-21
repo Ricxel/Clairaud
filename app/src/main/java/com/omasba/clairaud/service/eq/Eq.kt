@@ -8,10 +8,10 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     private var equalizer: Equalizer? = null
     val TAG = "Eq"
 
-    init{
-        if(eq == null){
+    init {
+        if (eq == null) {
             equalizer = Equalizer(0, sessionId)
-        }else{
+        } else {
             equalizer = Equalizer(0, sessionId)
             this.setAllBands(eq.getAllBands())
         }
@@ -28,12 +28,13 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     }
 
     //restitusce l'array di coppie (Hz,dB)
-    fun getBandsFormatted(bands:ArrayList<Pair<Int,Short>>):ArrayList<Pair<Int,Short>>{
-        val newBands = ArrayList<Pair<Int,Short>>()
+    fun getBandsFormatted(bands: ArrayList<Pair<Int, Short>>): ArrayList<Pair<Int, Short>> {
+        val newBands = ArrayList<Pair<Int, Short>>()
 
-        bands.forEach{band ->
-            val freq = equalizer?.getCenterFreq(band.first.toShort()) ?: 0 //mi trovo la frequenza della banda
-            newBands.add(Pair<Int,Short>(freq/1000,(band.second/100).toShort()))
+        bands.forEach { band ->
+            val freq = equalizer?.getCenterFreq(band.first.toShort())
+                ?: 0 //mi trovo la frequenza della banda
+            newBands.add(Pair<Int, Short>(freq / 1000, (band.second / 100).toShort()))
         }
 
         return newBands
@@ -61,8 +62,8 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     /**
      * @return the level of a band given it index
      */
-    fun getFreq(index: Short):Int{
-        val freq = equalizer!!.getCenterFreq(index) /1000
+    fun getFreq(index: Short): Int {
+        val freq = equalizer!!.getCenterFreq(index) / 1000
         return freq
     }
 
@@ -84,11 +85,11 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     /**
      * @return all bands paired with each band level
      */
-    fun getAllBands():ArrayList<Pair<Int, Short>>{
+    fun getAllBands(): ArrayList<Pair<Int, Short>> {
         val nBands = this.getNumberOfBands()
-        val result:ArrayList<Pair<Int, Short>> = ArrayList<Pair<Int, Short>>()
+        val result: ArrayList<Pair<Int, Short>> = ArrayList<Pair<Int, Short>>()
 
-        for(band in 0..<nBands){
+        for (band in 0..<nBands) {
             result.add(Pair(band, this.getBandLevel(band)))
         }
 
@@ -106,7 +107,7 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
                 this.setBandLevel(it.first, it.second)
             }
             Log.d(TAG, "Setted bands: ${bands.toList()}")
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Log.d(TAG, "Error setting bands: " + e.message.toString() + bands.toList())
         }
 
@@ -116,7 +117,7 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     /**
      * Toggles the Equalizer on or off
      */
-    fun setIsOn(isOn:Boolean){
+    fun setIsOn(isOn: Boolean) {
         Log.d(TAG, "Equalizer enabled: $isOn")
         equalizer?.enabled = isOn
     }

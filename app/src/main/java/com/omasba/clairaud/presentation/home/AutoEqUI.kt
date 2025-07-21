@@ -27,14 +27,14 @@ fun AutoEq(viewModel: AutoEqViewModel) {
 
     LaunchedEffect(Unit) {
         isEnabled = UserRepo.isLogged()
-        if(!isEnabled){
+        if (!isEnabled) {
             AutoEqStateHolder.setIsOn(false)
         }
     }
 
-    Row (
+    Row(
         verticalAlignment = Alignment.CenterVertically,
-    ){
+    ) {
         Text(
             text = "AutoEq",
             style = MaterialTheme.typography.headlineSmall,
@@ -45,13 +45,13 @@ fun AutoEq(viewModel: AutoEqViewModel) {
             text = state.currentPreset.name,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier
-                .padding(18.dp,5.dp),
+                .padding(18.dp, 5.dp),
             color = MaterialTheme.colorScheme.secondary
         )
 
         Switch(
             checked = state.isOn,
-            onCheckedChange = {checked ->
+            onCheckedChange = { checked ->
                 viewModel.changeIsOn(checked)
             },
             enabled = isEnabled

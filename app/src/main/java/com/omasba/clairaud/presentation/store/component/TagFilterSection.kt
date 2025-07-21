@@ -4,7 +4,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,8 +36,8 @@ fun TagFilterSection(
     onTagToggle: (Tag) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    var expanded by remember{ mutableStateOf(false) }
-    val maxHeight = if(expanded) 300.dp else 65.dp
+    var expanded by remember { mutableStateOf(false) }
+    val maxHeight = if (expanded) 300.dp else 65.dp
     val animatedHeight by animateDpAsState(targetValue = maxHeight, label = "CardHeight")
 
 
@@ -51,8 +50,8 @@ fun TagFilterSection(
         Box(
             modifier = Modifier
                 .verticalScroll(scrollState)
-        ){
-            Row{
+        ) {
+            Row {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -70,7 +69,7 @@ fun TagFilterSection(
                     }
                 }
                 IconButton(
-                    onClick = {expanded = !expanded}
+                    onClick = { expanded = !expanded }
                 ) {
                     Icon(
                         modifier = Modifier

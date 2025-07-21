@@ -9,8 +9,8 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
-class PermissionHandler{
-    companion object{
+class PermissionHandler {
+    companion object {
 
         private val NOTIFICATION_PERMISSION_CODE = 1
 

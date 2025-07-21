@@ -17,7 +17,7 @@ import com.omasba.clairaud.navigation.BottomNavItem
  * @param navController Application's navigation host controller
  */
 @Composable
-fun AppNavigationBar(navController: NavHostController){
+fun AppNavigationBar(navController: NavHostController) {
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route

@@ -6,9 +6,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.omasba.clairaud.presentation.auth.state.UserProfile
+import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
 import com.omasba.clairaud.presentation.store.state.EqPreset
 import com.omasba.clairaud.presentation.store.state.Tag
-import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,11 +31,11 @@ object UserRepo {
         var maxCount = 0
         var correctPreset = EqPreset()
 
-        _favPresets.value.forEach{ id ->
+        _favPresets.value.forEach { id ->
             run {
                 val preset = StoreRepo.presets.value.find { it.id == id } ?: EqPreset()
                 val tagsIntersection = preset.tags intersect tags
-                if (tagsIntersection.count() > maxCount){
+                if (tagsIntersection.count() > maxCount) {
                     maxCount = tagsIntersection.count()
                     correctPreset = preset
                 }
@@ -47,7 +47,7 @@ object UserRepo {
     /**
      * Uploads to Firestore a new list of favourite presets (for the current user)
      */
-    fun setFavPresets(){
+    fun setFavPresets() {
         val uid = currentUserProfile.uid
 
         val favList = _favPresets.value.toList()  // List<Int> sara' salvata come array su Firestore
@@ -73,7 +73,8 @@ object UserRepo {
                 .addOnSuccessListener { result ->
                     try {
                         val favs = result.get("favPresets") as? List<*>
-                        val ids = favs?.mapNotNull { (it as? Number)?.toInt() }?.toSet() ?: emptySet()
+                        val ids =
+                            favs?.mapNotNull { (it as? Number)?.toInt() }?.toSet() ?: emptySet()
 
                         _favPresets.value = ids // aggiorna lo StateFlow
 
@@ -85,7 +86,7 @@ object UserRepo {
                 .addOnFailureListener { e ->
                     Log.e(TAG, "Error Firestore get(): ${e.message}")
                 }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
 
@@ -120,7 +121,7 @@ object UserRepo {
     /**
      * Verify if the user is logged, and token's validity
      */
-    suspend fun isLogged(): Boolean{
+    suspend fun isLogged(): Boolean {
         //controllo firebase
         val firebaseUser: FirebaseUser = FirebaseAuth.getInstance().currentUser ?: return false
 
@@ -138,7 +139,7 @@ object UserRepo {
     /**
      * Logs out the current user
      */
-    fun logout(){
+    fun logout() {
         AuthRepo.logout()
         currentUserProfile = UserProfile()
         StoreRepo.reset()
@@ -148,13 +149,13 @@ object UserRepo {
     /**
      * Checks user authentication and set the local user
      */
-    suspend fun authOnStart(){
+    suspend fun authOnStart() {
         //controllo la validità del token
-        if (isLogged()){
+        if (isLogged()) {
             //imposto l'utente locale
             val uid = AuthRepo.getCurrentUser()?.uid
 
-            if(uid != null)
+            if (uid != null)
                 currentUserProfile = AuthRepo.getUserProfile(uid).getOrNull() ?: UserProfile()
         }
     }

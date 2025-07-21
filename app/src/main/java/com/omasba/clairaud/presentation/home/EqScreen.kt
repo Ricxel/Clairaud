@@ -25,6 +25,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,9 +35,9 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.omasba.clairaud.presentation.home.model.EqualizerViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,27 +45,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.omasba.clairaud.presentation.home.model.AutoEqViewModel
-import com.omasba.clairaud.data.repository.EqRepo
-import com.omasba.clairaud.presentation.store.state.EqPreset
-
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.runtime.key
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.omasba.clairaud.data.repository.EqRepo
 import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.component.EqNotFound
 import com.omasba.clairaud.presentation.component.PresetGraph
+import com.omasba.clairaud.presentation.home.model.AutoEqViewModel
+import com.omasba.clairaud.presentation.home.model.EqualizerViewModel
+import com.omasba.clairaud.presentation.home.state.EqualizerUiState
 import com.omasba.clairaud.presentation.store.component.TagList
 import com.omasba.clairaud.presentation.store.model.StoreViewModel
+import com.omasba.clairaud.presentation.store.state.EqPreset
 
 val TAG = "EqScreen"
 
 @Composable
-fun EqScreen(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel, navController: NavHostController){
+fun EqScreen(
+    eqViewModel: EqualizerViewModel,
+    storeViewModel: StoreViewModel,
+    navController: NavHostController
+) {
     val eq by EqRepo.eq.collectAsState()
 
     var isAuthenticated by remember { mutableStateOf<Boolean?>(null) } //per capire quando si è autenticati
@@ -87,13 +92,15 @@ fun EqScreen(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel, na
             Spacer(modifier = Modifier.height(16.dp))
 
             //sezione da proteggere, i preset applicabili sono solo i preferiti quindi bisogna essere autenticati
-            when(isAuthenticated){
+            when (isAuthenticated) {
                 true -> {
                     ApplyPresetCard(eqViewModel, storeViewModel)
                 }
+
                 false -> {
                     //niente
                 }
+
                 null -> {
                     Box(
                         modifier = Modifier
@@ -105,8 +112,7 @@ fun EqScreen(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel, na
                 }
             }
         }
-    }
-    else{
+    } else {
         EqNotFound()
     }
 
@@ -148,136 +154,11 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // titolo e switch
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Equalizer",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.weight(1f),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    IconButton(
-                        onClick = {
-                            //navigazione all'aggiunta del preset
-                            navController.navigate("addPreset")
-                        },
-                        enabled = isEnabled
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Share,
-                            contentDescription = "Share"
-                        )
-                    }
-                    Switch(
-                        checked = isOn,
-                        onCheckedChange = { viewModel.toggleEq() }
-                    )
-                }
-
+                EqTitle(isEnabled, isOn, viewModel, navController)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // colonne con dB, slider e Hz
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-
-                    val bandsNum = eqState.bands.size
-                    bands.take(bandsNum).forEachIndexed { index, band ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.width((cardWidth/bandsNum)) // spazio per testo sopra e sotto
-                        ) {
-                            var dBx = 0
-
-
-                            // Testo dB
-                            Text(
-                                text = "${band.second/100}dB",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (isOn) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                modifier = Modifier
-                                    .padding(bottom = 4.dp)
-                                    .onGloballyPositioned { coordinates ->
-                                        val position = coordinates.positionInParent()
-                                        val size = coordinates.size
-                                        dBx = (position.x + size.width / 2).toInt()
-                                    }
-                            )
-
-                            //Slider verticale libero dai vincoli della colonna
-                            Box(
-                                modifier = Modifier
-                                    .height(250.dp) // altezza totale della zona slider
-                                    .width(250.dp),  // larghezza effettiva dello slider verticale
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .rotate(-90f)
-                                        .layout { measurable, constraints ->
-                                            val placeable = measurable.measure(
-                                                constraints.copy(
-                                                    maxWidth = constraints.maxHeight,
-                                                    maxHeight = constraints.maxWidth
-                                                )
-                                            )
-
-                                            layout(placeable.height, placeable.width) {
-                                                val layoutHeight = placeable.width
-                                                val x = dBx - placeable.width / 2.7f
-                                                val y = (layoutHeight - placeable.height) / 1.8f
-
-                                                placeable.placeRelative(x.toInt(), y.toInt())
-
-                                            }
-                                        }
-                                        .fillMaxWidth()
-                                        .fillMaxHeight()
-                                        .align(Alignment.Center),
-                                ) {
-                                    var sliderValue = band.second/100 // perche nello state e nell'eq vengono impostati come mB
-
-                                    Slider(
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        value = sliderValue.toFloat(),
-                                        onValueChange = { newValue ->
-                                            sliderValue = newValue.toInt()
-                                            Log.d(TAG, "on change: $newValue")
-                                            viewModel.setBand(index, (sliderValue * 100).toShort())
-                                        },
-
-                                        valueRange = -15f..15f,
-                                        enabled = isOn,
-                                        steps = 30,
-
-                                        colors = SliderDefaults.colors(
-                                            thumbColor = MaterialTheme.colorScheme.primary,
-                                            activeTrackColor = MaterialTheme.colorScheme.primaryContainer,
-                                            inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
-                                        )
-                                    )
-                                }
-                            }
-
-                            // Hz
-                            Text(
-                                text = formatFrequency(EqRepo.getFreq(index.toShort())),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (isOn) MaterialTheme.colorScheme.onSurface
-                                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                modifier = Modifier.padding(top = 4.dp)
-                            )
-                        }
-
-                    }
-                }
-
+                EqSliderRow(eqState, bands, cardWidth, isOn, viewModel)
 
                 Spacer(modifier = Modifier.height(24.dp))
                 // AutoEQ
@@ -287,6 +168,153 @@ fun EqCard(viewModel: EqualizerViewModel, navController: NavHostController) {
         }
     }
 }
+
+@Composable
+fun EqSliderRow(
+    eqState: EqualizerUiState,
+    bands: ArrayList<Pair<Int, Short>>,
+    cardWidth: Dp,
+    isOn: Boolean,
+    viewModel: EqualizerViewModel
+) {
+    // colonne con dB, slider e Hz
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        val bandsNum = eqState.bands.size
+        bands.take(bandsNum).forEachIndexed { index, band ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.width((cardWidth / bandsNum)) // spazio per testo sopra e sotto
+            ) {
+                var dBx = 0
+
+
+                // Testo dB
+                Text(
+                    text = "${band.second / 100}dB",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (isOn) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                        .onGloballyPositioned { coordinates ->
+                            val position = coordinates.positionInParent()
+                            val size = coordinates.size
+                            dBx = (position.x + size.width / 2).toInt()
+                        }
+                )
+
+                //Slider verticale libero dai vincoli della colonna
+                Box(
+                    modifier = Modifier
+                        .height(250.dp) // altezza totale della zona slider
+                        .width(250.dp),  // larghezza effettiva dello slider verticale
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .rotate(-90f)
+                            .layout { measurable, constraints ->
+                                val placeable = measurable.measure(
+                                    constraints.copy(
+                                        maxWidth = constraints.maxHeight,
+                                        maxHeight = constraints.maxWidth
+                                    )
+                                )
+
+                                layout(placeable.height, placeable.width) {
+                                    val layoutHeight = placeable.width
+                                    val x = dBx - placeable.width / 2.7f
+                                    val y = (layoutHeight - placeable.height) / 1.8f
+
+                                    placeable.placeRelative(x.toInt(), y.toInt())
+
+                                }
+                            }
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .align(Alignment.Center),
+                    ) {
+                        var sliderValue =
+                            band.second / 100 // perche nello state e nell'eq vengono impostati come mB
+
+                        Slider(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            value = sliderValue.toFloat(),
+                            onValueChange = { newValue ->
+                                sliderValue = newValue.toInt()
+                                Log.d(TAG, "on change: $newValue")
+                                viewModel.setBand(index, (sliderValue * 100).toShort())
+                            },
+
+                            valueRange = -15f..15f,
+                            enabled = isOn,
+                            steps = 30,
+
+                            colors = SliderDefaults.colors(
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                activeTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        )
+                    }
+                }
+
+                // Hz
+                Text(
+                    text = formatFrequency(EqRepo.getFreq(index.toShort())),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (isOn) MaterialTheme.colorScheme.onSurface
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+
+        }
+    }
+}
+
+@Composable
+fun EqTitle(
+    isEnabled: Boolean,
+    isOn: Boolean,
+    viewModel: EqualizerViewModel,
+    navController: NavHostController
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = "Equalizer",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.weight(1f),
+            color = MaterialTheme.colorScheme.primary
+        )
+        IconButton(
+            onClick = {
+                //navigazione all'aggiunta del preset
+                navController.navigate("addPreset")
+            },
+            enabled = isEnabled
+        ) {
+            Icon(
+                imageVector = Icons.Default.Share,
+                contentDescription = "Share"
+            )
+        }
+        Switch(
+            checked = isOn,
+            onCheckedChange = { viewModel.toggleEq() }
+        )
+    }
+
+}
+
 @Composable
 fun formatFrequency(hz: Int): String {
     return when {
@@ -295,6 +323,7 @@ fun formatFrequency(hz: Int): String {
     } + "Hz"
 
 }
+
 @Composable
 fun ApplyPresetCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewModel) {
     val presets by storeViewModel.favoritePresets.collectAsState() //solo i preferiti per il drop down
@@ -327,57 +356,57 @@ fun ApplyPresetCard(eqViewModel: EqualizerViewModel, storeViewModel: StoreViewMo
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Dropdown
-                    Box(modifier = Modifier.weight(1f)) {
-                        val rightText = selected?.name ?: "Preset"
+                Box(modifier = Modifier.weight(1f)) {
+                    val rightText = selected?.name ?: "Preset"
 
-                        Column {
-                            PresetDropdown(
-                                text = rightText,
-                                expanded = rightExpanded,
-                                onExpandChange = { rightExpanded = it },
-                                presets = presets,
-                                onPresetSelected = {
-                                    selected = it
-                                    rightExpanded = false
+                    Column {
+                        PresetDropdown(
+                            text = rightText,
+                            expanded = rightExpanded,
+                            onExpandChange = { rightExpanded = it },
+                            presets = presets,
+                            onPresetSelected = {
+                                selected = it
+                                rightExpanded = false
 
-                                    eqViewModel.newBands(it.bands)
-                                },
-                                enabled = presets.isNotEmpty()
-                            )
+                                eqViewModel.newBands(it.bands)
+                            },
+                            enabled = presets.isNotEmpty()
+                        )
 
-                            selected?.let { preset ->
-                                key (preset.name){
-                                    PresetGraph(preset.name, EqRepo.getBandsFormatted(preset.bands))
-                                    Log.d(TAG, "graph changed")
-                                }
-                                Row(
-                                    modifier = Modifier
-                                        .padding(top = 8.dp)
-                                ){
-                                    Text(
-                                        text = "Author: ",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.tertiary
-                                    )
-                                    Text(
-                                        text = preset.author,
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
-                                }
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ){
-                                    Text(
-                                        text = "Tag ",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.tertiary
-                                    )
-                                    TagList(preset.tags)
-                                }
+                        selected?.let { preset ->
+                            key(preset.name) {
+                                PresetGraph(preset.name, EqRepo.getBandsFormatted(preset.bands))
+                                Log.d(TAG, "graph changed")
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                            ) {
+                                Text(
+                                    text = "Author: ",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.tertiary
+                                )
+                                Text(
+                                    text = preset.author,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Tag ",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.tertiary
+                                )
+                                TagList(preset.tags)
                             }
                         }
-
                     }
+
+                }
 
             }
 
@@ -414,12 +443,16 @@ fun PresetDropdown(
                 modifier = Modifier.weight(1f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.5f
+                )
             )
             Icon(
                 imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                 contentDescription = if (expanded) "Collapse" else "Expand",
-                tint = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                tint = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.5f
+                )
             )
         }
 

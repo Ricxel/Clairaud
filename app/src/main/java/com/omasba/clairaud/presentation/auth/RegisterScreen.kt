@@ -41,7 +41,7 @@ import com.omasba.clairaud.presentation.auth.components.CancelButton
 import com.omasba.clairaud.presentation.auth.model.AuthViewModel
 
 @Composable
-fun RegisterScreen(viewModel: AuthViewModel, navController: NavHostController){
+fun RegisterScreen(viewModel: AuthViewModel, navController: NavHostController) {
 
     val uiState by viewModel.uiState.collectAsState()
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -50,20 +50,26 @@ fun RegisterScreen(viewModel: AuthViewModel, navController: NavHostController){
     //controllo lo stato di autenticazione, se sono autenticato, mi sposto alla schermata di profilo
     LaunchedEffect(uiState.isLoggedIn) {
         Log.d("auth", "Changed")
-        if(uiState.isLoggedIn)
+        if (uiState.isLoggedIn)
             navController.navigate("profile") {
-                popUpTo("register"){inclusive = true} // fa in modo che non si possa tornare a login
+                popUpTo("register") {
+                    inclusive = true
+                } // fa in modo che non si possa tornare a login
             }
     }
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-    ){
+    ) {
         //testo
-        Text("Register", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary)
+        Text(
+            "Register",
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
 
         //casella per mail
         OutlinedTextField(
@@ -96,7 +102,8 @@ fun RegisterScreen(viewModel: AuthViewModel, navController: NavHostController){
             ),
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val icon = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                val icon =
+                    if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                 IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                     Icon(imageVector = icon, contentDescription = "Toggle password visibility")
                 }
@@ -130,7 +137,11 @@ fun RegisterScreen(viewModel: AuthViewModel, navController: NavHostController){
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Already have an account? ", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.secondary)
+            Text(
+                "Already have an account? ",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.secondary
+            )
             //collegamento con la registrazione
             TextButton(
                 onClick = {
@@ -142,7 +153,7 @@ fun RegisterScreen(viewModel: AuthViewModel, navController: NavHostController){
         }
 
         // caricamento
-        if(uiState.isLoading){
+        if (uiState.isLoading) {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }

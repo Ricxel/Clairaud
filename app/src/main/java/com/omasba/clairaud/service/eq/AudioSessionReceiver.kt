@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.audiofx.AudioEffect
-import android.media.audiofx.Equalizer
 import android.util.Log
 import com.omasba.clairaud.data.repository.EqRepo
 
@@ -29,12 +28,12 @@ class AudioSessionReceiver : BroadcastReceiver() {
                 Log.d(TAG, "Audio session opened: $sessionId")
 
                 try {
-                    if(EqRepo.eq.value == null){
+                    if (EqRepo.eq.value == null) {
                         equalizer = Eq(sessionId)
                         EqRepo.setEq(equalizer)
 
                         Log.d(TAG, "Built a new equalizer")
-                    }else{
+                    } else {
                         equalizer = Eq(sessionId, EqRepo.eq.value)
                         EqRepo.setEq(equalizer)
 
@@ -54,7 +53,7 @@ class AudioSessionReceiver : BroadcastReceiver() {
     /**
      * Release the eq, needed when the service is destroyed
      */
-    fun releaseEq(){
+    fun releaseEq() {
         equalizer?.setIsOn(false)
         equalizer?.release()
         Log.d(TAG, "Destroy")

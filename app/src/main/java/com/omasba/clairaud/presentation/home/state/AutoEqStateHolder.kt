@@ -12,7 +12,7 @@ object AutoEqStateHolder {
     private val _uiState = MutableStateFlow(AutoEqUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun setIsOn(value: Boolean){
+    fun setIsOn(value: Boolean) {
         _uiState.update { it.copy(isOn = value) }
     }
 

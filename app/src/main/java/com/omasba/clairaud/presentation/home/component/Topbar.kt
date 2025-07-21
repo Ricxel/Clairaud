@@ -24,18 +24,18 @@ import com.omasba.clairaud.R
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(){
+fun TopBar() {
     TopAppBar(
         modifier = Modifier
             .background(Color.Red)
             .padding(start = 0.dp),
         title = {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .offset(x = (-16).dp) //compensa il padding di default nello start (che non ha senso)
-            ){
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "App Icon",

@@ -4,13 +4,10 @@ import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,7 +29,11 @@ import com.omasba.clairaud.presentation.store.model.StoreViewModel
 import com.omasba.clairaud.presentation.store.state.EqPreset
 
 @Composable
-fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerViewModel, modifier: Modifier = Modifier) {
+fun AppNavHost(
+    navController: NavHostController,
+    equalizerViewModel: EqualizerViewModel,
+    modifier: Modifier = Modifier
+) {
 
     val authViewModel = AuthViewModel()
     val storeViewModel = StoreViewModel()
@@ -52,7 +53,11 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
         }
     ) {
         composable(BottomNavItem.Home.route) {
-            EqScreen(eqViewModel = equalizerViewModel, storeViewModel, navController = navController)
+            EqScreen(
+                eqViewModel = equalizerViewModel,
+                storeViewModel,
+                navController = navController
+            )
         }
         composable(BottomNavItem.Store.route) {
             //per accedere allo store, è necessario essere loggati, controllo in viewmodel auth
@@ -64,19 +69,41 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
         }
 
         //add preset
-        composable("notAuth"){ NotAuthenticatedScreen(navController) }
-        composable("addPreset"){ AddPresetScreen(viewModel = addPresetViewModel, navController = navController) }
-        composable("register"){ RegisterScreen(viewModel = authViewModel, navController = navController) }
-        composable("login"){ LoginScreen(viewModel = authViewModel, navController = navController) }
-        composable("editProfile"){ EditAccountScreen(viewModel = EditViewModel(UserRepo.currentUserProfile.username, UserRepo.currentUserProfile.mail), navController = navController)}
+        composable("notAuth") { NotAuthenticatedScreen(navController) }
+        composable("addPreset") {
+            AddPresetScreen(
+                viewModel = addPresetViewModel,
+                navController = navController
+            )
+        }
+        composable("register") {
+            RegisterScreen(
+                viewModel = authViewModel,
+                navController = navController
+            )
+        }
+        composable("login") {
+            LoginScreen(
+                viewModel = authViewModel,
+                navController = navController
+            )
+        }
+        composable("editProfile") {
+            EditAccountScreen(
+                viewModel = EditViewModel(
+                    UserRepo.currentUserProfile.username,
+                    UserRepo.currentUserProfile.mail
+                ), navController = navController
+            )
+        }
 
-        composable("editPreset/{presetId}"){backStackEntry ->
+        composable("editPreset/{presetId}") { backStackEntry ->
             //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare e aggiornare il viewModel di conseguenza
             val presetId = backStackEntry.arguments?.getString("presetId")?.toInt()
             Log.d("route", "ID given to the route: ${presetId}")
             val preset = presets.find { it.id == presetId }
 
-            Log.d("route","Preset found: $preset")
+            Log.d("route", "Preset found: $preset")
             val editPresetViewModel = AddPresetViewModel()
             editPresetViewModel.changePreset(preset ?: EqPreset())
             AddPresetScreen(viewModel = editPresetViewModel, navController = navController)

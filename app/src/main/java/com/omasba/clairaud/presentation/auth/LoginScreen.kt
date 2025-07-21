@@ -1,7 +1,6 @@
 package com.omasba.clairaud.presentation.auth
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,25 +31,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lint.kotlin.metadata.Visibility
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.omasba.clairaud.data.repository.AuthRepo
-import com.omasba.clairaud.data.repository.UserRepo
-import com.omasba.clairaud.navigation.BottomNavItem
 import com.omasba.clairaud.presentation.auth.components.CancelButton
-import com.omasba.clairaud.presentation.auth.components.LogoutButton
-import com.omasba.clairaud.presentation.auth.state.UserProfile
 import com.omasba.clairaud.presentation.auth.model.AuthViewModel
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
+fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController) {
 
     val uiState by viewModel.uiState.collectAsState()
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -61,20 +50,24 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
     //controllo lo stato di autenticazione, se sono autenticato, mi sposto alla schermata di profilo
     LaunchedEffect(uiState.isLoggedIn) {
         Log.d("auth", "Changed")
-        if(uiState.isLoggedIn)
+        if (uiState.isLoggedIn)
             navController.navigate("profile") {
-                popUpTo("login"){inclusive = true} // fa in modo che non si possa tornare a login
+                popUpTo("login") { inclusive = true } // fa in modo che non si possa tornare a login
             }
     }
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-    ){
+    ) {
         //testo
-        Text("Login", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.primary)
+        Text(
+            "Login",
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
 
         //casella per mail
         OutlinedTextField(
@@ -100,7 +93,8 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
             ),
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val icon = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                val icon =
+                    if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
                 IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                     Icon(imageVector = icon, contentDescription = "Toggle password visibility")
                 }
@@ -134,7 +128,11 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Don't have an account? ", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.secondary)
+            Text(
+                "Don't have an account? ",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.secondary
+            )
             //collegamento con la registrazione
             TextButton(
                 onClick = {
@@ -146,7 +144,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
         }
 
         //animazione di caricamento
-        if(uiState.isLoading){
+        if (uiState.isLoading) {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }

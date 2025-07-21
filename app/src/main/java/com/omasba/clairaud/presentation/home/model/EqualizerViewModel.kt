@@ -5,16 +5,17 @@ import androidx.lifecycle.ViewModel
 import com.omasba.clairaud.data.repository.EqRepo
 
 class EqualizerViewModel : ViewModel() {
-    val TAG:String = "EqViewModel"
+    val TAG: String = "EqViewModel"
     val eqState = EqRepo.eqState
 
     init {
         val bands = arrayListOf(
-            Pair<Int,Short>(0,0),
-            Pair<Int,Short>(1,0),
-            Pair<Int,Short>(2,0),
-            Pair<Int,Short>(3,0),
-            Pair<Int,Short>(4,0))
+            Pair<Int, Short>(0, 0),
+            Pair<Int, Short>(1, 0),
+            Pair<Int, Short>(2, 0),
+            Pair<Int, Short>(3, 0),
+            Pair<Int, Short>(4, 0)
+        )
         newBands(bands)
     }
 
@@ -23,7 +24,7 @@ class EqualizerViewModel : ViewModel() {
      * @param index The index (0 to 4) of the band to modify
      * @param level The new level for the band
      */
-    fun setBand(index:Int, level:Short){
+    fun setBand(index: Int, level: Short) {
         Log.d(TAG, "Setting band $index to $level")
         EqRepo.setBand(index, level)
     }
@@ -32,14 +33,14 @@ class EqualizerViewModel : ViewModel() {
      * Sets a new set of bands
      * @param newBands The list of new bands
      */
-    fun newBands(newBands: ArrayList<Pair<Int, Short>>){
+    fun newBands(newBands: ArrayList<Pair<Int, Short>>) {
         EqRepo.newBands(newBands)
     }
 
     /**
      * Toggles the equalizer on or off
      */
-    fun toggleEq(){
+    fun toggleEq() {
         Log.d(TAG, "Equalizer toggled")
         EqRepo.setIsOn(!eqState.value.isOn)
     }

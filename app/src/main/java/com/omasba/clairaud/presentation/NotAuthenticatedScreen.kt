@@ -10,13 +10,13 @@ import androidx.navigation.NavHostController
 import com.omasba.clairaud.presentation.component.NotAuthenticated
 
 @Composable
-fun NotAuthenticatedScreen(navController: NavHostController){
-    Column (
+fun NotAuthenticatedScreen(navController: NavHostController) {
+    Column(
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         NotAuthenticated(navController)
     }
 }

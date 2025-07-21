@@ -10,13 +10,13 @@ import retrofit2.http.Query
 private const val BASE_URL = "https://ws.audioscrobbler.com"
 const val API_KEY: String = "51b710eed01b56a851a342cca1bead2a"
 
-private val json = Json{ ignoreUnknownKeys = true}
+private val json = Json { ignoreUnknownKeys = true }
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL)
     .build()
 
-interface LastFmApiService{
+interface LastFmApiService {
     @GET("2.0/")
     suspend fun getTopTags(
         @Query("method") method: String = "track.gettoptags",
@@ -26,6 +26,7 @@ interface LastFmApiService{
         @Query("format") format: String = "json"
     ): TopTagsResponse
 }
+
 object LastFmApi {
     val retrofitService: LastFmApiService by lazy {
         retrofit.create(LastFmApiService::class.java)

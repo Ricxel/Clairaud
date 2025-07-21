@@ -40,8 +40,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.data.repository.StoreRepo
 import com.omasba.clairaud.data.repository.UserRepo
-import com.omasba.clairaud.presentation.store.state.EqPreset
 import com.omasba.clairaud.presentation.component.PresetGraph
+import com.omasba.clairaud.presentation.store.state.EqPreset
 
 @Composable
 fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: NavHostController) {
@@ -52,7 +52,7 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
             .padding(8.dp)
             .animateContentSize(animationSpec = tween(0)), // fluidità altezza
         shape = RoundedCornerShape(50.dp),
-        onClick = {expanded = !expanded}
+        onClick = { expanded = !expanded }
     ) {
         Column(
             modifier = Modifier
@@ -60,11 +60,11 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(text = preset.name, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.weight(1f))
 
-                if(preset.authorUid == UserRepo.currentUserProfile?.uid){
+                if (preset.authorUid == UserRepo.currentUserProfile?.uid) {
                     IconButton(
                         onClick = {
                             navController.navigate("editPreset/${preset.id}")
@@ -92,10 +92,10 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
                 IconButton(
                     onClick = {
                         Log.d("store", "Click")
-                        if(favPresets.value.contains(preset.id))
+                        if (favPresets.value.contains(preset.id))
                             UserRepo.removeFavorite(preset.id)
                         else UserRepo.addFavorite(preset.id)
-                        Log.d("store","Fav: ${favPresets.value}")
+                        Log.d("store", "Fav: ${favPresets.value}")
                     }
                 ) {
                     Icon(
@@ -120,13 +120,16 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
                 //contenuto espanso
                 Column {
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(text = "Author: ${preset.author}", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = "Author: ${preset.author}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                     TagList(preset.tags)
                     //formatto le bande in modo che abbiamo decibel nel volume, come primo parametro lascio il numero di banda
                     //perchè altrimenti sarebbe possibile vedere il preset solo se si è collegati a una sessione audio
-                    val graphBands = ArrayList<Pair<Int,Short>>()
-                    preset.bands.forEach{band ->
-                        graphBands.add(Pair<Int,Short>(band.first, (band.second/100).toShort()))
+                    val graphBands = ArrayList<Pair<Int, Short>>()
+                    preset.bands.forEach { band ->
+                        graphBands.add(Pair<Int, Short>(band.first, (band.second / 100).toShort()))
                     }
                     PresetGraph(presetName = preset.name, bands = graphBands)
                 }
@@ -141,7 +144,7 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
     showBackground = true
 )
 @Composable
-fun PresetCardPreview(){
+fun PresetCardPreview() {
     val presets by StoreRepo.presets.collectAsState()
     val favPreset = UserRepo.favPresets
     PresetCard(presets.first(), favPreset.collectAsState(), rememberNavController())

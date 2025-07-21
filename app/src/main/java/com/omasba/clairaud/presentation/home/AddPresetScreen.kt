@@ -29,46 +29,45 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.omasba.clairaud.data.repository.EqRepo
-import com.omasba.clairaud.presentation.store.state.Tag
 import com.omasba.clairaud.presentation.component.PresetGraph
-import com.omasba.clairaud.presentation.store.component.TagList
 import com.omasba.clairaud.presentation.home.model.AddPresetViewModel
+import com.omasba.clairaud.presentation.store.component.TagList
+import com.omasba.clairaud.presentation.store.state.Tag
 
 @Composable
-fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostController){
+fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostController) {
     val eqPreset by viewModel.eqPreset.collectAsState()
     val eqState by EqRepo.eqState.collectAsState()
     val errorState by viewModel.showError.collectAsState()
     var tagInput by remember { mutableStateOf("") }
-    Box (
+    Box(
         modifier = Modifier
             .fillMaxSize()
-    ){
-        Column (
+    ) {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-        ){
+        ) {
             Text(
                 text = "Add preset",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
             //area dell'eq
-            val rawBands = if(eqPreset.authorUid != "") eqPreset.bands else eqState.bands
+            val rawBands = if (eqPreset.authorUid != "") eqPreset.bands else eqState.bands
 
             //se non c'è una sessione attiva, non si posso ottenere le bande vere, quindi bisogna usare le rawbands
             var bands = ArrayList(rawBands)
 
-            if(EqRepo.getFreq(0) != -1){
+            if (EqRepo.getFreq(0) != -1) {
                 //vuol dire che c'è un eq attivo
                 bands = EqRepo.getBandsFormatted(bands)
-            }
-            else{
+            } else {
                 //non attivo
                 bands.clear()
-                rawBands.forEach{band ->
-                    bands.add(Pair<Int,Short>(band.first, (band.second/100).toShort()))
+                rawBands.forEach { band ->
+                    bands.add(Pair<Int, Short>(band.first, (band.second / 100).toShort()))
                 }
 
             }
@@ -78,12 +77,12 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
             //area per le altre info del preset
             TextField(
                 value = eqPreset.name,
-                onValueChange = {viewModel.updatePresetName(it)},
-                label = {Text("Preset name")},
+                onValueChange = { viewModel.updatePresetName(it) },
+                label = { Text("Preset name") },
                 modifier = Modifier.fillMaxWidth()
             )
             // per mostrare l'errore
-            if(errorState){
+            if (errorState) {
                 Text(
                     text = "* Preset name is empty",
                     color = MaterialTheme.colorScheme.error
@@ -93,13 +92,13 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 modifier = Modifier
                     .height(20.dp)
             )
-            if(eqPreset.tags.isEmpty())
+            if (eqPreset.tags.isEmpty())
                 Text(
                     text = "No tags added",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.secondary
                 )
-            TagList(eqPreset.tags){tag ->
+            TagList(eqPreset.tags) { tag ->
                 viewModel.removeTag(tag)
             }
             OutlinedTextField(
@@ -122,11 +121,11 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
             ) {
                 Text("Add tag")
             }
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
-            ){
+            ) {
 
                 Button(
                     onClick = {
@@ -142,7 +141,7 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = {
-                        if(viewModel.confirmPreset(rawBands))
+                        if (viewModel.confirmPreset(rawBands))
                             navController.popBackStack()
                     },
                 ) {
@@ -159,6 +158,6 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
 @Preview(
     showBackground = true
 )
-fun AddPresetScreenPreview(){
+fun AddPresetScreenPreview() {
     AddPresetScreen(AddPresetViewModel(), rememberNavController())
 }

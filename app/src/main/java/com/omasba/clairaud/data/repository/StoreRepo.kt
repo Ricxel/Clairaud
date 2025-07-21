@@ -10,7 +10,6 @@ import com.omasba.clairaud.presentation.store.state.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.lang.Thread.sleep
 
 /**
  * Presets store state holder repository
@@ -31,7 +30,7 @@ object StoreRepo {
     /**
      * Clears all the presets in the state flow
      */
-    fun reset(){
+    fun reset() {
         // per poter rifare la query a firebase
         _presets.update { emptyList() }
         Log.d(TAG, "Store reset done")
@@ -129,13 +128,18 @@ object StoreRepo {
      * @param preset Preset to be converted
      * @return Preset convertend in HashMap<String,Any> format
      */
-    fun presetMapFrom(preset: EqPreset):HashMap<String, Any>{
+    fun presetMapFrom(preset: EqPreset): HashMap<String, Any> {
         val presetMap = hashMapOf(
             "name" to preset.name,
             "tags" to preset.tags.map { it.name }.toList(),
             "id" to preset.id,
             "authorUid" to preset.authorUid,
-            "bands" to preset.bands.map { mapOf("index" to it.first, "gain" to it.second.toInt()) } // conversione per firebase
+            "bands" to preset.bands.map {
+                mapOf(
+                    "index" to it.first,
+                    "gain" to it.second.toInt()
+                )
+            } // conversione per firebase
         )
 
         return presetMap

@@ -1,17 +1,14 @@
 package com.omasba.clairaud.service.eq
 
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.audiofx.AudioEffect
 import android.os.Build
 import android.os.IBinder
-import android.provider.MediaStore.Audio
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.omasba.clairaud.data.repository.EqRepo
 import com.omasba.clairaud.core.util.NotificationUtils
 
 /**
@@ -22,7 +19,8 @@ class EqService : Service() {
     private val TAG = "EqService"
     private val CHANNEL_ID = "equalizer_service_channel"
     private val NOTIFICATION_ID = 1002 //id per la notifica permanente del servizio
-    private val notificationUtils = NotificationUtils(CHANNEL_ID) //per gestire la notifica permanente
+    private val notificationUtils =
+        NotificationUtils(CHANNEL_ID) //per gestire la notifica permanente
 
 
     private val audioSessionReceiver = AudioSessionReceiver()

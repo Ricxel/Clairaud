@@ -4,30 +4,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
 import androidx.navigation.NavHostController
-import com.omasba.clairaud.data.repository.AuthRepo
 import com.omasba.clairaud.presentation.auth.components.CancelButton
 import com.omasba.clairaud.presentation.auth.model.EditViewModel
 
 @Composable
-fun EditAccountScreen(viewModel: EditViewModel, navController: NavHostController){
+fun EditAccountScreen(viewModel: EditViewModel, navController: NavHostController) {
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -35,7 +29,7 @@ fun EditAccountScreen(viewModel: EditViewModel, navController: NavHostController
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         androidx.compose.material.Text(
             "Edit profile",
             style = MaterialTheme.typography.headlineLarge,
@@ -54,9 +48,9 @@ fun EditAccountScreen(viewModel: EditViewModel, navController: NavHostController
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(8.dp),
-        ){
+        ) {
             //bottone per tornare indietro
-            CancelButton{
+            CancelButton {
                 navController.popBackStack()
             }
 
@@ -75,9 +69,9 @@ fun EditAccountScreen(viewModel: EditViewModel, navController: NavHostController
         }
 
         //errore
-        if(uiState.error != null)
+        if (uiState.error != null)
             Text("Error: ${uiState.error}", color = Color.Red)
-        if(uiState.isChanged)
+        if (uiState.isChanged)
             Text("Profile updated successfully!", color = Color.Green)
 
     }

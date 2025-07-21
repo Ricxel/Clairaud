@@ -1,28 +1,18 @@
 package com.omasba.clairaud.data.repository
 
 import android.util.Log
-import androidx.credentials.Credential
-import androidx.credentials.CustomCredential
-import androidx.test.espresso.core.internal.deps.dagger.Reusable
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import com.omasba.clairaud.data.interfaces.AuthRepoI
-import com.omasba.clairaud.data.interfaces.GoogleAuthRepoI
 import com.omasba.clairaud.presentation.auth.state.UserProfile
 import com.omasba.clairaud.presentation.auth.state.UserProfileDTO
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 /**
  * User state auth repository
  */
-object AuthRepo: AuthRepoI {
+object AuthRepo : AuthRepoI {
     private val TAG = "auth"
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance() //per l'auth
 
@@ -49,7 +39,7 @@ object AuthRepo: AuthRepoI {
     /**
      * @return the current authenticated user
      */
-    override fun getCurrentUser(): FirebaseUser?{
+    override fun getCurrentUser(): FirebaseUser? {
         return firebaseAuth.currentUser
     }
 
@@ -58,19 +48,20 @@ object AuthRepo: AuthRepoI {
      * @param uid the user's uid
      * @param profile the user's email and password
      */
-    override suspend fun createUserProfile(uid: String, profile: UserProfile): Result<Unit> = runCatching{
-        Log.d("auth","Profile begin")
+    override suspend fun createUserProfile(uid: String, profile: UserProfile): Result<Unit> =
+        runCatching {
+            Log.d("auth", "Profile begin")
 
-        //converto perchè firebase non support i set
-        val tmp: UserProfileDTO = UserProfileDTO(
-            favPresets = profile.favPresets.toList(),
-            uid = profile.uid,
-            username = profile.username,
-            mail = profile.mail
-        )
-        FirebaseFirestore.getInstance().collection("users").document(uid).set(tmp).await()
-        Log.d("auth","Created $tmp")
-    }
+            //converto perchè firebase non support i set
+            val tmp: UserProfileDTO = UserProfileDTO(
+                favPresets = profile.favPresets.toList(),
+                uid = profile.uid,
+                username = profile.username,
+                mail = profile.mail
+            )
+            FirebaseFirestore.getInstance().collection("users").document(uid).set(tmp).await()
+            Log.d("auth", "Created $tmp")
+        }
 
     /**
      * @param uid the user's you are looking for
@@ -134,7 +125,8 @@ object AuthRepo: AuthRepoI {
             .await()
 
         //aggiorna anche il currentUserProfile nel repo
-        UserRepo.currentUserProfile = UserRepo.currentUserProfile.copy(username = profile.username, mail = profile.mail)
+        UserRepo.currentUserProfile =
+            UserRepo.currentUserProfile.copy(username = profile.username, mail = profile.mail)
         Log.d("auth", "Profile changed")
     }
 }

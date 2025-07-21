@@ -1,7 +1,6 @@
 package com.omasba.clairaud.presentation.store
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -13,13 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.store.component.Store
 import com.omasba.clairaud.presentation.store.model.StoreViewModel
-import com.omasba.clairaud.presentation.theme.ClairaudTheme
 
 
 /**
@@ -41,8 +37,7 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController) {
             navController.navigate("notAuth") {
                 popUpTo("store") { inclusive = true }
             }
-        }
-        else if (presets.isEmpty())
+        } else if (presets.isEmpty())
             viewModel.fetchPresets()
     }
 
@@ -61,10 +56,9 @@ fun StoreScreen(viewModel: StoreViewModel, navController: NavHostController) {
 
         true -> {
             // autenticazione verificata
-            if(presetsLoaded){
+            if (presetsLoaded) {
                 Store(viewModel, navController)
-            }
-            else{
+            } else {
                 // aspetto il fetch
                 Box(
                     modifier = Modifier

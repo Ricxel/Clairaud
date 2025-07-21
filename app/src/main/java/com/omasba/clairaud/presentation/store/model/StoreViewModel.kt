@@ -1,12 +1,9 @@
 package com.omasba.clairaud.presentation.store.model
 
-import androidx.compose.lint.Names.Runtime.MutableStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.omasba.clairaud.data.repository.StoreRepo
 import com.omasba.clairaud.data.repository.UserRepo
-import com.omasba.clairaud.presentation.auth.state.UserProfile
 import com.omasba.clairaud.presentation.store.state.EqPreset
 import com.omasba.clairaud.presentation.store.state.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +11,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 

@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import androidx.compose.ui.res.painterResource
 import androidx.core.app.NotificationCompat
 import com.omasba.clairaud.R
 
@@ -23,12 +22,13 @@ class NotificationUtils(
      * @param ticker Notification's ticker
      * @return The notification object with the specified parameters
      */
-    fun createNotification(context: Context,
-                           onGoing: Boolean,
-                           contentTitle: String,
-                           contentText: String,
-                           ticker: String,
-                           ): Notification {
+    fun createNotification(
+        context: Context,
+        onGoing: Boolean,
+        contentTitle: String,
+        contentText: String,
+        ticker: String,
+    ): Notification {
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
@@ -62,7 +62,8 @@ class NotificationUtils(
             )
             channel.description = description
 
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             manager.createNotificationChannel(channel)
         }
@@ -92,7 +93,7 @@ class NotificationUtils(
     fun cancelNotification(
         context: Context,
         notificationId: Int
-    ){
+    ) {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.cancel(notificationId)
     }

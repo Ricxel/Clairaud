@@ -4,7 +4,8 @@ data class EqPreset(
     val id: Int = -1,
     var tags: Set<Tag> = emptySet(),
     var name: String = "DefaultPreset",
-    var bands: ArrayList<Pair<Int,Short>> = arrayListOf( //default preset
+    var bands: ArrayList<Pair<Int, Short>> = arrayListOf(
+        //default preset
         Pair(0, 0),
         Pair(1, 0),
         Pair(2, 0),

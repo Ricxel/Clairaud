@@ -12,7 +12,7 @@ import kotlin.random.Random
 
 val TAG = "AddPresetViewModel"
 
-class AddPresetViewModel:ViewModel(){
+class AddPresetViewModel : ViewModel() {
     private val _eqPreset = MutableStateFlow(EqPreset(authorUid = "").apply { name = "" })
     val eqPreset = _eqPreset.asStateFlow()
 
@@ -21,50 +21,52 @@ class AddPresetViewModel:ViewModel(){
 
     private val TAG_MAX_DIM = 10
 
-    fun changePreset(preset: EqPreset){
+    fun changePreset(preset: EqPreset) {
         _eqPreset.value = preset
     }
-    fun updatePresetName(name:String){
+
+    fun updatePresetName(name: String) {
         _eqPreset.update { current ->
             current.copy(name = name)
         }
     }
-    fun addTag(tag: Tag){
+
+    fun addTag(tag: Tag) {
         val name = tag.name.trim() //sanitizzazione
-        if(name.isBlank() || name.length > TAG_MAX_DIM) return
+        if (name.isBlank() || name.length > TAG_MAX_DIM) return
 
         _eqPreset.update {
             it.copy(tags = it.tags + tag.copy(name = name))
         }
     }
 
-    fun removeTag(tag: Tag){
+    fun removeTag(tag: Tag) {
         _eqPreset.update {
             it.copy(tags = it.tags - tag)
         }
     }
+
     //aggiunge o modifica il preset
-    fun confirmPreset(bands: ArrayList<Pair<Int,Short>>):Boolean{
+    fun confirmPreset(bands: ArrayList<Pair<Int, Short>>): Boolean {
         //sanifico
         _eqPreset.update { it.copy(name = it.name.trim()) }
-        if(_eqPreset.value.name.isBlank()){
+        if (_eqPreset.value.name.isBlank()) {
             _showError.value = true
             return false
         }
 
-        if(_eqPreset.value.authorUid != (UserRepo.currentUserProfile.uid ?: "")){
+        if (_eqPreset.value.authorUid != (UserRepo.currentUserProfile.uid ?: "")) {
             //vuol dire che è nuovo
             _eqPreset.update {
                 it.copy(
                     authorUid = UserRepo.currentUserProfile.uid,
                     bands = bands,
                     author = UserRepo.currentUserProfile.username,
-                    id = Random.nextInt(100,100000)
+                    id = Random.nextInt(100, 100000)
                 )
             }
             StoreRepo.addPreset(_eqPreset.value)
-        }
-        else{
+        } else {
             //vuol dire che lo sto modificando
             StoreRepo.replacePreset(preset = _eqPreset.value)
         }

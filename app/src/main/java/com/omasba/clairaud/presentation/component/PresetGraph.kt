@@ -20,7 +20,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 
 @Composable
-fun PresetGraph(presetName:String, bands: ArrayList<Pair<Int, Short>>?){
+fun PresetGraph(presetName: String, bands: ArrayList<Pair<Int, Short>>?) {
     val labelColor = MaterialTheme.colorScheme.primary.toArgb()
     AndroidView(
         modifier = Modifier
@@ -84,13 +84,13 @@ fun PresetGraph(presetName:String, bands: ArrayList<Pair<Int, Short>>?){
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
-private fun PresetGraphPreview(){
+private fun PresetGraphPreview() {
     val sampleBands = arrayListOf(
-        Pair<Int,Short>(60,4),
-        Pair<Int,Short>(250,-2),
-        Pair<Int,Short>(1000,1),
-        Pair<Int,Short>(4000,3),
-        Pair<Int,Short>(14000,4),
+        Pair<Int, Short>(60, 4),
+        Pair<Int, Short>(250, -2),
+        Pair<Int, Short>(1000, 1),
+        Pair<Int, Short>(4000, 3),
+        Pair<Int, Short>(14000, 4),
     )
     PresetGraph(presetName = "Jazz", bands = sampleBands)
 

@@ -15,12 +15,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 @Composable
-fun NotAuthenticated(navController: NavHostController){
-    Row (
+fun NotAuthenticated(navController: NavHostController) {
+    Row(
         modifier = Modifier
             .padding(bottom = 8.dp)
-    ){
-        Text(text = "You are not autheticated", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
+    ) {
+        Text(
+            text = "You are not autheticated",
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 
     Row(
@@ -30,8 +34,10 @@ fun NotAuthenticated(navController: NavHostController){
         //bottone per il login
         Button(
             onClick = {
-                navController.navigate("login"){
-                    popUpTo("notAuth"){ inclusive = true } //tolgo dallo stack per eveitare di tornare indietro
+                navController.navigate("login") {
+                    popUpTo("notAuth") {
+                        inclusive = true
+                    } //tolgo dallo stack per eveitare di tornare indietro
                 }
             }
         ) {
@@ -46,8 +52,10 @@ fun NotAuthenticated(navController: NavHostController){
         //bottone per la registrazione
         TextButton(
             onClick = {
-                navController.navigate("register"){
-                    popUpTo("notAuth"){ inclusive = true } //tolgo dallo stack per eveitare di tornare indietro
+                navController.navigate("register") {
+                    popUpTo("notAuth") {
+                        inclusive = true
+                    } //tolgo dallo stack per eveitare di tornare indietro
                 }
             }
         ) {
