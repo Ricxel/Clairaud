@@ -142,7 +142,7 @@ class MusicDetectionService : NotificationListenerService() {
                                     if(preset.id != -1){ //cambio il preset solamente se ne trovo uno applicabile che non sia il default
                                         AutoEqStateHolder.changePreset(preset)
                                         EqRepo.newBands(preset.bands)
-                                        Log.d("MusicDetection","Bande cambiate")
+                                        Log.d("MusicDetection","Bands changed")
                                     }
                                     //cambio la notifica mettendo il testo per le canzoni rilevate
                                     val updateNotification = notificationUtils.createNotification(
@@ -175,10 +175,10 @@ class MusicDetectionService : NotificationListenerService() {
                     Thread.sleep(5000)
                 }
             }catch (e: CancellationException) { //serve altrimenti blocca l'eccezione e il job non termina
-                Log.d("Polling", "Job cancellato")
+                Log.d("Polling", "Job cancelled")
                 throw e
             }catch (e: Exception) {
-                Log.e("Polling", "Errore: ${e.message}")
+                Log.e("Polling", "Error: ${e.message}")
             }
         }
     }

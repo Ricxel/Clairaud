@@ -37,7 +37,7 @@ class NotificationUtils(
             .setOngoing(onGoing)
             .setTicker(ticker)
 
-        Log.d("MusicDetection", "Notifica creata")
+        Log.d("MusicDetection", "Notify created")
 
         return notificationBuilder.build()
     }

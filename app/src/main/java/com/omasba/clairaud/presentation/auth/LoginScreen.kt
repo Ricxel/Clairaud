@@ -60,7 +60,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController){
 
     //controllo lo stato di autenticazione, se sono autenticato, mi sposto alla schermata di profilo
     LaunchedEffect(uiState.isLoggedIn) {
-        Log.d("auth", "Cambiato")
+        Log.d("auth", "Changed")
         if(uiState.isLoggedIn)
             navController.navigate("profile") {
                 popUpTo("login"){inclusive = true} // fa in modo che non si possa tornare a login

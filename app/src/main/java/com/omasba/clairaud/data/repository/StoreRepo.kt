@@ -60,7 +60,7 @@ object StoreRepo {
                     val authorUid = doc.getString("authorUid") ?: return@mapNotNull null
 
                     if (authorUid.isEmpty()) {
-                        Log.e(TAG, "Preset ${doc.id} ha un authorUid nullo o vuoto")
+                        Log.e(TAG, "Preset ${doc.id} has a null or invalid AuthorUid")
                         return@mapNotNull null
                     }
 
@@ -100,11 +100,11 @@ object StoreRepo {
                         _presetsLoaded.update { true }
                     }
                     .addOnFailureListener {
-                        Log.e(TAG, "Errore durante il fetch utenti: ${it.message}")
+                        Log.e(TAG, "Error fetching users: ${it.message}")
                     }
             }
             .addOnFailureListener {
-                Log.e(TAG, "Errore fetch preset: ${it.message}")
+                Log.e(TAG, "Error fetching presets: ${it.message}")
             }
     }
 
@@ -146,15 +146,15 @@ object StoreRepo {
      * @param preset Preset to be added
      */
     fun addPreset(preset: EqPreset) {
-        Log.d(TAG, "Aggiunto preset ${preset.name} su Firestore")
+        Log.d(TAG, "Preset ${preset.name} to add to Firestore")
 
         presetsCollection.document(preset.id.toString())
             .set(presetMapFrom(preset), SetOptions.merge())
             .addOnSuccessListener {
-                Log.d(TAG, "Preset ${preset.name} salvato su Firestore")
+                Log.d(TAG, "Preset ${preset.name} saved to Firestore")
             }
             .addOnFailureListener {
-                Log.e(TAG, "Errore salvataggio: ${it.message}")
+                Log.e(TAG, "Errore saving: ${it.message}")
             }
 
         fetchPresets()

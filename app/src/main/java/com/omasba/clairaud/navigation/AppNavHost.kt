@@ -75,10 +75,10 @@ fun AppNavHost(navController: NavHostController, equalizerViewModel: EqualizerVi
         composable("editPreset/{presetId}"){backStackEntry ->
             //nel caso in cui sto editando un preset, devo capire attraverso l'id che preset devo modificare e aggiornare il viewModel di conseguenza
             val presetId = backStackEntry.arguments?.getString("presetId")?.toInt()
-            Log.d("route", "id passato alla route: ${presetId}")
+            Log.d("route", "ID given to the route: ${presetId}")
             val preset = presets.find { it.id == presetId }
 
-            Log.d("route","Preset trovato: $preset")
+            Log.d("route","Preset found: $preset")
             val editPresetViewModel = AddPresetViewModel()
             editPresetViewModel.changePreset(preset ?: EqPreset())
             AddPresetScreen(viewModel = editPresetViewModel, navController = navController)

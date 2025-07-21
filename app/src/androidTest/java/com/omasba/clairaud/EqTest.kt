@@ -16,9 +16,5 @@ class EqTest{
         val bands = equalizer.getNumberOfBands()
         Log.i("bands: ", bands.toString())
 
-        // Non ancora testato
-        // val midLevel = ((range.first + range.second) / 2).toShort()
-        // val levels = ShortArray(bands) { midLevel }
-        // equalizer.setAllBands(levels)
     }
 }

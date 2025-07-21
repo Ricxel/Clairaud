@@ -45,7 +45,7 @@ class AuthViewModel: ViewModel(){
                     val profile = AuthRepo.getUserProfile(uid).getOrNull() ?: UserProfile()
 
                     UserRepo.currentUserProfile = profile
-                    Log.d("auth", "Current impostato $profile")
+                    Log.d("auth", "Current set $profile")
                     it.copy(isLoading = false, isLoggedIn = true, email = "", password = "")
                 }
                 else{

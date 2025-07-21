@@ -80,13 +80,13 @@ object UserRepo {
 
                         _favPresets.value = ids // aggiorna lo StateFlow
 
-                        Log.d(TAG, "Preferiti caricati: $ids")
+                        Log.d(TAG, "Favourites loaded: $ids")
                     } catch (e: Exception) {
-                        Log.e(TAG, "Errore parsing favPresets: ${e.message}")
+                        Log.e(TAG, "Error parsing favPresets: ${e.message}")
                     }
                 }
                 .addOnFailureListener { e ->
-                    Log.e(TAG, "Errore Firestore get(): ${e.message}")
+                    Log.e(TAG, "Error Firestore get(): ${e.message}")
                 }
         }catch (e:Exception){
             Log.e(TAG, e.message.toString())

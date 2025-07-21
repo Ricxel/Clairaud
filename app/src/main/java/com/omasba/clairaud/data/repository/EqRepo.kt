@@ -67,7 +67,7 @@ object EqRepo{
      */
     fun newBands(newBands: ArrayList<Pair<Int, Short>>) {
         try{
-            Log.d(TAG, "bande: " + newBands.toList().toString())
+            Log.d(TAG, "bands: " + newBands.toList().toString())
 
             _eq.update {
                 it?.setAllBands(newBands)

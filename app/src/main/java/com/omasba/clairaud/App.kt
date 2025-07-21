@@ -33,7 +33,7 @@ class App: Application() {
         val serviceIntent = Intent(this, EqService::class.java)
 
         startForegroundService(serviceIntent)
-        Log.d("EqScreen","Lanciato!")
+        Log.d("EqScreen","Started!")
     }
 
     override fun onTerminate() {

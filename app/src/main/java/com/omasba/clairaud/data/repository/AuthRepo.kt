@@ -50,7 +50,7 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
      * @param profile the user's email and password
      */
     override suspend fun createUserProfile(uid: String, profile: UserProfile): Result<Unit> = runCatching{
-        Log.d("auth","Inizio profilo")
+        Log.d("auth","Profile begin")
 
         //converto perchè firebase non support i set
         val tmp: UserProfileDTO = UserProfileDTO(
@@ -60,7 +60,7 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
             mail = profile.mail
         )
         FirebaseFirestore.getInstance().collection("users").document(uid).set(tmp).await()
-        Log.d("auth","Creato $tmp")
+        Log.d("auth","Created $tmp")
     }
 
     /**
@@ -126,7 +126,7 @@ object AuthRepo: AuthRepoI, GoogleAuthRepoI {
 
         //aggiorna anche il currentUserProfile nel repo
         UserRepo.currentUserProfile = UserRepo.currentUserProfile.copy(username = profile.username, mail = profile.mail)
-        Log.d("auth", "Cambiato profilo")
+        Log.d("auth", "Profile changed")
     }
 
     override suspend fun loginWithGoogle(idToken: String): Result<Unit> = runCatching {
