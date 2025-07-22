@@ -13,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Share
@@ -303,8 +305,9 @@ fun EqTitle(
             enabled = isEnabled
         ) {
             Icon(
-                imageVector = Icons.Default.Share,
-                contentDescription = "Share"
+                imageVector = Icons.Default.Add,
+                contentDescription = "Share",
+                modifier = Modifier.size(40.dp)
             )
         }
         Switch(
