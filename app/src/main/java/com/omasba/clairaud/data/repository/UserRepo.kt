@@ -155,8 +155,11 @@ object UserRepo {
             //imposto l'utente locale
             val uid = AuthRepo.getCurrentUser()?.uid
 
-            if (uid != null)
+            if (uid != null){
                 currentUserProfile = AuthRepo.getUserProfile(uid).getOrNull() ?: UserProfile()
+                //setto anche preferiti
+                _favPresets.update { currentUserProfile.favPresets }
+            }
         }
     }
 }

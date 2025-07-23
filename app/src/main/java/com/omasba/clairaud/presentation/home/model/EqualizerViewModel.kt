@@ -8,16 +8,6 @@ class EqualizerViewModel : ViewModel() {
     val TAG: String = "EqViewModel"
     val eqState = EqRepo.eqState
 
-    init {
-        val bands = arrayListOf(
-            Pair<Int, Short>(0, 0),
-            Pair<Int, Short>(1, 0),
-            Pair<Int, Short>(2, 0),
-            Pair<Int, Short>(3, 0),
-            Pair<Int, Short>(4, 0)
-        )
-        newBands(bands)
-    }
 
     /**
      * Sets the level of a specific equalizer band

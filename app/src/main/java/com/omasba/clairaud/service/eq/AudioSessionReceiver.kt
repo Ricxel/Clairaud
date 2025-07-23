@@ -28,17 +28,8 @@ class AudioSessionReceiver : BroadcastReceiver() {
                 Log.d(TAG, "Audio session opened: $sessionId")
 
                 try {
-                    if (EqRepo.eq.value == null) {
-                        equalizer = Eq(sessionId)
-                        EqRepo.setEq(equalizer)
-
-                        Log.d(TAG, "Built a new equalizer")
-                    } else {
-                        equalizer = Eq(sessionId, EqRepo.eq.value)
-                        EqRepo.setEq(equalizer)
-
-                        Log.d(TAG, "Cloned last equalizer")
-                    }
+                    equalizer = Eq(sessionId, equalizer)
+                    EqRepo.setEq(equalizer)
                 } catch (e: Exception) {
                     Log.e(TAG, "Equalizer error: ${e.message}")
                 }

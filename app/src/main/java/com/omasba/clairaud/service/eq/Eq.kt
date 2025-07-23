@@ -11,11 +11,21 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     init {
         if (eq == null) {
             equalizer = Equalizer(0, sessionId)
+            Log.d(TAG,"IMPOSTO A 0")
+            //imposta le bande a 0
+            val bands = arrayListOf(
+                Pair<Int, Short>(0, 0),
+                Pair<Int, Short>(1, 0),
+                Pair<Int, Short>(2, 0),
+                Pair<Int, Short>(3, 0),
+                Pair<Int, Short>(4, 0)
+            )
+            this.setAllBands(bands)
         } else {
             equalizer = Equalizer(0, sessionId)
             this.setAllBands(eq.getAllBands())
         }
-        EqRepo.newBands(this.getAllBands()) //
+        EqRepo.newBands(this.getAllBands()) //li imposta anche nella UI
 
         Log.d(TAG, "Equalizer init: ${this.properties().toString()}")
     }
