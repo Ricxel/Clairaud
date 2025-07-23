@@ -38,7 +38,7 @@ import com.omasba.clairaud.presentation.store.state.Tag
 fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostController) {
     val eqPreset by viewModel.eqPreset.collectAsState()
     val eqState by EqRepo.eqState.collectAsState()
-    val errorState by viewModel.showError.collectAsState()
+    val error by viewModel.error.collectAsState()
     var tagInput by remember { mutableStateOf("") }
     Box(
         modifier = Modifier
@@ -82,12 +82,10 @@ fun AddPresetScreen(viewModel: AddPresetViewModel, navController: NavHostControl
                 modifier = Modifier.fillMaxWidth()
             )
             // per mostrare l'errore
-            if (errorState) {
-                Text(
-                    text = "* Preset name is empty",
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
+            Text(
+                text = error ?: "",
+                color = MaterialTheme.colorScheme.error
+            )
             Spacer(
                 modifier = Modifier
                     .height(20.dp)

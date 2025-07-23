@@ -64,7 +64,7 @@ fun PresetCard(preset: EqPreset, favPresets: State<Set<Int>>, navController: Nav
                 Text(text = preset.name, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.weight(1f))
 
-                if (preset.authorUid == UserRepo.currentUserProfile?.uid) {
+                if (preset.authorUid == UserRepo.currentUserProfile.uid) {
                     IconButton(
                         onClick = {
                             navController.navigate("editPreset/${preset.id}")

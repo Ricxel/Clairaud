@@ -16,8 +16,8 @@ class AddPresetViewModel : ViewModel() {
     private val _eqPreset = MutableStateFlow(EqPreset(authorUid = "").apply { name = "" })
     val eqPreset = _eqPreset.asStateFlow()
 
-    private val _showError = MutableStateFlow(false)
-    val showError = _showError.asStateFlow()
+    private val _error = MutableStateFlow<String?>(null)
+    val error = _error.asStateFlow()
 
     private val TAG_MAX_DIM = 10
 
@@ -33,11 +33,15 @@ class AddPresetViewModel : ViewModel() {
 
     fun addTag(tag: Tag) {
         val name = tag.name.trim() //sanitizzazione
-        if (name.isBlank() || name.length > TAG_MAX_DIM) return
+        if (name.isBlank() || name.length > TAG_MAX_DIM){
+            _error.value = "Tag is blank or too long"
+            return
+        }
 
         _eqPreset.update {
             it.copy(tags = it.tags + tag.copy(name = name))
         }
+        _error.value = ""
     }
 
     fun removeTag(tag: Tag) {
@@ -51,11 +55,11 @@ class AddPresetViewModel : ViewModel() {
         //sanifico
         _eqPreset.update { it.copy(name = it.name.trim()) }
         if (_eqPreset.value.name.isBlank()) {
-            _showError.value = true
+            _error.value = "The preset name is empty"
             return false
         }
 
-        if (_eqPreset.value.authorUid != (UserRepo.currentUserProfile.uid ?: "")) {
+        if (_eqPreset.value.authorUid != (UserRepo.currentUserProfile.uid)) {
             //vuol dire che è nuovo
             _eqPreset.update {
                 it.copy(
@@ -71,7 +75,7 @@ class AddPresetViewModel : ViewModel() {
             StoreRepo.replacePreset(preset = _eqPreset.value)
         }
         //resetta
-        _showError.value = false
+        _error.value = null
         this.changePreset(EqPreset(name = "")) //nuovo preset pulito
         return true
     }
