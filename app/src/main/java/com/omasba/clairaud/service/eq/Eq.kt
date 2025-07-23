@@ -11,7 +11,6 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     init {
         if (eq == null) {
             equalizer = Equalizer(0, sessionId)
-            Log.d(TAG,"IMPOSTO A 0")
             //imposta le bande a 0
             val bands = arrayListOf(
                 Pair<Int, Short>(0, 0),
