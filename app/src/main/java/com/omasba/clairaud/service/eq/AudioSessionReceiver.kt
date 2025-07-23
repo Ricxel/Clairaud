@@ -30,6 +30,7 @@ class AudioSessionReceiver : BroadcastReceiver() {
                 try {
                     equalizer = Eq(sessionId, equalizer)
                     EqRepo.setEq(equalizer)
+                    Log.d(TAG, "The eq is active: ${equalizer?.hasControl()}")
                 } catch (e: Exception) {
                     Log.e(TAG, "Equalizer error: ${e.message}")
                 }

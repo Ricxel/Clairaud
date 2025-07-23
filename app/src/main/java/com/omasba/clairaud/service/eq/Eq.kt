@@ -8,9 +8,10 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     private var equalizer: Equalizer? = null
     val TAG = "Eq"
 
+    val priority = 1000
     init {
         if (eq == null) {
-            equalizer = Equalizer(0, sessionId)
+            equalizer = Equalizer(priority, sessionId)
             //imposta le bande a 0
             val bands = arrayListOf(
                 Pair<Int, Short>(0, 0),
@@ -21,7 +22,7 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
             )
             this.setAllBands(bands)
         } else {
-            equalizer = Equalizer(0, sessionId)
+            equalizer = Equalizer(priority, sessionId)
             this.setAllBands(eq.getAllBands())
         }
         EqRepo.newBands(this.getAllBands()) //li imposta anche nella UI
@@ -137,5 +138,9 @@ data class Eq(private val sessionId: Int, private val eq: Eq? = null) {
     fun release() { // IMPORTANTE
         Log.d(TAG, "releasing equalizer")
         equalizer?.release()
+    }
+
+    fun hasControl():Boolean{
+        return equalizer!!.hasControl()
     }
 }
