@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.home.model.AutoEqViewModel
-import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
+import com.omasba.clairaud.data.repository.AutoEqRepo
 
 @Composable
 fun AutoEq(viewModel: AutoEqViewModel) {
@@ -28,7 +28,7 @@ fun AutoEq(viewModel: AutoEqViewModel) {
     LaunchedEffect(Unit) {
         isEnabled = UserRepo.isLogged()
         if (!isEnabled) {
-            AutoEqStateHolder.setIsOn(false)
+            AutoEqRepo.setIsOn(false)
         }
     }
 

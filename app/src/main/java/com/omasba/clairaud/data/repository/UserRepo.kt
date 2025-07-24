@@ -6,7 +6,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.omasba.clairaud.presentation.auth.state.UserProfile
-import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
 import com.omasba.clairaud.presentation.store.state.EqPreset
 import com.omasba.clairaud.presentation.store.state.Tag
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -143,7 +142,7 @@ object UserRepo {
         AuthRepo.logout()
         currentUserProfile = UserProfile()
         StoreRepo.reset()
-        AutoEqStateHolder.setIsOn(false)
+        AutoEqRepo.setIsOn(false)
     }
 
     /**

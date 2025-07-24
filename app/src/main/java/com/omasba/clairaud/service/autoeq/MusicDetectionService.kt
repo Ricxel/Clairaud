@@ -9,13 +9,12 @@ import android.os.Build
 import android.os.IBinder
 import android.service.notification.NotificationListenerService
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.omasba.clairaud.core.network.API_KEY
 import com.omasba.clairaud.core.network.LastFmApi
 import com.omasba.clairaud.core.util.NotificationUtils
 import com.omasba.clairaud.data.repository.EqRepo
 import com.omasba.clairaud.data.repository.UserRepo
-import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
+import com.omasba.clairaud.data.repository.AutoEqRepo
 import com.omasba.clairaud.presentation.store.state.Tag
 import com.omasba.clairaud.service.eq.Eq
 import com.omasba.clairaud.service.eq.EqService
@@ -97,7 +96,7 @@ class MusicDetectionService : NotificationListenerService() {
         val applicationContext = this // per poter creare la notifica
 
         serviceScope.launch {
-            AutoEqStateHolder.uiState.collectLatest { state ->
+            AutoEqRepo.uiState.collectLatest { state ->
                 if (state.isOn && !isPollingActive()) {
                     Log.d("MusicDetection", "Starting polling...")
 
@@ -177,7 +176,7 @@ class MusicDetectionService : NotificationListenerService() {
                                     val preset = UserRepo.getPresetToApply(tags.toSet())
 
                                     if (preset.id != -1) { //cambio il preset solamente se ne trovo uno applicabile che non sia il default
-                                        AutoEqStateHolder.changePreset(preset)
+                                        AutoEqRepo.changePreset(preset)
                                         EqRepo.newBands(preset.bands)
                                         Log.d("MusicDetection", "Bands changed")
                                     }

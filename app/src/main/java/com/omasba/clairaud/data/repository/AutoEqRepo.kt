@@ -1,5 +1,6 @@
-package com.omasba.clairaud.presentation.home.state
+package com.omasba.clairaud.data.repository
 
+import com.omasba.clairaud.presentation.home.state.AutoEqUiState
 import com.omasba.clairaud.presentation.store.state.EqPreset
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -8,7 +9,7 @@ import kotlinx.coroutines.flow.update
 /**
  * Repository for AutoEq feature state
  */
-object AutoEqStateHolder {
+object AutoEqRepo {
     private val _uiState = MutableStateFlow(AutoEqUiState())
     val uiState = _uiState.asStateFlow()
 

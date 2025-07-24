@@ -1,3 +1,6 @@
+import org.gradle.internal.impldep.org.bouncycastle.bcpg.SecretSubkeyPacket
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,6 +10,18 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+class Secrets(private val project: Project) {
+    fun getLocalProperty(key: String): String {
+        val properties = Properties().apply {
+            load(project.rootProject.file("local.properties").inputStream())
+        }
+        return properties.getProperty(key) ?: error("$key non trovato!")
+    }
+
+    val lastfmApiKey get() = getLocalProperty("LASTFM_API_KEY")
+}
+
+val secrets = Secrets(project)
 android {
     namespace = "com.omasba.clairaud"
     compileSdk = 35
@@ -19,6 +34,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "LASTFM_API_KEY", "\"${secrets.lastfmApiKey}\"")
     }
 
     buildTypes {
@@ -39,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

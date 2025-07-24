@@ -1,5 +1,6 @@
 package com.omasba.clairaud.core.network
 
+import com.google.firebase.BuildConfig
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -8,7 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 private const val BASE_URL = "https://ws.audioscrobbler.com"
-const val API_KEY: String = "51b710eed01b56a851a342cca1bead2a"
+const val API_KEY: String = com.omasba.clairaud.BuildConfig.LASTFM_API_KEY
 
 private val json = Json { ignoreUnknownKeys = true }
 private val retrofit = Retrofit.Builder()
