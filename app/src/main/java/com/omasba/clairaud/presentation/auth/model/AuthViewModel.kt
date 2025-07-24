@@ -86,7 +86,7 @@ class AuthViewModel : ViewModel() {
                 }
             }
 
-            UserRepo.getFavPresets()
+            UserRepo.getFavPresets() //aggiorni anche in locale
         }
     }
 
@@ -115,6 +115,7 @@ class AuthViewModel : ViewModel() {
 
                         AuthRepo.createUserProfile(user.uid, profile) //creo il profilo
                         UserRepo.currentUserProfile = profile
+                        UserRepo.getFavPresets() //aggiorna anche i preferiti
                         it.copy(
                             isLoading = false,
                             isLoggedIn = true,
