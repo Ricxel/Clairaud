@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaMetadata
 import android.media.session.MediaSessionManager
+import android.os.Build
 import android.os.IBinder
 import android.service.notification.NotificationListenerService
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.omasba.clairaud.core.network.API_KEY
 import com.omasba.clairaud.core.network.LastFmApi
 import com.omasba.clairaud.core.util.NotificationUtils
@@ -15,6 +17,8 @@ import com.omasba.clairaud.data.repository.EqRepo
 import com.omasba.clairaud.data.repository.UserRepo
 import com.omasba.clairaud.presentation.home.state.AutoEqStateHolder
 import com.omasba.clairaud.presentation.store.state.Tag
+import com.omasba.clairaud.service.eq.Eq
+import com.omasba.clairaud.service.eq.EqService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -60,7 +64,28 @@ class MusicDetectionService : NotificationListenerService() {
 
         // Avvia il servizio come foreground per mantenerlo attivo in background
         observeAutoEqState()
+
+        //faccio partire l'eqService qui, perchè è un foreground service ed evita che questo servizio venga ucciso da android
+        startEqService()
     }
+
+    private fun startEqService() {
+        //avvio il servizio per la rilevazione delle sessioni audio
+        //Il servizio è necessario solo nelle versioni recenti di android (>=26) altrimenti è sufficiente creare l'eq con session_id = 0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceIntent = Intent(this, EqService::class.java)
+
+            startForegroundService(serviceIntent)
+            Log.d("EqScreen", "Started!")
+        } else {
+            //uso session_id=0
+            val eq = Eq(0)
+
+            EqRepo.setEq(eq)
+        }
+
+    }
+
 
     override fun onListenerConnected() {
         super.onListenerConnected()
@@ -187,7 +212,6 @@ class MusicDetectionService : NotificationListenerService() {
                     }
 
                     // aspetta 5 secondi prima del prossimo controllo
-                    Log.d("MusicDetection", "Waiting...")
                     Thread.sleep(5000)
                 }
             } catch (e: CancellationException) { //serve altrimenti blocca l'eccezione e il job non termina
