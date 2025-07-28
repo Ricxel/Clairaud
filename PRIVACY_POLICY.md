@@ -21,7 +21,7 @@ Your email and related user data are stored securely using Firebase Authenticati
 ## Open Source
 
 Clairaud is an open-source application. You can review the full source code and privacy-related configurations on our GitHub repository:  
-[https://github.com/tuoutente/clairaud](https://github.com/tuoutente/clairaud)
+[https://github.com/Ricxel/Clairaud](https://github.com/Ricxel/Clairaud)
 
 ## Contact
 
