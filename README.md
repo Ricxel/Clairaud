@@ -25,8 +25,11 @@ Clairaud è un'app mobile che permette di personalizzare e migliorare l’esperi
 
 <ul>
 	<li>
+	  <div style="display: inline-block; margin: 10px;">
+
 		<strong>Home e applicazione preset </strong>
   		<img style="inline-block" src="readme_assets/presets.gif" alt="Home & presets" width="250"/>
+	  </div>
 	</li>
 	<li>
 		<strong>Preset condivisi dalla community</strong>
