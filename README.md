@@ -21,4 +21,10 @@ Clairaud è un'app mobile che permette di personalizzare e migliorare l’esperi
 - **Audio Engine:** AndroidEqualizer (API nativa)  
 - **AutoEQ:** LastFM API  
 
-## App workflow (gif/immagini da inserire)
+## App demo
+
+<p align="center">
+  <img src="readme_assets/presets.gif" alt="Home & presets" width="250"/>
+  <img src="readme_assets/store.gif" alt="Store" width="250"/>
+  <img src="readme_assets/autoeq.gif" alt="AutoEQ" width="250"/>
+</p>
