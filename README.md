@@ -23,19 +23,4 @@ Clairaud è un'app mobile che permette di personalizzare e migliorare l’esperi
 
 ## App demo
 
-<ul>
-	<li>
-	  <div style="display: inline-block; margin: 10px;">
-			<strong>Home e applicazione preset </strong>
-  		<img style="inline-block" src="readme_assets/presets.gif" alt="Home & presets" width="250"/>
-	  </div>
-	</li>
-	<li>
-		<strong>Preset condivisi dalla community</strong>
-  		<img src="readme_assets/store.gif" alt="Store" width="250"/>
-	</li>
-	<li>
-		<strong>Funzione AutoEQ</strong>
-	    <img src="readme_assets/autoeq.gif" alt="AutoEQ" width="250"/>
-	</li>
-</ul>
+![Descrizione della GIF](readme_assets/presets.gif)
