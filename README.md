@@ -35,5 +35,5 @@ Clairaud è un'app mobile che permette di personalizzare e migliorare l’esperi
 
 ### Crediti
 L'app è stata sviluppata come progetto per un corso di programmazione mobile all'università dagli studenti:
-- **Giovanni Sbalchiero** - ***giovanni.sbalchiero@ikmail.com***
-- **Alessandro Omati** - ***alessoma2004@gmail.com***
+- ***Giovanni Sbalchiero*** - giovanni.sbalchiero@ikmail.com
+- ***Alessandro Omati*** - alessoma2004@gmail.com
