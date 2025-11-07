@@ -33,7 +33,7 @@ Clairaud è un'app mobile che permette di personalizzare e migliorare l’esperi
 <li><strong>Funzione AutoEQ</strong></li>
 <img style="display: inline-block; margin-bottom: 20px;" src="readme_assets/autoeq.gif" alt="AutoEQ" width="250"/>
 
-##Crediti
-L'app è stata sviluppata per un corso di programmazione mobile all'università dagli studenti:
-- **Giovanni Sbalchiero** g.sbalchiero04@gmail.com
-- **Alessandro Omati** 
+### Crediti
+L'app è stata sviluppata come progetto per un corso di programmazione mobile all'università dagli studenti:
+- **Giovanni Sbalchiero** - ***giovanni.sbalchiero@ikmail.com***
+- **Alessandro Omati** - ***alessoma2004@gmail.com***
