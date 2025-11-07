@@ -30,5 +30,5 @@ Clairaud è un'app mobile che permette di personalizzare e migliorare l’esperi
 <li><strong>Preset condivisi dalla community</strong></li>
 <img style="display: inline-block; margin-bottom: 20px;" src="readme_assets/store.gif" alt="Store" width="250"/>
 
-<li><strong>Preset condivisi dalla community</strong></li>
+<li><strong>Funzione AutoEQ</strong></li>
 <img style="display: inline-block; margin-bottom: 20px;" src="readme_assets/autoeq.gif" alt="AutoEQ" width="250"/>
